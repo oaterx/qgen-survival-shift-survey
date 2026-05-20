@@ -1,0 +1,15 @@
+{"timestamp":"2026-05-19T09:13:41.149Z","f":80,"c":45,"w":60,"personaId":"04"}
+{"timestamp":"2026-05-19T09:14:24.538Z","f":47,"c":53,"w":67,"personaId":"11"}
+{"timestamp":"2026-05-19T09:35:23.609Z","f":53,"c":60,"w":27,"personaId":"12"}
+{"timestamp":"2026-05-19T09:35:45.298Z","f":47,"c":53,"w":93,"personaId":"08"}
+{"timestamp":"2026-05-19T09:45:32.523Z","f":47,"c":67,"w":47,"personaId":"11"}
+{"timestamp":"2026-05-19T09:56:43.004Z","f":73,"c":47,"w":40,"personaId":"10"}
+{"timestamp":"2026-05-19T10:10:18.868Z","f":73,"c":27,"w":73,"personaId":"05","demographics":{}}
+{"timestamp":"2026-05-19T10:21:18.767Z","f":67,"c":100,"w":100,"personaId":"02","demographics":{"positionLevel":"senior_officer","industry":"tech_it_software","ageRange":"under_22","incomeRange":"15k_24999"}}
+{"timestamp":"2026-05-19T10:22:04.387Z","f":33,"c":33,"w":33,"personaId":"11","demographics":{"positionLevel":"officer_specialist","industry":"fmcg","ageRange":"36_40","incomeRange":"25k_34999"}}
+{"timestamp":"2026-05-19T10:29:33.764Z","f":67,"c":40,"w":60,"personaId":"11","demographics":{"positionLevel":"officer_specialist","industry":"retail_ecommerce","ageRange":"26_30","incomeRange":"35k_49999","gender":"male"}}
+{"timestamp":"2026-05-19T10:33:14.459Z","f":67,"c":47,"w":33,"personaId":"11","demographics":{"positionLevel":"senior_officer","industry":"healthcare_pharma","ageRange":"41_45","incomeRange":"35k_49999","gender":"male"}}
+{"timestamp":"2026-05-19T10:37:17.057Z","f":33,"c":33,"w":33,"personaId":"11","demographics":{"ageRange":"31_35","industry":"real_estate","positionLevel":"other","incomeRange":"25k_34999","gender":"male"}}
+{"timestamp":"2026-05-19T10:43:10.229Z","f":73,"c":60,"w":67,"personaId":"10","demographics":{"positionLevel":"senior_manager_head","industry":"fmcg","ageRange":"36_40","incomeRange":"50k_74999","gender":"female"}}
+{"timestamp":"2026-05-20T04:26:17.858Z","f":33,"c":33,"w":40,"personaId":"11","demographics":{"positionLevel":"director_vp_c","industry":"fmcg","ageRange":"31_35","incomeRange":"15k_24999","gender":"male"}}
+{"timestamp":"2026-05-20T04:43:51.738Z","f":33,"c":33,"w":40,"personaId":"11","demographics":{"positionLevel":"senior_manager_head","industry":"energy_utilities","ageRange":"46_50","incomeRange":"25k_34999","gender":"male"}}

@@ -1,0 +1,11 @@
+node_modules
+.next
+.env*
+*.jsonl
+Dockerfile
+.dockerignore
+README*.md
+CLAUDE*.md
+AGENTS.md
+__tests__
+*.csv

@@ -2,25 +2,91 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1b2843;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-prompt);
+
+  /* QGEN brand */
+  --color-qgen-dark: #1b2843;
+  --color-qgen-blue: #1c5fa6;
+  --color-qgen-gold: #f5b31b;
+
+  /* Animations */
+  --animate-fade-up: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-in: fade-in 0.4s ease-out both;
+  --animate-slide-in: slide-from-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-prompt, system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Walking character animations ── */
+@keyframes walk-body-bounce {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-2px); }
+}
+
+@keyframes walk-swing-forward {
+  0%, 100% { transform: rotate(-22deg); }
+  50%       { transform: rotate(22deg); }
+}
+
+@keyframes walk-swing-backward {
+  0%, 100% { transform: rotate(22deg); }
+  50%       { transform: rotate(-22deg); }
+}
+
+.walk-bounce {
+  animation: walk-body-bounce 0.48s ease-in-out infinite;
+}
+
+.walk-leg-l {
+  animation: walk-swing-forward 0.48s ease-in-out infinite;
+}
+
+.walk-leg-r {
+  animation: walk-swing-backward 0.48s ease-in-out infinite;
+}
+
+.walk-arm-l {
+  animation: walk-swing-backward 0.48s ease-in-out infinite;
+}
+
+.walk-arm-r {
+  animation: walk-swing-forward 0.48s ease-in-out infinite;
 }
