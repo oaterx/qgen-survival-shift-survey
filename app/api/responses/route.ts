@@ -18,6 +18,32 @@ async function pushToGoogleSheet(record: Record<string, unknown>) {
   }
 }
 
+function flattenForSheet(
+  f: number,
+  c: number,
+  w: number,
+  personaId: string,
+  demographics: DemographicAnswers & { gender?: string },
+  answers: SurveyAnswer[],
+) {
+  const flat: Record<string, unknown> = {
+    timestamp: new Date().toISOString(),
+    personaId,
+    f,
+    c,
+    w,
+    gender: demographics.gender ?? "",
+    positionLevel: demographics.positionLevel ?? "",
+    industry: demographics.industry ?? "",
+    ageRange: demographics.ageRange ?? "",
+    incomeRange: demographics.incomeRange ?? "",
+  };
+  for (const a of answers) {
+    flat[a.questionId] = a.value;
+  }
+  return flat;
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -44,12 +70,20 @@ export async function POST(request: Request) {
       answers: answers ?? [],
     };
 
-    // Save locally
+    // Save locally (full nested format)
     const filePath = path.join(process.cwd(), "data", "responses.jsonl");
     fs.appendFileSync(filePath, JSON.stringify(record) + "\n", "utf-8");
 
-    // Push to Google Sheet (fire-and-forget, non-blocking)
-    pushToGoogleSheet(record);
+    // Push to Google Sheet (flat columns: one column per question)
+    const flat = flattenForSheet(
+      f,
+      c,
+      w,
+      String(personaId ?? ""),
+      demographics ?? {},
+      answers ?? [],
+    );
+    pushToGoogleSheet(flat);
 
     return NextResponse.json({ ok: true });
   } catch {
