@@ -86,7 +86,7 @@ export default function LandingPage() {
         className="flex items-center gap-3 mt-6 animate-fade-in"
         style={{ animationDelay: "350ms" }}
       >
-        {["15 คำถาม", "3–5 นาที", "ไม่ระบุตัวตน"].map((item, i) => (
+        {["18 คำถาม", "5–8 นาที", "ไม่ระบุตัวตน"].map((item, i) => (
           <span key={i} className="flex items-center gap-3">
             <span className="text-xs text-zinc-400 font-light">{item}</span>
             {i < 2 && <span className="w-0.5 h-0.5 rounded-full bg-zinc-300" />}
