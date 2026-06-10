@@ -1,19 +1,47 @@
-@import "tailwindcss";
+/* Disable Tailwind auto-scan — repo root has binary/data files (.xlsx, .csv, .jsonl)
+   and theme-kit PNGs that produce garbage class names when scanned. */
+@import "tailwindcss" source(none);
+@source "../app";
+@source "../components";
+
+@import "./qgen-ci-v2-theme.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #1b2843;
+  --background: #f7f6f3;
+  --foreground: #1a1a1a;
+
+  /* Wire CI v2 font tokens to next/font CSS variables */
+  --font-qgen-display: var(--font-playfair), Georgia, serif;
+  --font-qgen-th: var(--font-plex-thai), var(--font-prompt), "Noto Sans Thai", sans-serif;
+  --font-qgen-en: var(--font-inter), "IBM Plex Sans", sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-prompt);
+  --font-sans: var(--font-qgen-th);
+  --font-display: var(--font-qgen-display);
+  --font-ui: var(--font-qgen-en);
 
-  /* QGEN brand */
-  --color-qgen-dark: #1b2843;
-  --color-qgen-blue: #1c5fa6;
-  --color-qgen-gold: #f5b31b;
+  /* ── QGEN CI v2.1 palette ── */
+  --color-qgen-black-absolute: #0A0A0A;
+  --color-qgen-black-soft: #1A1A1A;
+  --color-qgen-gray-ash: #6E6E6E;
+  --color-qgen-gray-border: #DDD9D0;
+  --color-qgen-paper: #F7F6F3;
+  --color-qgen-paper-alt: #FDFCF9;
+  --color-qgen-paper-wash: #EAE6DD;
+  --color-qgen-surface: #FFFFFF;
+  --color-qgen-signal: #C96F3B;
+  --color-qgen-signal-soft: #F3E2D8;
+  --color-qgen-signal-deep: #D8471A;
+
+  /* Status bands — 5-level CI v2.1 */
+  --color-qgen-status-stable: #4F9B45;
+  --color-qgen-status-at-risk: #E1A300;
+  --color-qgen-status-crisis-visible: #E66A2C;
+  --color-qgen-status-emerging: #D9471E;
+  --color-qgen-status-deepening-severe: #A72F1D;
 
   /* Animations */
   --animate-fade-up: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -22,14 +50,8 @@
 }
 
 @keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fade-in {
@@ -38,55 +60,29 @@
 }
 
 @keyframes slide-from-right {
-  from {
-    opacity: 0;
-    transform: translateX(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-prompt, system-ui, sans-serif);
+  font-family: var(--font-qgen-th);
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Walking character animations ── */
-@keyframes walk-body-bounce {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-2px); }
+/* Draw-in animation for the signal/heartbeat line */
+@keyframes qgen-signal-draw {
+  from { stroke-dashoffset: 760; }
+  to   { stroke-dashoffset: 0; }
 }
 
-@keyframes walk-swing-forward {
-  0%, 100% { transform: rotate(-22deg); }
-  50%       { transform: rotate(22deg); }
+.qgen-signal-animate path {
+  stroke-dasharray: 760;
+  animation: qgen-signal-draw 1.6s ease-out both;
 }
 
-@keyframes walk-swing-backward {
-  0%, 100% { transform: rotate(22deg); }
-  50%       { transform: rotate(-22deg); }
-}
-
-.walk-bounce {
-  animation: walk-body-bounce 0.48s ease-in-out infinite;
-}
-
-.walk-leg-l {
-  animation: walk-swing-forward 0.48s ease-in-out infinite;
-}
-
-.walk-leg-r {
-  animation: walk-swing-backward 0.48s ease-in-out infinite;
-}
-
-.walk-arm-l {
-  animation: walk-swing-backward 0.48s ease-in-out infinite;
-}
-
-.walk-arm-r {
-  animation: walk-swing-forward 0.48s ease-in-out infinite;
+@keyframes loading-bar {
+  from { width: 0%; }
+  to   { width: 100%; }
 }

@@ -1,0 +1,338 @@
+[
+  {
+    "id": "color_palette_panel",
+    "source_slide": "slide_05_color_typography_system",
+    "file": "assets/crops/color_palette_panel.jpg",
+    "box_xywh": [
+      38,
+      378,
+      630,
+      622
+    ],
+    "description": "Official palette and color usage rules."
+  },
+  {
+    "id": "typography_hierarchy_panel",
+    "source_slide": "slide_05_color_typography_system",
+    "file": "assets/crops/typography_hierarchy_panel.jpg",
+    "box_xywh": [
+      640,
+      380,
+      1285,
+      615
+    ],
+    "description": "H1/H2/body/caption/overline typography hierarchy."
+  },
+  {
+    "id": "typography_system_panel",
+    "source_slide": "slide_05_color_typography_system",
+    "file": "assets/crops/typography_system_panel.jpg",
+    "box_xywh": [
+      1292,
+      380,
+      1858,
+      435
+    ],
+    "description": "Thai and English font suggestions."
+  },
+  {
+    "id": "editorial_rhythm_panel",
+    "source_slide": "slide_05_color_typography_system",
+    "file": "assets/crops/editorial_rhythm_panel.jpg",
+    "box_xywh": [
+      1292,
+      700,
+      1858,
+      285
+    ],
+    "description": "Editorial rhythm example and spacing scale."
+  },
+  {
+    "id": "top_collage_color_typography",
+    "source_slide": "slide_05_color_typography_system",
+    "file": "assets/crops/top_collage_color_typography.jpg",
+    "box_xywh": [
+      890,
+      45,
+      900,
+      300
+    ],
+    "description": "Hero collage with city, man, receipt, signal line."
+  },
+  {
+    "id": "key_visual_hero_collage",
+    "source_slide": "slide_06_key_visual_system",
+    "file": "assets/crops/key_visual_hero_collage.jpg",
+    "box_xywh": [
+      880,
+      55,
+      910,
+      285
+    ],
+    "description": "Main visual system hero collage."
+  },
+  {
+    "id": "semi_silhouette_reference",
+    "source_slide": "slide_06_key_visual_system",
+    "file": "assets/crops/semi_silhouette_reference.jpg",
+    "box_xywh": [
+      45,
+      400,
+      320,
+      325
+    ],
+    "description": "Semi-silhouette Asian human figure reference."
+  },
+  {
+    "id": "shadow_layer_reference",
+    "source_slide": "slide_06_key_visual_system",
+    "file": "assets/crops/shadow_layer_reference.jpg",
+    "box_xywh": [
+      345,
+      400,
+      305,
+      325
+    ],
+    "description": "Shadow / paper wash layer reference."
+  },
+  {
+    "id": "collage_composition_reference",
+    "source_slide": "slide_06_key_visual_system",
+    "file": "assets/crops/collage_composition_reference.jpg",
+    "box_xywh": [
+      680,
+      400,
+      305,
+      325
+    ],
+    "description": "City / document / data collage reference."
+  },
+  {
+    "id": "cutout_fragment_reference",
+    "source_slide": "slide_06_key_visual_system",
+    "file": "assets/crops/cutout_fragment_reference.jpg",
+    "box_xywh": [
+      1005,
+      400,
+      305,
+      325
+    ],
+    "description": "Cut-out and fragment effect reference."
+  },
+  {
+    "id": "signal_overlay_reference",
+    "source_slide": "slide_06_key_visual_system",
+    "file": "assets/crops/signal_overlay_reference.jpg",
+    "box_xywh": [
+      1325,
+      400,
+      305,
+      325
+    ],
+    "description": "Signal overlay line reference."
+  },
+  {
+    "id": "photography_direction_reference",
+    "source_slide": "slide_06_key_visual_system",
+    "file": "assets/crops/photography_direction_reference.jpg",
+    "box_xywh": [
+      1635,
+      400,
+      245,
+      325
+    ],
+    "description": "Black and white photography direction reference."
+  },
+  {
+    "id": "do_panel",
+    "source_slide": "slide_06_key_visual_system",
+    "file": "assets/crops/do_panel.jpg",
+    "box_xywh": [
+      40,
+      765,
+      600,
+      215
+    ],
+    "description": "Do visual rules."
+  },
+  {
+    "id": "dont_panel",
+    "source_slide": "slide_06_key_visual_system",
+    "file": "assets/crops/dont_panel.jpg",
+    "box_xywh": [
+      660,
+      765,
+      570,
+      215
+    ],
+    "description": "Don’t visual rules."
+  },
+  {
+    "id": "layer_guidance_panel",
+    "source_slide": "slide_06_key_visual_system",
+    "file": "assets/crops/layer_guidance_panel.jpg",
+    "box_xywh": [
+      1250,
+      765,
+      590,
+      215
+    ],
+    "description": "Layer guidance recommended stack."
+  },
+  {
+    "id": "survey_mode_hero_collage",
+    "source_slide": "slide_08_survey_mode",
+    "file": "assets/crops/survey_mode_hero_collage.jpg",
+    "box_xywh": [
+      790,
+      70,
+      1050,
+      275
+    ],
+    "description": "Survey mode hero collage with mobile respondent."
+  },
+  {
+    "id": "survey_principles_strip",
+    "source_slide": "slide_08_survey_mode",
+    "file": "assets/crops/survey_principles_strip.jpg",
+    "box_xywh": [
+      565,
+      345,
+      1300,
+      145
+    ],
+    "description": "Light, quick, actionable, private, improving principles."
+  },
+  {
+    "id": "survey_screen_example",
+    "source_slide": "slide_08_survey_mode",
+    "file": "assets/crops/survey_screen_example.jpg",
+    "box_xywh": [
+      42,
+      560,
+      485,
+      360
+    ],
+    "description": "Survey screen example with options and CTA."
+  },
+  {
+    "id": "result_naming_example",
+    "source_slide": "slide_08_survey_mode",
+    "file": "assets/crops/result_naming_example.jpg",
+    "box_xywh": [
+      560,
+      560,
+      420,
+      360
+    ],
+    "description": "Result naming card example, Strained 64/100."
+  },
+  {
+    "id": "signal_card_system_example",
+    "source_slide": "slide_08_survey_mode",
+    "file": "assets/crops/signal_card_system_example.jpg",
+    "box_xywh": [
+      1020,
+      560,
+      420,
+      360
+    ],
+    "description": "Signal card system with status bands."
+  },
+  {
+    "id": "dashboard_snapshot_example",
+    "source_slide": "slide_08_survey_mode",
+    "file": "assets/crops/dashboard_snapshot_example.jpg",
+    "box_xywh": [
+      1475,
+      560,
+      405,
+      360
+    ],
+    "description": "Dashboard snapshot example."
+  },
+  {
+    "id": "survey_design_principles",
+    "source_slide": "slide_08_survey_mode",
+    "file": "assets/crops/survey_design_principles.jpg",
+    "box_xywh": [
+      42,
+      925,
+      1800,
+      120
+    ],
+    "description": "Survey design principles: readable cards, spacing, quiet texture, mono icons."
+  },
+  {
+    "id": "core_templates_hero_collage",
+    "source_slide": "slide_09_core_templates",
+    "file": "assets/crops/core_templates_hero_collage.jpg",
+    "box_xywh": [
+      900,
+      55,
+      850,
+      250
+    ],
+    "description": "Header city collage with signal line."
+  },
+  {
+    "id": "dashboard_template_card",
+    "source_slide": "slide_09_core_templates",
+    "file": "assets/crops/dashboard_template_card.jpg",
+    "box_xywh": [
+      52,
+      392,
+      445,
+      565
+    ],
+    "description": "Dashboard core template."
+  },
+  {
+    "id": "persona_card_template",
+    "source_slide": "slide_09_core_templates",
+    "file": "assets/crops/persona_card_template.jpg",
+    "box_xywh": [
+      525,
+      392,
+      425,
+      565
+    ],
+    "description": "Persona card core template."
+  },
+  {
+    "id": "framework_page_template",
+    "source_slide": "slide_09_core_templates",
+    "file": "assets/crops/framework_page_template.jpg",
+    "box_xywh": [
+      980,
+      392,
+      420,
+      565
+    ],
+    "description": "Framework page core template."
+  },
+  {
+    "id": "social_post_template",
+    "source_slide": "slide_09_core_templates",
+    "file": "assets/crops/social_post_template.jpg",
+    "box_xywh": [
+      1420,
+      392,
+      430,
+      565
+    ],
+    "description": "Social post core template."
+  },
+  {
+    "id": "qgen_logo_header_crop",
+    "source_slide": "slide_09_core_templates",
+    "file": "assets/crops/qgen_logo_header_crop.jpg",
+    "box_xywh": [
+      1588,
+      18,
+      160,
+      58
+    ],
+    "description": "QGEN logo crop from header for reference only."
+  }
+]

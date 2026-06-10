@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" fill="none">
+  <circle cx="80" cy="80" r="62" stroke="#EAE6DD" stroke-width="12"/>
+  <circle cx="80" cy="80" r="62" stroke="#C96F3B" stroke-width="12" stroke-linecap="round" stroke-dasharray="249.4 389.6" transform="rotate(-90 80 80)"/>
+  <text x="80" y="84" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-size="52" font-weight="700" fill="#0A0A0A">64</text>
+  <text x="80" y="112" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" fill="#6E6E6E">/100</text>
+</svg>

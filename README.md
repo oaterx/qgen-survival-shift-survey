@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# QGEN — The Survival Shift Survey Data Package
 
-## Getting Started
+แปลงจากไฟล์ Excel ล่าสุด: `Draft - The Survival Shift Survey.xlsx`
 
-First, run the development server:
+แพ็กนี้เตรียมไว้สำหรับนำไปใช้ใน web app survey / Claude Code ได้ทันที โดยแยกเป็น data และ logic หลักที่ควรใช้ซ้ำในแอป
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ไฟล์หลัก
+
+- `survey-content.json` — ข้อมูลทั้งหมดในไฟล์เดียว: survey meta, scoring, axes, questions, personas
+- `questions.csv` — ตารางคำถาม 15 ข้อ สำหรับตรวจ/แก้เร็ว
+- `personas.csv` — ตาราง Persona 13 แบบ พร้อม description/action plan/icon concept
+- `data/questions.ts` — questions สำหรับ Next.js/TypeScript
+- `data/personas.ts` — persona copy + action plan + illustration prompt
+- `data/axes.ts` — รายละเอียดแกน F/C/W
+- `lib/scoring.ts` — สูตร Survival Score
+- `lib/status.ts` — mapping Stable / At Risk / Crisis
+- `lib/persona-router.ts` — logic routing Persona 01–13
+- `__tests__/scoring.test.ts` — unit test ตัวอย่างสำหรับ Vitest
+
+## กติกาสำคัญ
+
+### Scoring
+
+```ts
+Survival Score = ((4 - averageAnswer) / 3) * 100
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- A = 1 = ดีที่สุด / กดดันน้อยสุด
+- D = 4 = หนักสุด / เปราะบางสุด
+- ยิ่ง Survival Score สูง = ยังมีพื้นที่หายใจ
+- ยิ่ง Survival Score ต่ำ = เปราะบาง
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Status ต่อแกน
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```ts
+score >= 67  => Stable
+score > 33 && score < 67 => At Risk
+score <= 33 => Crisis
+```
 
-## Learn More
+### Result Page Rule
 
-To learn more about Next.js, take a look at the following resources:
+- ไม่ต้องโชว์ Survival Score รวม
+- โชว์เฉพาะ F/C/W axis scores
+- แต่ละแกนต้องมี status: Stable / At Risk / Crisis
+- ใช้ persona description แทน tagline
+- ใส่ Action Plan 30 / 90 / 365 วันด้านล่าง
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Persona Routing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+ต้องตรวจ Persona 13 ก่อน Persona 12 เสมอ
 
-## Deploy on Vercel
+```ts
+if (F crisis && C crisis && W crisis) return "13";
+...
+if (all axes not stable && at least one crisis) return "12";
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## วิธีใช้ใน Next.js
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+นำโฟลเดอร์ `data` และ `lib` ไปวางในโปรเจกต์ แล้ว import เช่น
+
+```ts
+import { questions } from "@/data/questions";
+import { routePersona } from "@/lib/persona-router";
+import { calculateAxisScores } from "@/lib/scoring";
+```
+

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { questions } from "../../data/questions";
 import { demographicFields } from "../../data/demographics";
@@ -8,41 +8,51 @@ import type { DemographicAnswers, DemographicFieldId } from "../../data/demograp
 import type { SurveyAnswer } from "../../data/types";
 import { groupAnswersByAxis, calculateAxisScores } from "../../lib/scoring";
 import { routePersonaId } from "../../lib/persona-router";
-import QGenLogo from "../../components/QGenLogo";
-import WalkingCharacter from "../../components/WalkingCharacter";
+import SignalTopBar from "../../components/survival-shift/SignalTopBar";
+import SignalProgress from "../../components/survival-shift/SignalProgress";
+import SignalLine from "../../components/survival-shift/SignalLine";
+import OptionCard from "../../components/survival-shift/OptionCard";
 
-type Gender = "male" | "female" | "unspecified";
+type Gender = "unspecified";
+type Phase = "demo" | "storyIntro" | "chapterIntro" | "survey" | "ending";
+type AxisId = "F" | "C" | "W";
 
-const AXIS_LABEL: Record<string, string> = {
+const AXIS_LABEL: Record<AxisId, string> = {
   F: "Financial Security",
   C: "Career Path",
   W: "Well-being",
 };
 
-const AXIS_PILL: Record<string, string> = {
-  F: "bg-green-100 text-green-700",
-  C: "bg-blue-100 text-qgen-blue",
-  W: "bg-purple-100 text-purple-700",
+const CHAPTER_META: Record<AxisId, { no: string; desc: string; cta: string }> = {
+  F: {
+    no: "บทที่ 1",
+    desc: "เราจะเริ่มที่เรื่องเงิน — แรงกดดันที่ทุกคนรู้สึกอยู่ แต่ไม่ค่อยพูดออกมา",
+    cta: "เริ่มบทที่ 1",
+  },
+  C: {
+    no: "บทที่ 2",
+    desc: "ถัดไปคือเรื่องงาน — เส้นทาง ความผูกพัน และคำถามที่คุณอาจหลีกเลี่ยงมานาน",
+    cta: "เริ่มบทที่ 2",
+  },
+  W: {
+    no: "บทที่ 3",
+    desc: "บทสุดท้ายคือร่างกายและจิตใจ — สิ่งที่มักถูกเสียสละเป็นอันดับแรกเสมอ",
+    cta: "เริ่มบทที่ 3",
+  },
 };
 
-const AXIS_BAR: Record<string, string> = {
-  F: "bg-green-400",
-  C: "bg-qgen-blue",
-  W: "bg-purple-400",
-};
+const AXIS_START_INDEX: Record<AxisId, number> = { F: 0, C: 6, W: 12 };
 
 function BackButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-200 bg-white
-        text-sm font-medium text-zinc-600
-        hover:border-zinc-400 hover:text-qgen-dark hover:bg-zinc-50
-        active:scale-[0.98] transition-all duration-150"
+      className="inline-flex items-center gap-1.5 font-ui text-qgen-gray-ash
+        hover:text-qgen-black-soft transition-colors duration-150"
+      style={{ fontSize: 13 }}
     >
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      >
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 2L4 7l5 5" />
       </svg>
       ย้อนกลับ
@@ -52,29 +62,37 @@ function BackButton({ onClick }: { onClick: () => void }) {
 
 export default function SurveyClient() {
   const router = useRouter();
+  const q2Ref = useRef<HTMLDivElement>(null);
 
-  // Redirect to home if user lands here via refresh or direct URL (not from Start button)
   useEffect(() => {
     const ts = Number(sessionStorage.getItem("survey_entry") ?? 0);
-    if (Date.now() - ts > 10_000) {
-      router.replace("/");
-    }
+    if (Date.now() - ts > 10_000) router.replace("/");
   }, []);
 
-  const [phase, setPhase] = useState<"gender" | "demo" | "survey">("gender");
-  const [gender, setGender] = useState<Gender>("unspecified");
+  const [phase, setPhase] = useState<Phase>("demo");
+  const [chapterIntroAxis, setChapterIntroAxis] = useState<AxisId>("F");
+  const gender: Gender = "unspecified";
   const [demoAnswers, setDemoAnswers] = useState<DemographicAnswers>({});
-
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [currentIndex]);
   const [answers, setAnswers] = useState<SurveyAnswer[]>([]);
+  const [pageSelections, setPageSelections] = useState<Record<string, 1 | 2 | 3 | 4>>({});
   const [submitting, setSubmitting] = useState(false);
   const [direction, setDirection] = useState<"forward" | "back">("forward");
+  const [email, setEmail] = useState("");
 
   const total = questions.length;
-  const question = questions[currentIndex];
+  const q1 = questions[currentIndex];
+  const q2 = questions[currentIndex + 1];
   const progressPct = (currentIndex / total) * 100;
+  const bothAnswered =
+    q1 && q2 &&
+    pageSelections[q1.id] !== undefined &&
+    pageSelections[q2.id] !== undefined;
 
-  // All required fields must have a value before demo can advance
   const requiredFields = demographicFields.filter((f) => f.required);
   const demoCanAdvance = requiredFields.every((f) => !!demoAnswers[f.id]);
 
@@ -82,23 +100,47 @@ export default function SurveyClient() {
     setDemoAnswers((prev) => ({ ...prev, [id]: value }));
   }
 
-  async function handleSelect(value: 1 | 2 | 3 | 4) {
-    const answer: SurveyAnswer = {
-      questionId: question.id,
-      axis: question.axis,
-      value,
-    };
-    const newAnswers = [...answers, answer];
+  function handleSelect(questionId: string, value: 1 | 2 | 3 | 4) {
+    setPageSelections((prev) => {
+      const wasUnanswered = prev[questionId] === undefined;
+      if (q1 && questionId === q1.id && wasUnanswered) {
+        setTimeout(() => q2Ref.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
+      }
+      return { ...prev, [questionId]: value };
+    });
+  }
 
-    if (currentIndex < total - 1) {
-      setDirection("forward");
-      setAnswers(newAnswers);
-      setCurrentIndex((i) => i + 1);
+  function handleNext() {
+    const a1: SurveyAnswer = { questionId: q1.id, axis: q1.axis, value: pageSelections[q1.id]! };
+    const a2: SurveyAnswer = { questionId: q2.id, axis: q2.axis, value: pageSelections[q2.id]! };
+    const newAnswers = [...answers, a1, a2];
+    setAnswers(newAnswers);
+    setPageSelections({});
+    const nextIndex = currentIndex + 2;
+
+    if (nextIndex === 6) {
+      setCurrentIndex(6);
+      setChapterIntroAxis("C");
+      setPhase("chapterIntro");
       return;
     }
+    if (nextIndex === 12) {
+      setCurrentIndex(12);
+      setChapterIntroAxis("W");
+      setPhase("chapterIntro");
+      return;
+    }
+    if (nextIndex >= total) {
+      setPhase("ending");
+      return;
+    }
+    setDirection("forward");
+    setCurrentIndex(nextIndex);
+  }
 
+  async function handleSubmit() {
     setSubmitting(true);
-    const grouped = groupAnswersByAxis(newAnswers);
+    const grouped = groupAnswersByAxis(answers);
     const scores = calculateAxisScores(grouped);
     const personaId = routePersonaId(scores);
 
@@ -106,150 +148,144 @@ export default function SurveyClient() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        f: Math.round(scores.F),
-        c: Math.round(scores.C),
-        w: Math.round(scores.W),
+        f: Math.round(scores.F), c: Math.round(scores.C), w: Math.round(scores.W),
         personaId,
         demographics: { ...demoAnswers, gender },
-        answers: newAnswers,
+        answers,
+        email: email.trim() || undefined,
       }),
     }).catch(() => {});
 
-    router.push(
-      `/result?f=${scores.F.toFixed(4)}&c=${scores.C.toFixed(4)}&w=${scores.W.toFixed(4)}`
-    );
+    await new Promise((r) => setTimeout(r, 2000));
+    router.push(`/result?f=${scores.F.toFixed(4)}&c=${scores.C.toFixed(4)}&w=${scores.W.toFixed(4)}`);
   }
 
   function handleSurveyBack() {
+    setPageSelections({});
+
     if (currentIndex === 0) {
-      setPhase("demo");
+      setPhase("chapterIntro");
+      setChapterIntroAxis("F");
       return;
     }
+    if (currentIndex === 6) {
+      setPhase("chapterIntro");
+      setChapterIntroAxis("C");
+      return;
+    }
+    if (currentIndex === 12) {
+      setPhase("chapterIntro");
+      setChapterIntroAxis("W");
+      return;
+    }
+
+    const prevPairIndex = currentIndex - 2;
+    const pq1 = questions[prevPairIndex];
+    const pq2 = questions[prevPairIndex + 1];
+    const last2 = answers.slice(-2);
+    setPageSelections({
+      [pq1.id]: last2[0].value as 1 | 2 | 3 | 4,
+      [pq2.id]: last2[1].value as 1 | 2 | 3 | 4,
+    });
+    setAnswers((a) => a.slice(0, -2));
+    setCurrentIndex(prevPairIndex);
     setDirection("back");
-    setAnswers((a) => a.slice(0, -1));
-    setCurrentIndex((i) => i - 1);
+  }
+
+  function handleChapterIntroBack() {
+    if (chapterIntroAxis === "F") {
+      setPhase("storyIntro");
+      return;
+    }
+    const prevPairIndex = chapterIntroAxis === "C" ? 4 : 10;
+    const pq1 = questions[prevPairIndex];
+    const pq2 = questions[prevPairIndex + 1];
+    const last2 = answers.slice(-2);
+    setPageSelections({
+      [pq1.id]: last2[0].value as 1 | 2 | 3 | 4,
+      [pq2.id]: last2[1].value as 1 | 2 | 3 | 4,
+    });
+    setAnswers((a) => a.slice(0, -2));
+    setCurrentIndex(prevPairIndex);
+    setPhase("survey");
+    setDirection("back");
   }
 
   // ── Loading ────────────────────────────────────────────────────────────────
   if (submitting) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-5 bg-white">
-        <div className="relative w-12 h-12">
-          <div className="absolute inset-0 rounded-full border-4 border-zinc-100" />
-          <div className="absolute inset-0 rounded-full border-4 border-qgen-blue border-t-transparent animate-spin" />
-        </div>
-        <p className="text-sm text-zinc-400 font-light tracking-wide">กำลังคำนวณผลลัพธ์…</p>
-      </div>
-    );
-  }
-
-  // ── Gender selection ───────────────────────────────────────────────────────
-  if (phase === "gender") {
-    return (
-      <div className="min-h-screen bg-white flex flex-col">
-        <div className="flex items-center px-5 py-4">
-          <QGenLogo height={36} />
-        </div>
-
-        <div className="flex-1 flex flex-col items-center justify-center px-5 pb-10 max-w-lg mx-auto w-full animate-fade-up">
-          <h2 className="text-xl font-bold text-qgen-dark mb-1 text-center">
-            เลือกตัวละครของคุณ
-          </h2>
-          <p className="text-xs font-light text-zinc-400 mb-10 text-center">
-            ตัวละครจะเดินตามคุณตลอดการทำแบบสำรวจ
-          </p>
-
-          <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
-            <button
-              onClick={() => { setGender("male"); setPhase("demo"); }}
-              className="flex flex-col items-center gap-3 py-8 px-4 rounded-2xl border-2 border-zinc-100
-                hover:border-qgen-dark hover:bg-zinc-50 active:scale-[0.97] transition-all duration-200"
-            >
-              <div className="flex items-end justify-center h-20">
-                <WalkingCharacter gender="male" width={46} />
-              </div>
-              <span className="text-sm font-semibold text-qgen-dark">ชาย</span>
-            </button>
-
-            <button
-              onClick={() => { setGender("female"); setPhase("demo"); }}
-              className="flex flex-col items-center gap-3 py-8 px-4 rounded-2xl border-2 border-zinc-100
-                hover:border-qgen-dark hover:bg-zinc-50 active:scale-[0.97] transition-all duration-200"
-            >
-              <div className="flex items-end justify-center h-20">
-                <WalkingCharacter gender="female" width={46} />
-              </div>
-              <span className="text-sm font-semibold text-qgen-dark">หญิง</span>
-            </button>
-          </div>
-
-          <button
-            onClick={() => { setGender("unspecified"); setPhase("demo"); }}
-            className="mt-6 text-sm font-light text-zinc-300 hover:text-zinc-500 transition-colors duration-150"
-          >
-            ไม่ระบุเพศ / ข้าม
-          </button>
+      <div className="flex flex-col items-center justify-center min-h-screen gap-5 px-8 bg-qgen-paper">
+        <p className="font-ui font-medium text-qgen-black-soft" style={{ fontSize: 15 }}>
+          กำลังวิเคราะห์…
+        </p>
+        <div
+          className="rounded-full overflow-hidden bg-qgen-paper-wash"
+          style={{ width: 200, height: 6 }}
+        >
+          <div
+            className="h-full rounded-full bg-qgen-signal"
+            style={{ animation: "loading-bar 2s ease-out forwards" }}
+          />
         </div>
       </div>
     );
   }
 
-  // ── Demographic — single page, all dropdowns ───────────────────────────────
+  // ── Demographics ───────────────────────────────────────────────────────────
   if (phase === "demo") {
     return (
-      <div className="min-h-screen bg-white flex flex-col">
-        <div className="flex items-center justify-between px-5 py-4">
-          <QGenLogo height={36} />
-        </div>
+      <div className="h-screen flex flex-col bg-qgen-paper">
+        <SignalTopBar rightLabel="Demographic" />
 
-        <div className="flex-1 overflow-y-auto px-5 pt-2 pb-10 max-w-lg mx-auto w-full animate-slide-in">
-          {/* Notice */}
-          <div className="mb-6 px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-100">
-            <p className="text-xs font-light text-zinc-400 leading-relaxed">
-              ข้อมูลนี้ใช้เพื่อดูภาพรวมเชิงสถิติเท่านั้น และไม่มีผลต่อผลลัพธ์ Persona ของคุณ
-            </p>
+        <div className="flex-1 overflow-y-auto px-5 pt-6 pb-16 max-w-lg mx-auto w-full animate-slide-in">
+          <div className="text-center mb-2">
+            <h1 className="font-display font-bold text-qgen-black-absolute"
+              style={{ fontSize: 26, lineHeight: "34px", letterSpacing: "-0.01em" }}>
+              ข้อมูลพื้นฐาน
+            </h1>
           </div>
 
-          {/* All fields */}
+          <p className="text-center text-qgen-gray-ash mb-8"
+            style={{ fontSize: 13, lineHeight: "20px" }}>
+            ข้อมูลนี้ใช้เพื่อดูภาพรวมเชิงสถิติเท่านั้น และไม่มีผลต่อผลลัพธ์ Persona ของคุณ
+          </p>
+
           <div className="flex flex-col gap-6">
             {demographicFields.map((field) => (
               <div key={field.id}>
-                <label className="block text-sm font-semibold text-qgen-dark mb-1">
+                <label className="block font-ui font-semibold text-qgen-black-soft mb-2"
+                  style={{ fontSize: 13 }}>
                   {field.label}
                   {field.required
-                    ? <span className="ml-1 text-qgen-blue">*</span>
-                    : <span className="ml-1.5 text-xs font-normal text-zinc-400">(ไม่บังคับ)</span>
+                    ? <span className="ml-1 text-qgen-signal">*</span>
+                    : <span className="ml-1.5 font-normal text-qgen-gray-ash" style={{ fontSize: 11 }}>(ไม่บังคับ)</span>
                   }
                 </label>
                 {field.helperText && (
-                  <p className="text-xs font-light text-zinc-400 mb-2">{field.helperText}</p>
+                  <p className="text-qgen-gray-ash mb-2" style={{ fontSize: 12 }}>{field.helperText}</p>
                 )}
                 <div className="relative">
                   <select
                     value={demoAnswers[field.id] ?? ""}
                     onChange={(e) => handleDemoChange(field.id, e.target.value)}
                     className={[
-                      "w-full appearance-none px-4 py-3.5 pr-10 rounded-xl border bg-white",
-                      "text-sm font-light cursor-pointer",
-                      "focus:outline-none focus:ring-1 focus:ring-qgen-dark focus:border-qgen-dark",
-                      "transition-colors duration-150",
+                      "w-full appearance-none px-4 pr-10 rounded-[10px] border bg-qgen-paper-alt",
+                      "font-ui cursor-pointer transition-colors duration-150",
+                      "focus:outline-none focus:ring-2 focus:ring-qgen-signal/30 focus:border-qgen-signal",
                       demoAnswers[field.id]
-                        ? "text-zinc-800 border-zinc-300"
-                        : "text-zinc-400 border-zinc-200",
+                        ? "text-qgen-black-soft border-qgen-gray-ash/60"
+                        : "text-qgen-gray-ash border-qgen-gray-border",
                     ].join(" ")}
+                    style={{ height: 46, fontSize: 14 }}
                   >
                     <option value="" disabled>เลือก...</option>
                     {field.options.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
                     ))}
                   </select>
-                  {/* Custom chevron */}
-                  <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    >
+                  <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-qgen-gray-ash">
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none"
+                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M3 5l4 4 4-4" />
                     </svg>
                   </div>
@@ -258,21 +294,20 @@ export default function SurveyClient() {
             ))}
           </div>
 
-          {/* Actions */}
-          <div className="mt-8 flex flex-col gap-3">
+          <div className="mt-10 flex flex-col gap-3">
             <button
-              onClick={() => setPhase("survey")}
+              onClick={() => setPhase("storyIntro")}
               disabled={!demoCanAdvance}
-              className="w-full py-4 rounded-2xl bg-qgen-dark text-white font-semibold text-sm
-                disabled:opacity-30 disabled:cursor-not-allowed
-                hover:bg-qgen-blue hover:shadow-lg hover:shadow-qgen-blue/20
-                active:scale-[0.98] transition-all duration-300"
+              className="w-full font-ui font-bold text-white rounded-[12px]
+                bg-qgen-signal shadow-[0_12px_32px_rgba(201,111,59,0.25)]
+                disabled:opacity-30 disabled:cursor-not-allowed disabled:shadow-none
+                hover:bg-qgen-signal-deep active:scale-[0.98] transition-all duration-200"
+              style={{ height: 48, fontSize: 15 }}
             >
-              เริ่มทำแบบสำรวจ
+              ถัดไป
             </button>
-
-            <div className="flex justify-start">
-              <BackButton onClick={() => setPhase("gender")} />
+            <div className="flex justify-start pt-1">
+              <BackButton onClick={() => router.push("/")} />
             </div>
           </div>
         </div>
@@ -280,91 +315,302 @@ export default function SurveyClient() {
     );
   }
 
-  // ── Main survey ────────────────────────────────────────────────────────────
-  return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <div className="flex items-center justify-between px-5 py-4">
-        <QGenLogo height={36} />
-        <div className="flex items-center gap-1.5">
-          <span className="text-sm font-semibold text-qgen-dark tabular-nums">{currentIndex + 1}</span>
-          <span className="text-zinc-300 text-sm">/</span>
-          <span className="text-sm text-zinc-300 tabular-nums">{total}</span>
+  // ── Story Intro ────────────────────────────────────────────────────────────
+  if (phase === "storyIntro") {
+    const STORY_AXES = [
+      { label: "Financial\nSecurity" },
+      { label: "Career Path" },
+      { label: "Well-being" },
+    ];
+    return (
+      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+        <SignalTopBar />
+
+        <div className="flex-1 flex flex-col justify-between px-5 py-8 max-w-lg mx-auto w-full animate-slide-in">
+          <div>
+            <div
+              className="mb-6 font-display text-qgen-black-soft text-center whitespace-nowrap"
+              style={{ fontSize: "clamp(28px, 8vw, 40px)", lineHeight: 1.1, fontWeight: 800, letterSpacing: "-0.02em" }}
+            >
+              The Survival Shift
+            </div>
+
+            <p className="text-qgen-black-soft mb-3" style={{ fontSize: 15, lineHeight: "24px" }}>
+              ในยุคที่ค่าครองชีพสูงขึ้นทุกปี แต่รายได้ไม่ตาม — พนักงานหลายคนกำลังเอาตัวรอดอยู่อย่างเงียบ ๆ
+            </p>
+            <p className="text-qgen-gray-ash mb-6" style={{ fontSize: 14, lineHeight: "22px" }}>
+              แบบสำรวจนี้จะพาคุณผ่าน 3 บท เพื่อช่วยให้คุณเห็นว่าตอนนี้ชีวิตของคุณอยู่ที่จุดไหน
+            </p>
+
+            <div className="flex gap-3">
+              {STORY_AXES.map((ax, i) => (
+                <div
+                  key={i}
+                  className="flex-1 flex items-center justify-center rounded-xl border border-qgen-gray-border bg-qgen-paper-alt"
+                  style={{ padding: "12px 8px", boxShadow: "0 2px 8px rgba(10,10,10,0.04)" }}
+                >
+                  <span
+                    className="font-ui font-semibold text-qgen-black-soft text-center whitespace-pre-line"
+                    style={{ fontSize: 13, lineHeight: "18px" }}
+                  >
+                    {ax.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => {
+                setChapterIntroAxis("F");
+                setPhase("chapterIntro");
+              }}
+              className="w-full font-ui font-bold text-white rounded-[12px]
+                bg-qgen-signal shadow-[0_12px_32px_rgba(201,111,59,0.25)]
+                hover:bg-qgen-signal-deep active:scale-[0.98] transition-all duration-200"
+              style={{ height: 48, fontSize: 15 }}
+            >
+              เริ่มเลย
+              <svg className="inline ml-2 -mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 8h9M8 3l5 5-5 5" />
+              </svg>
+            </button>
+            <div className="flex justify-start pt-1">
+              <BackButton onClick={() => setPhase("demo")} />
+            </div>
+          </div>
         </div>
       </div>
+    );
+  }
 
+  // ── Chapter Intro ──────────────────────────────────────────────────────────
+  if (phase === "chapterIntro") {
+    const meta = CHAPTER_META[chapterIntroAxis];
+    const startIdx = AXIS_START_INDEX[chapterIntroAxis];
+
+    return (
+      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+        <SignalTopBar rightLabel={AXIS_LABEL[chapterIntroAxis]} />
+        <SignalProgress value={(startIdx / total) * 100} />
+
+        <div className="flex-1 flex flex-col justify-between px-5 py-8 max-w-lg mx-auto w-full animate-slide-in">
+          <div>
+            <p className="font-ui font-semibold text-qgen-signal uppercase mb-3"
+              style={{ fontSize: 11, letterSpacing: "0.18em" }}>
+              {meta.no}
+            </p>
+            <div
+              className="font-display text-qgen-black-soft"
+              style={{ fontSize: 34, lineHeight: "40px", fontWeight: 800, letterSpacing: "-0.02em" }}
+            >
+              {AXIS_LABEL[chapterIntroAxis]}
+            </div>
+
+            <div className="w-12 rounded-full" style={{ height: 3, background: "#C96F3B", marginTop: 18, marginBottom: 18 }} />
+
+            <p className="text-qgen-black-soft" style={{ fontSize: 15, lineHeight: "25px" }}>
+              {meta.desc}
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => {
+                setCurrentIndex(startIdx);
+                setDirection("forward");
+                setPhase("survey");
+              }}
+              className="w-full font-ui font-bold text-white rounded-[12px]
+                bg-qgen-signal shadow-[0_12px_32px_rgba(201,111,59,0.25)]
+                hover:bg-qgen-signal-deep active:scale-[0.98] transition-all duration-200"
+              style={{ height: 48, fontSize: 15 }}
+            >
+              {meta.cta}
+            </button>
+            <div className="flex justify-start pt-1">
+              <BackButton onClick={handleChapterIntroBack} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Ending + Email ─────────────────────────────────────────────────────────
+  if (phase === "ending") {
+    return (
+      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+        <SignalTopBar />
+        <SignalProgress value={100} />
+
+        <div className="flex-1 flex flex-col justify-between px-5 py-8 max-w-lg mx-auto w-full animate-slide-in">
+          <div>
+            <div
+              className="font-display text-qgen-black-soft mb-5 text-center"
+              style={{ fontSize: 26, lineHeight: "34px", fontWeight: 700, letterSpacing: "-0.01em" }}
+            >
+              คุณตอบคำถามครบแล้ว
+            </div>
+
+            <p className="text-qgen-black-soft mb-6 text-center" style={{ fontSize: 16, lineHeight: "26px" }}>
+              กำลังวิเคราะห์คำตอบทั้ง 3 แกนของคุณ
+            </p>
+
+            <div className="rounded-[14px] bg-qgen-paper-alt border border-qgen-gray-border p-5">
+              <p className="font-ui font-semibold text-qgen-black-soft mb-1" style={{ fontSize: 13 }}>
+                Your Email
+              </p>
+              <p className="text-qgen-gray-ash mb-3" style={{ fontSize: 12, lineHeight: "18px" }}>
+                กรอกอีเมลเพื่อรับข้อมูล ความรู้ และข่าวสารจากทาง QGEN Consultant ก่อนใคร
+              </p>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                className="w-full px-4 rounded-[10px] border bg-qgen-paper font-ui
+                  focus:outline-none focus:ring-2 focus:ring-qgen-signal/30 focus:border-qgen-signal
+                  text-qgen-black-soft border-qgen-gray-border placeholder:text-qgen-gray-ash/60
+                  transition-colors duration-150"
+                style={{ height: 44, fontSize: 14 }}
+              />
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-col gap-3">
+            <button
+              onClick={handleSubmit}
+              className="w-full font-ui font-bold text-white rounded-[12px]
+                bg-qgen-signal shadow-[0_12px_32px_rgba(201,111,59,0.25)]
+                hover:bg-qgen-signal-deep active:scale-[0.98] transition-all duration-200"
+              style={{ height: 48, fontSize: 15 }}
+            >
+              ดูผลลัพธ์ของฉัน
+              <svg className="inline ml-2 -mt-0.5" width="16" height="16" viewBox="0 0 16 16" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 8h9M8 3l5 5-5 5" />
+              </svg>
+            </button>
+            <div className="flex justify-start pt-1">
+              <BackButton onClick={() => {
+                const pq1 = questions[16];
+                const pq2 = questions[17];
+                const last2 = answers.slice(-2);
+                setPageSelections({
+                  [pq1.id]: last2[0].value as 1 | 2 | 3 | 4,
+                  [pq2.id]: last2[1].value as 1 | 2 | 3 | 4,
+                });
+                setAnswers((a) => a.slice(0, -2));
+                setCurrentIndex(16);
+                setPhase("survey");
+                setDirection("back");
+              }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Survey ─────────────────────────────────────────────────────────────────
+  return (
+    <div className="min-h-screen flex flex-col bg-qgen-paper">
+
+      {/* Sticky header: TopBar + thin progress */}
+      <div className="sticky top-0 z-10 bg-qgen-paper">
+        <SignalTopBar
+          current={currentIndex + 1}
+          currentEnd={currentIndex + 2}
+          total={total}
+        />
+        <SignalProgress value={progressPct} />
+      </div>
+
+      {/* Content: 2 questions */}
       <div
-        key={`q-${currentIndex}-${direction}`}
-        className="flex-1 flex flex-col px-5 pt-5 pb-36 max-w-lg mx-auto w-full animate-slide-in"
+        key={`pair-${currentIndex}-${direction}`}
+        className="flex-1 flex flex-col px-5 pt-6 pb-40 max-w-lg mx-auto w-full animate-slide-in"
       >
-        <div className="mb-5">
-          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${AXIS_PILL[question.axis]}`}>
-            <span className="font-black">{question.axis}</span>
-            <span>·</span>
-            <span>{AXIS_LABEL[question.axis]}</span>
-          </span>
-        </div>
+        {/* Axis label — centered, display font */}
+        <p className="text-center font-display font-bold text-qgen-black-soft uppercase mb-6"
+          style={{ fontSize: 15, letterSpacing: "0.14em" }}>
+          {AXIS_LABEL[q1.axis as AxisId]}
+        </p>
 
-        <h2 className="text-[1.25rem] font-bold text-qgen-dark leading-snug mb-8">
-          {question.question}
-        </h2>
-
-        <div className="flex flex-col gap-2.5">
-          {question.options.map((opt) => {
-            const style: Record<string, { btn: string; pill: string }> = {
-              A: {
-                btn:  "border-zinc-150 hover:border-green-300  hover:bg-green-50/60  hover:shadow-green-100",
-                pill: "text-green-600  bg-green-100",
-              },
-              B: {
-                btn:  "border-zinc-150 hover:border-yellow-300 hover:bg-yellow-50/60 hover:shadow-yellow-100",
-                pill: "text-yellow-600 bg-yellow-100",
-              },
-              C: {
-                btn:  "border-zinc-150 hover:border-orange-300 hover:bg-orange-50/60 hover:shadow-orange-100",
-                pill: "text-orange-600 bg-orange-100",
-              },
-              D: {
-                btn:  "border-zinc-150 hover:border-red-300    hover:bg-red-50/60    hover:shadow-red-100",
-                pill: "text-red-600    bg-red-100",
-              },
-            };
-            const s = style[opt.label] ?? { btn: "border-zinc-150 hover:border-zinc-300 hover:bg-zinc-50", pill: "text-zinc-500 bg-zinc-100" };
-            return (
-              <button
+        {/* Question 1 */}
+        <div className="mb-8">
+          <p className="font-ui text-qgen-gray-ash mb-2"
+            style={{ fontSize: 11, letterSpacing: "0.06em" }}>
+            ข้อที่ {currentIndex + 1}
+          </p>
+          <h2 className="text-qgen-black-soft font-semibold mb-3"
+            style={{ fontSize: 17, lineHeight: "26px" }}>
+            {q1.question}
+          </h2>
+          <div className="flex flex-col gap-2">
+            {q1.options.map((opt) => (
+              <OptionCard
                 key={opt.label}
-                onClick={() => handleSelect(opt.value as 1 | 2 | 3 | 4)}
-                className={`group w-full text-left px-4 py-4 rounded-xl border bg-white
-                  hover:-translate-y-0.5 hover:shadow-sm
-                  active:scale-[0.99] active:translate-y-0 transition-all duration-150 ease-out
-                  flex items-start gap-3 ${s.btn}`}
-              >
-                <span className={`flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center font-mono text-xs font-black ${s.pill}`}>
-                  {opt.label}
-                </span>
-                <span className="text-zinc-700 text-sm font-light leading-snug mt-[5px]">{opt.text}</span>
-              </button>
-            );
-          })}
+                label={opt.label}
+                text={opt.text}
+                selected={pageSelections[q1.id] === opt.value}
+                onSelect={() => handleSelect(q1.id, opt.value as 1 | 2 | 3 | 4)}
+              />
+            ))}
+          </div>
         </div>
 
-        <div className="mt-8">
+        {/* Divider */}
+        <div className="border-t border-qgen-gray-border/40 mb-8" />
+
+        {/* Question 2 */}
+        <div ref={q2Ref} className="mb-6">
+          <p className="font-ui text-qgen-gray-ash mb-2"
+            style={{ fontSize: 11, letterSpacing: "0.06em" }}>
+            ข้อที่ {currentIndex + 2}
+          </p>
+          <h2 className="text-qgen-black-soft font-semibold mb-3"
+            style={{ fontSize: 17, lineHeight: "26px" }}>
+            {q2.question}
+          </h2>
+          <div className="flex flex-col gap-2">
+            {q2.options.map((opt) => (
+              <OptionCard
+                key={opt.label}
+                label={opt.label}
+                text={opt.text}
+                selected={pageSelections[q2.id] === opt.value}
+                onSelect={() => handleSelect(q2.id, opt.value as 1 | 2 | 3 | 4)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="flex justify-start">
           <BackButton onClick={handleSurveyBack} />
         </div>
       </div>
 
-      {/* Fixed bottom progress bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-zinc-200 px-5 pt-5 pb-8 shadow-[0_-4px_16px_rgba(0,0,0,0.04)]">
-        <div className="relative w-full h-2 bg-zinc-100 rounded-full overflow-visible max-w-lg mx-auto">
-          <div
-            className={`h-full rounded-full ${AXIS_BAR[question.axis]} transition-all duration-500 ease-out`}
-            style={{ width: `${progressPct}%` }}
-          />
-          <div
-            className="absolute bottom-full transition-all duration-500 ease-out"
-            style={{ left: `${progressPct}%`, transform: "translateX(-50%) translateY(4px)" }}
+      {/* Fixed bottom: ถัดไป button */}
+      <div
+        className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-6"
+        style={{ background: "rgba(247,246,243,0.92)", backdropFilter: "blur(8px)" }}
+      >
+        <div className="max-w-lg mx-auto">
+          <button
+            onClick={handleNext}
+            disabled={!bothAnswered}
+            className="w-full font-ui font-bold text-white rounded-[12px]
+              bg-qgen-signal shadow-[0_12px_32px_rgba(201,111,59,0.25)]
+              disabled:opacity-30 disabled:cursor-not-allowed disabled:shadow-none
+              hover:bg-qgen-signal-deep active:scale-[0.98] transition-all duration-200"
+            style={{ height: 48, fontSize: 15 }}
           >
-            <WalkingCharacter gender={gender} width={26} />
-          </div>
+            ถัดไป
+          </button>
         </div>
       </div>
     </div>

@@ -8,9 +8,12 @@ import type { StoryPersona, StoryAxisResult } from "./StoryCard";
 type Props = {
   persona: StoryPersona;
   axisResult: Record<"F" | "C" | "W", StoryAxisResult>;
+  buttonColor?: string;
+  fontFace?: string;
+  logoDataUrl?: string;
 };
 
-export default function ShareStoryButton({ persona, axisResult }: Props) {
+export default function ShareStoryButton({ persona, axisResult, buttonColor, fontFace, logoDataUrl }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<"idle" | "loading">("idle");
 
@@ -19,7 +22,14 @@ export default function ShareStoryButton({ persona, axisResult }: Props) {
     setState("loading");
 
     try {
-      // Render twice — first pass warms the font cache, second is the real capture
+      // Inject font-face styles into the card element so html-to-image picks them up
+      if (fontFace) {
+        const style = document.createElement("style");
+        style.textContent = fontFace;
+        cardRef.current.appendChild(style);
+      }
+
+      // Two-pass render: first warms font cache, second is real capture
       await toPng(cardRef.current, { pixelRatio: 2, cacheBust: true });
       const dataUrl = await toPng(cardRef.current, { pixelRatio: 2, cacheBust: true });
 
@@ -29,7 +39,6 @@ export default function ShareStoryButton({ persona, axisResult }: Props) {
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file] });
       } else {
-        // Desktop fallback: download the image
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
@@ -38,7 +47,7 @@ export default function ShareStoryButton({ persona, axisResult }: Props) {
         URL.revokeObjectURL(url);
       }
     } catch {
-      // User cancelled share sheet — no-op
+      // user cancelled
     } finally {
       setState("idle");
     }
@@ -46,12 +55,12 @@ export default function ShareStoryButton({ persona, axisResult }: Props) {
 
   return (
     <>
-      {/* Story card rendered off-screen for capture only */}
+      {/* Card rendered off-screen for capture only */}
       <div
         style={{ position: "fixed", top: -9999, left: -9999, pointerEvents: "none" }}
         aria-hidden="true"
       >
-        <StoryCard ref={cardRef} persona={persona} axisResult={axisResult} />
+        <StoryCard ref={cardRef} persona={persona} axisResult={axisResult} logoDataUrl={logoDataUrl} />
       </div>
 
       <button
@@ -61,7 +70,7 @@ export default function ShareStoryButton({ persona, axisResult }: Props) {
           disabled:opacity-60 active:scale-[0.98] transition-all duration-300
           flex items-center justify-center gap-2.5"
         style={{
-          background: "linear-gradient(135deg, #833ab4, #e1306c, #f77737)",
+          background: buttonColor ?? "linear-gradient(135deg, #833ab4, #e1306c, #f77737)",
         }}
       >
         {state === "loading" ? (
@@ -71,7 +80,6 @@ export default function ShareStoryButton({ persona, axisResult }: Props) {
           </>
         ) : (
           <>
-            {/* Instagram glyph */}
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
               <circle cx="12" cy="12" r="4.5" />

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="300" viewBox="0 0 1300 300">
+<rect width="1300" height="300" fill="#F4F4F0"/>
+<rect x="20" y="30" width="180" height="120" rx="8" fill="#0A0A0A"/>
+<text x="20" y="178" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#1A1A1A">Absolute Black</text>
+<text x="20" y="203" font-family="Inter, sans-serif" font-size="16" fill="#6E6E6E">#0A0A0A</text>
+<rect x="280" y="30" width="180" height="120" rx="8" fill="#1A1A1A"/>
+<text x="280" y="178" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#1A1A1A">Soft Black / Charcoal</text>
+<text x="280" y="203" font-family="Inter, sans-serif" font-size="16" fill="#6E6E6E">#1A1A1A</text>
+<rect x="540" y="30" width="180" height="120" rx="8" fill="#6E6E6E"/>
+<text x="540" y="178" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#1A1A1A">Ash Gray</text>
+<text x="540" y="203" font-family="Inter, sans-serif" font-size="16" fill="#6E6E6E">#6E6E6E</text>
+<rect x="800" y="30" width="180" height="120" rx="8" fill="#F4F4F0"/>
+<text x="800" y="178" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#1A1A1A">Paper White</text>
+<text x="800" y="203" font-family="Inter, sans-serif" font-size="16" fill="#6E6E6E">#F4F4F0</text>
+<rect x="1060" y="30" width="180" height="120" rx="8" fill="#C96F3B"/>
+<text x="1060" y="178" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#1A1A1A">Accent Signal</text>
+<text x="1060" y="203" font-family="Inter, sans-serif" font-size="16" fill="#6E6E6E">#C96F3B</text>
+</svg>

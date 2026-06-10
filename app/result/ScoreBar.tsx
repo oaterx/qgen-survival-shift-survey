@@ -2,19 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-const BAR_COLOR: Record<string, string> = {
-  stable: "bg-green-500",
-  atRisk: "bg-orange-500",
-  crisis: "bg-red-500",
-};
-
 interface Props {
   score: number;
-  status: "stable" | "atRisk" | "crisis";
   delay?: number;
 }
 
-export default function ScoreBar({ score, status, delay = 0 }: Props) {
+export default function ScoreBar({ score, delay = 0 }: Props) {
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
@@ -22,11 +15,13 @@ export default function ScoreBar({ score, status, delay = 0 }: Props) {
     return () => clearTimeout(t);
   }, [score, delay]);
 
+  const color = `hsl(${(score * 1.2).toFixed(0)}, 68%, 42%)`;
+
   return (
-    <div className="w-full h-1 bg-zinc-100 rounded-full overflow-hidden mt-2.5">
+    <div className="w-full h-1.5 bg-qgen-paper-wash/60 rounded-full overflow-hidden mt-2.5">
       <div
-        className={`h-full rounded-full transition-all duration-700 ease-out ${BAR_COLOR[status]}`}
-        style={{ width: `${width}%` }}
+        className="h-full rounded-full transition-all duration-700 ease-out"
+        style={{ width: `${width}%`, backgroundColor: color }}
       />
     </div>
   );

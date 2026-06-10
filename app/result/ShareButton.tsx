@@ -23,9 +23,8 @@ export default function ShareButton() {
   return (
     <button
       onClick={handleCopy}
-      className="w-full py-4 rounded-2xl bg-qgen-dark text-white font-semibold text-sm
-        hover:bg-qgen-blue hover:shadow-lg hover:shadow-qgen-blue/20
-        active:scale-[0.98]
+      className="w-full py-4 rounded-[12px] bg-qgen-black-soft text-qgen-paper font-ui font-bold text-sm tracking-wide
+        hover:bg-qgen-black-absolute active:scale-[0.98]
         transition-all duration-300"
     >
       {copied ? "✓ คัดลอกลิงก์แล้ว" : "แชร์ผลลัพธ์"}
