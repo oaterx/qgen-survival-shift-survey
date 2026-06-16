@@ -2,24 +2,62 @@
 
 import { useState } from "react";
 
+// Fallback for browsers/contexts where the async Clipboard API throws
+// (permission denied, insecure context, older WebView, etc.) — uses the
+// older execCommand path via a temporary off-screen textarea.
+function copyWithFallback(text: string): boolean {
+  try {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.top = "-9999px";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
 export default function ShareLinkButton() {
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState(false);
 
   async function handleShare() {
     const url = window.location.href;
+    setError(false);
 
     if (navigator.share) {
       try {
         await navigator.share({ title: "The Office Survivor — ผลลัพธ์ของฉัน", url });
-      } catch {
-        // user cancelled
+        return;
+      } catch (err) {
+        // AbortError = user cancelled the native share sheet — not a failure.
+        if (err instanceof Error && err.name === "AbortError") return;
+        // Otherwise fall through and try clipboard copy instead.
       }
-      return;
     }
 
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      return;
+    } catch {
+      // Clipboard API blocked (permission denied / insecure context) — fall back.
+    }
+
+    if (copyWithFallback(url)) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } else {
+      setError(true);
+      setTimeout(() => setError(false), 2500);
+    }
   }
 
   return (
@@ -38,6 +76,8 @@ export default function ShareLinkButton() {
           </svg>
           คัดลอกลิ้งค์แล้ว
         </>
+      ) : error ? (
+        <span className="text-qgen-signal-deep">คัดลอกไม่สำเร็จ ลองอีกครั้ง</span>
       ) : (
         <>
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor"

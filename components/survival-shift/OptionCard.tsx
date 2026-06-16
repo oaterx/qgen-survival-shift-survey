@@ -51,6 +51,8 @@ export default function OptionCard({ label, text, selected = false, onSelect }: 
           fontSize: 13,
           lineHeight: "19px",
           color: "#1A1A1A",
+          minWidth: 0,
+          overflowWrap: "break-word",
         }}
       >
         {text}

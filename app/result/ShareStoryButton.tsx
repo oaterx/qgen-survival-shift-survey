@@ -17,15 +17,25 @@ type Props = {
 
 export default function ShareStoryButton({ persona, axisResult, buttonColor, fontFace, logoDataUrl, headingDataUrl, personaImageDataUrl }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [state, setState] = useState<"idle" | "loading">("idle");
+  const [state, setState] = useState<"idle" | "loading" | "error">("idle");
+
+  function downloadBlob(blob: Blob) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "survival-shift-story.png";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   async function handleShare() {
     if (!cardRef.current || state === "loading") return;
     setState("loading");
 
+    let blob: Blob;
     try {
       // Inject font-face styles into the card element so html-to-image picks them up
-      if (fontFace) {
+      if (fontFace && !cardRef.current.querySelector("style")) {
         const style = document.createElement("style");
         style.textContent = fontFace;
         cardRef.current.appendChild(style);
@@ -34,24 +44,41 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
       // Two-pass render: first warms font cache, second is real capture
       await toPng(cardRef.current, { pixelRatio: 2, cacheBust: true });
       const dataUrl = await toPng(cardRef.current, { pixelRatio: 2, cacheBust: true });
-
-      const blob = await fetch(dataUrl).then((r) => r.blob());
-      const file = new File([blob], "survival-shift-story.png", { type: "image/png" });
-
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file] });
-      } else {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "survival-shift-story.png";
-        a.click();
-        URL.revokeObjectURL(url);
-      }
+      blob = await fetch(dataUrl).then((r) => r.blob());
     } catch {
-      // user cancelled
-    } finally {
+      // Image generation itself failed — nothing to share/download.
+      setState("error");
+      setTimeout(() => setState("idle"), 2500);
+      return;
+    }
+
+    const file = new File([blob], "survival-shift-story.png", { type: "image/png" });
+
+    // Try the native share sheet first, but always fall back to a direct
+    // download if it fails for any reason other than the user cancelling —
+    // some mobile browsers (notably iOS Safari) reject navigator.share()
+    // here because the user-gesture context can expire during the async
+    // image generation above, and we don't want that to look like nothing happened.
+    if (navigator.canShare?.({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file] });
+        setState("idle");
+        return;
+      } catch (err) {
+        if (err instanceof Error && err.name === "AbortError") {
+          setState("idle");
+          return;
+        }
+        // fall through to download
+      }
+    }
+
+    try {
+      downloadBlob(blob);
       setState("idle");
+    } catch {
+      setState("error");
+      setTimeout(() => setState("idle"), 2500);
     }
   }
 
@@ -80,6 +107,8 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
             <span className="inline-block w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
             กำลังสร้างภาพ…
           </>
+        ) : state === "error" ? (
+          <>สร้างภาพไม่สำเร็จ ลองอีกครั้ง</>
         ) : (
           <>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">

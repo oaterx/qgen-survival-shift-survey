@@ -544,9 +544,9 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-5 sm:py-8 pb-36 max-w-lg mx-auto w-full animate-slide-in pt-8 sm:pt-16">
+        <div className="flex-1 overflow-y-auto px-5 py-3 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-3 sm:pt-16">
           <div
-            className="relative w-full max-w-[260px] sm:max-w-[300px] mx-auto mb-3 sm:mb-4"
+            className="relative w-full max-w-[190px] sm:max-w-[300px] mx-auto mb-1.5 sm:mb-4"
             style={{ aspectRatio: "1022 / 356" }}
           >
             <Image
@@ -559,23 +559,23 @@ export default function SurveyClient() {
             />
           </div>
 
-          <p className="text-qgen-gray-ash text-center mb-7 sm:mb-6" style={{ fontSize: 15.5, lineHeight: "24px" }}>
+          <p className="text-qgen-gray-ash text-center mb-3 sm:mb-6 text-[12.5px] leading-[18px] sm:text-[15.5px] sm:leading-[24px]">
             สำรวจปัญหา 3 ด้านหลัก ของชีวิตมนุษย์ออฟฟิศ
             <br />
             เพื่อดูความเสี่ยงที่อาจเกิดขึ้นและแนวทางการรับมือสถานการณ์เบื้องต้น
           </p>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5 sm:gap-2">
             {STORY_AXES.map((ax, i) => (
               <div
                 key={i}
-                className="w-full rounded-xl border border-qgen-gray-border bg-qgen-paper-alt"
-                style={{ padding: "14px 16px", boxShadow: "0 2px 8px rgba(10,10,10,0.04)" }}
+                className="w-full rounded-xl border border-qgen-gray-border bg-qgen-paper-alt px-3.5 py-2 sm:px-4 sm:py-3.5"
+                style={{ boxShadow: "0 2px 8px rgba(10,10,10,0.04)" }}
               >
-                <p className="font-ui font-semibold text-qgen-black-soft" style={{ fontSize: 16, lineHeight: "21px" }}>
-                  {ax.label} <span className="text-qgen-gray-ash font-semibold" style={{ fontSize: 13 }}>· {ax.labelTH}</span>
+                <p className="font-ui font-semibold text-qgen-black-soft text-[13.5px] leading-[17px] sm:text-[16px] sm:leading-[21px]">
+                  {ax.label} <span className="text-qgen-gray-ash font-semibold text-[11.5px] sm:text-[13px]">· {ax.labelTH}</span>
                 </p>
-                <p className="font-ui text-qgen-gray-ash mt-2 text-[13.5px] leading-[20px] sm:text-[12px] sm:leading-[18px]">
+                <p className="font-ui text-qgen-gray-ash mt-1 sm:mt-2 text-[11.5px] leading-[16px] sm:text-[13.5px] sm:leading-[20px]">
                   {ax.desc}
                 </p>
               </div>
@@ -619,9 +619,9 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className={`flex-1 overflow-y-auto px-5 py-8 pb-36 max-w-lg mx-auto w-full animate-slide-in ${meta.story ? "pt-32" : ""}`}>
+        <div className={`flex-1 overflow-y-auto px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in ${meta.story ? "pt-12 sm:pt-32" : ""}`}>
           {meta.story && (
-            <div className="relative w-[220px] h-[220px] mx-auto mb-5" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
+            <div className="relative w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-5" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
               <Image
                 src="/Element/Clock.png"
                 alt="นาฬิกาปลุก"
@@ -648,22 +648,22 @@ export default function SurveyClient() {
               <div className="w-12 rounded-full mx-auto" style={{ height: 3, background: "#C96F3B", marginTop: 18, marginBottom: 18 }} />
             </>
           )}
-          {meta.story && <div style={{ marginTop: 40 }} />}
+          {meta.story && <div className="mt-5 sm:mt-10" />}
 
           {meta.story ? (
-            <div className="flex flex-col gap-3.5">
+            <div className="flex flex-col gap-2.5 sm:gap-3.5">
               {meta.story.map((line, i) => {
                 if (i === 0 && line.includes("|")) {
                   const [highlight, rest] = line.split("|");
                   return (
-                    <p key={i} className="text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
-                      <span className="font-bold text-qgen-signal" style={{ fontSize: 23 }}>{highlight}</span>
+                    <p key={i} className="text-center text-[13.5px] leading-[22px] sm:text-[15px] sm:leading-[25px]">
+                      <span className="font-bold text-qgen-signal text-[20px] sm:text-[23px]">{highlight}</span>
                       <span className="text-qgen-black-soft">{rest}</span>
                     </p>
                   );
                 }
                 return (
-                  <p key={i} className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                  <p key={i} className="text-qgen-black-soft text-center text-[13.5px] leading-[22px] sm:text-[15px] sm:leading-[25px]">
                     {line}
                   </p>
                 );
@@ -713,8 +713,8 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-8 pb-36 max-w-lg mx-auto w-full animate-slide-in pt-32">
-          <div className="relative w-[220px] h-[220px] mx-auto mb-5">
+        <div className="flex-1 overflow-y-auto px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-12 sm:pt-32">
+          <div className="relative w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-5">
             <Image
               src="/Element/Phone.png"
               alt="โทรศัพท์แจ้งเตือน"
@@ -725,16 +725,16 @@ export default function SurveyClient() {
             />
           </div>
 
-          <div style={{ marginTop: 40 }} />
+          <div className="mt-5 sm:mt-10" />
 
-          <div className="flex flex-col gap-3.5">
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+          <div className="flex flex-col gap-2.5 sm:gap-3.5">
+            <p className="text-qgen-black-soft text-center text-[13.5px] leading-[22px] sm:text-[15px] sm:leading-[25px]">
               ก่อนออกจากห้อง โทรศัพท์สว่างขึ้นพร้อมแจ้งเตือนค่าใช้จ่าย
             </p>
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+            <p className="text-qgen-black-soft text-center text-[13.5px] leading-[22px] sm:text-[15px] sm:leading-[25px]">
               และคำถามในหัวก็เด้งขึ้นมาเบา ๆ ว่า
             </p>
-            <p className="text-center mx-auto" style={{ fontSize: 18, lineHeight: "27px", width: "100vw", marginLeft: "calc(-50vw + 50%)", padding: "0 28px", boxSizing: "border-box" }}>
+            <p className="text-center mx-auto text-[16px] leading-[24px] sm:text-[18px] sm:leading-[27px]" style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)", padding: "0 28px", boxSizing: "border-box" }}>
               <span className="font-bold text-qgen-signal">
                 &ldquo;เรากำลังใช้ชีวิตอยู่จริง ๆ หรือแค่พยายามเอาตัวเองให้รอดไปวัน ๆ&rdquo;
               </span>
@@ -775,27 +775,26 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-8 pb-36 max-w-lg mx-auto w-full animate-slide-in pt-12">
+        <div className="flex-1 overflow-y-auto px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-6 sm:pt-12">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 1
           </p>
-          <div className="text-center mb-6">
+          <div className="text-center mb-3 sm:mb-6">
             <div
-              className="font-display text-qgen-black-soft"
-              style={{ fontSize: 32, lineHeight: "38px", fontWeight: 800, letterSpacing: "-0.02em" }}
+              className="font-display text-qgen-black-soft text-[25px] leading-[30px] sm:text-[32px] sm:leading-[38px]"
+              style={{ fontWeight: 800, letterSpacing: "-0.02em" }}
             >
               Financial Security
             </div>
             <div
-              className="font-bold text-qgen-signal"
-              style={{ fontSize: 19, lineHeight: "28px", marginTop: 6 }}
+              className="font-bold text-qgen-signal text-[15px] leading-[22px] sm:text-[19px] sm:leading-[28px] mt-1.5 sm:mt-[6px]"
             >
               เงินเดือนเข้า แต่ชีวิตเรายังหนักอึ้ง
             </div>
           </div>
 
-          <div className="relative w-[220px] h-[220px] mx-auto mb-6">
+          <div className="relative w-[150px] h-[150px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-6">
             <Image
               src="/Element/Money.png"
               alt="เงินเดือนกับค่าใช้จ่าย"
@@ -806,17 +805,17 @@ export default function SurveyClient() {
             />
           </div>
 
-          <div className="flex flex-col gap-3.5">
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+          <div className="flex flex-col gap-2 sm:gap-3.5">
+            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               ระหว่างทางไปทำงาน คุณเปิดแอปธนาคารขึ้นมาดูแบบไม่ตั้งใจ
             </p>
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               เงินเดือนเพิ่งเข้าได้ไม่นาน แต่ค่าใช้จ่ายเหมือนมารออยู่ก่อนแล้ว
             </p>
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               บางครั้งคุณไม่ได้อยากประหยัดทุกอย่าง
             </p>
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               แต่ทุกครั้งที่ใช้เงิน คุณก็เริ่มคิดมากขึ้นเรื่อย ๆ
             </p>
           </div>
@@ -856,27 +855,26 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-8 pb-36 max-w-lg mx-auto w-full animate-slide-in pt-12">
+        <div className="flex-1 overflow-y-auto px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-6 sm:pt-12">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 2
           </p>
-          <div className="text-center mb-6">
+          <div className="text-center mb-3 sm:mb-6">
             <div
-              className="font-display text-qgen-black-soft"
-              style={{ fontSize: 32, lineHeight: "38px", fontWeight: 800, letterSpacing: "-0.02em" }}
+              className="font-display text-qgen-black-soft text-[25px] leading-[30px] sm:text-[32px] sm:leading-[38px]"
+              style={{ fontWeight: 800, letterSpacing: "-0.02em" }}
             >
               Career Path
             </div>
             <div
-              className="font-bold text-qgen-signal"
-              style={{ fontSize: 19, lineHeight: "28px", marginTop: 6 }}
+              className="font-bold text-qgen-signal text-[15px] leading-[22px] sm:text-[19px] sm:leading-[28px] mt-1.5 sm:mt-[6px]"
             >
               งานที่ทำอยู่ กำลังพาเราไปไหน
             </div>
           </div>
 
-          <div className="relative w-[220px] h-[220px] mx-auto mb-6">
+          <div className="relative w-[150px] h-[150px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-6">
             <Image
               src="/Element/Career.png"
               alt="เส้นทางอาชีพ"
@@ -887,17 +885,17 @@ export default function SurveyClient() {
             />
           </div>
 
-          <div className="flex flex-col gap-3.5">
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+          <div className="flex flex-col gap-2 sm:gap-3.5">
+            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               คุณมาถึงออฟฟิศ เปิดคอม และเข้าสู่โหมดพร้อมทำงาน
             </p>
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               อีเมลรอตอบ ประชุมรออยู่ งานเก่ารอแก้ และงานใหม่รอเริ่ม
             </p>
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               ไม่ใช่ว่าคุณไม่ตั้งใจหรือไม่พยายาม แต่บางวันคุณก็เริ่มสงสัยว่า
             </p>
-            <p className="text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+            <p className="text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               <span className="font-bold text-qgen-black-soft">
                 &ldquo;งานที่ทำอยู่กำลังพาคุณไปข้างหน้าจริงไหม&rdquo;
               </span>
@@ -939,27 +937,26 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-8 pb-36 max-w-lg mx-auto w-full animate-slide-in pt-12">
+        <div className="flex-1 overflow-y-auto px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-6 sm:pt-12">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 3
           </p>
-          <div className="text-center mb-6">
+          <div className="text-center mb-3 sm:mb-6">
             <div
-              className="font-display text-qgen-black-soft"
-              style={{ fontSize: 32, lineHeight: "38px", fontWeight: 800, letterSpacing: "-0.02em" }}
+              className="font-display text-qgen-black-soft text-[25px] leading-[30px] sm:text-[32px] sm:leading-[38px]"
+              style={{ fontWeight: 800, letterSpacing: "-0.02em" }}
             >
               Well Being
             </div>
             <div
-              className="font-bold text-qgen-signal"
-              style={{ fontSize: 19, lineHeight: "28px", marginTop: 6 }}
+              className="font-bold text-qgen-signal text-[15px] leading-[22px] sm:text-[19px] sm:leading-[28px] mt-1.5 sm:mt-[6px]"
             >
               ร่างกายยังเดินต่อไป แต่ใจเริ่มไปต่อไม่ไหว
             </div>
           </div>
 
-          <div className="relative w-[220px] h-[220px] mx-auto mb-6">
+          <div className="relative w-[150px] h-[150px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-6">
             <Image
               src="/Element/Health.png"
               alt="ความเหนื่อยล้าทางร่างกายและใจ"
@@ -970,17 +967,17 @@ export default function SurveyClient() {
             />
           </div>
 
-          <div className="flex flex-col gap-3.5">
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+          <div className="flex flex-col gap-2 sm:gap-3.5">
+            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               วันทำงานดำเนินไปเรื่อย ๆ ช่วงบ่ายมาถึง
             </p>
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               กาแฟแก้วแรกเริ่มหมดฤทธิ์
             </p>
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               ตาเริ่มล้า ไหล่เริ่มตึง คุณอาจยังทำงานได้
             </p>
-            <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               แต่ร่างกายเริ่มส่งสัญญาณเล็ก ๆ ว่า มันเหนื่อยมาสักพักแล้ว
             </p>
           </div>

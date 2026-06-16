@@ -2,7 +2,7 @@ export const personas = [
   {
     "id": "01",
     "group": "ไม่มีแกนตึง",
-    "name": "ตัวแม่ ตัว Mom",
+    "name": "เริ่ดดดเลยหละ",
     "tagline": "Balance ได้ดีในทุกด้าน",
     "conditionText": "ทุกแกน ≥ 67%",
     "axisStatusTextTH": { "F": "ปลอดภัย", "C": "ปลอดภัย", "W": "ปลอดภัย" },
@@ -40,7 +40,7 @@ export const personas = [
   {
     "id": "02",
     "group": "การเงิน",
-    "name": "กระเป๋าแบนแฟนยิ้ม",
+    "name": "ชีวิตปัง ตังค์ติดบัค",
     "tagline": "เดือนชนเดือนแบบยังยิ้มได้",
     "conditionText": "F = 34–66%  ·  C, W ≥ 67%",
     "axisStatusTextTH": { "F": "ตึง", "C": "ปลอดภัย", "W": "ปลอดภัย" },
@@ -268,7 +268,7 @@ export const personas = [
   {
     "id": "08",
     "group": "F + C",
-    "name": "ซัพพอร์ตผู้หญิงคนนี้\nหน่อยได้มั้ยคะ",
+    "name": "สู้ชีวิต (แต่ชีวิตสู้กลับ)",
     "tagline": "ทุ่มสุดตัว แต่ยังอยู่ที่เดิม",
     "conditionText": "F, C ≤ 66% · W ≥ 67%",
     "axisStatusTextTH": { "F": "ตึง/วิกฤต", "C": "ตึง/วิกฤต", "W": "ปลอดภัย" },
@@ -382,7 +382,7 @@ export const personas = [
   {
     "id": "11",
     "group": "3 แกน",
-    "name": "ขอพักใจ 3 วิ",
+    "name": "ชีวิตปรุงจืด",
     "tagline": "ทุกอย่างพอไปได้ แต่รู้ว่าไม่ดี",
     "conditionText": "F, C, W ทั้งหมด 34–66%",
     "axisStatusTextTH": { "F": "ตึง", "C": "ตึง", "W": "ตึง" },
@@ -420,7 +420,7 @@ export const personas = [
   {
     "id": "12",
     "group": "3 แกน",
-    "name": "ฉันเพียงต้องการทางออก",
+    "name": "สภาพพพพพพ",
     "tagline": "ไม่รู้จะเริ่มแก้ตรงไหน",
     "conditionText": "F, C, W ทั้งหมด ≤ 66%  ·  อย่างน้อย 1 ≤ 33%  ·  ไม่ใช่ทุกแกน ≤ 33%",
     "axisStatusTextTH": { "F": "ตึง/วิกฤต", "C": "ตึง/วิกฤต", "W": "ตึง/วิกฤต" },
@@ -458,7 +458,7 @@ export const personas = [
   {
     "id": "13",
     "group": "3 แกน",
-    "name": "เหตุการณ์นี้\nมีผู้ประสบภัย",
+    "name": "รับจบ",
     "tagline": "ถึงขีดสุด วิกฤติแล้ว",
     "conditionText": "F, C, W ทั้งหมด 0–33%",
     "axisStatusTextTH": { "F": "วิกฤต", "C": "วิกฤต", "W": "วิกฤต" },
