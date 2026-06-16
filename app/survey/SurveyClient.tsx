@@ -10,6 +10,7 @@ import type { DemographicAnswers, DemographicFieldId } from "../../data/demograp
 import type { SurveyAnswer } from "../../data/types";
 import { groupAnswersByAxis, calculateAxisScores } from "../../lib/scoring";
 import { routePersonaId } from "../../lib/persona-router";
+import { encodeScoreToken } from "../../lib/share-token";
 import SignalTopBar from "../../components/survival-shift/SignalTopBar";
 import SignalProgress from "../../components/survival-shift/SignalProgress";
 import SignalLine from "../../components/survival-shift/SignalLine";
@@ -311,7 +312,7 @@ export default function SurveyClient() {
       // ignore
     }
 
-    router.push(`/result?f=${scores.F.toFixed(4)}&c=${scores.C.toFixed(4)}&w=${scores.W.toFixed(4)}`);
+    router.push(`/result?r=${encodeScoreToken(scores.F, scores.C, scores.W)}`);
   }
 
   function handleSurveyBack() {

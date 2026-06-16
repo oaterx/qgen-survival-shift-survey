@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { routePersona } from "../../lib/persona-router";
 import { getAxisResult } from "../../lib/scoring";
+import { decodeScoreToken } from "../../lib/share-token";
 import { loadStorycardAssets, loadPersonaImageDataUrl } from "../../lib/storycard-assets";
 import SignalTopBar from "../../components/survival-shift/SignalTopBar";
 import SurvivalScoreSection from "./SurvivalScoreSection";
@@ -32,13 +33,12 @@ function scoreLevel(score: number): { label: string; description: string } {
 export default async function ResultPage({
   searchParams,
 }: {
-  searchParams: Promise<{ f?: string; c?: string; w?: string }>;
+  searchParams: Promise<{ r?: string }>;
 }) {
   const sp = await searchParams;
-  const f = parseFloat(sp.f ?? "");
-  const c = parseFloat(sp.c ?? "");
-  const w = parseFloat(sp.w ?? "");
-  if (isNaN(f) || isNaN(c) || isNaN(w)) return notFound();
+  const decoded = sp.r ? decodeScoreToken(sp.r) : null;
+  if (!decoded) return notFound();
+  const { f, c, w } = decoded;
 
   const scores = { F: f, C: c, W: w };
   const persona = routePersona(scores);
