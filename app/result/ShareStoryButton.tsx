@@ -15,18 +15,29 @@ type Props = {
   personaImageDataUrl?: string;
 };
 
+function isIOS(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent;
+  return /iPad|iPhone|iPod/.test(ua) || (ua.includes("Macintosh") && navigator.maxTouchPoints > 1);
+}
+
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+    promise.then(
+      (v) => { clearTimeout(timer); resolve(v); },
+      (e) => { clearTimeout(timer); reject(e); },
+    );
+  });
+}
+
 export default function ShareStoryButton({ persona, axisResult, buttonColor, fontFace, logoDataUrl, headingDataUrl, personaImageDataUrl }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
-
-  function downloadBlob(blob: Blob) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "survival-shift-story.png";
-    a.click();
-    URL.revokeObjectURL(url);
-  }
+  // When share isn't available/fails, we show the generated image in an
+  // on-page modal instead of trying download/popup tricks that depend on a
+  // user-gesture context that's already expired by the time we get here.
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   async function handleShare() {
     if (!cardRef.current || state === "loading") return;
@@ -34,19 +45,20 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
 
     let blob: Blob;
     try {
-      // Inject font-face styles into the card element so html-to-image picks them up
       if (fontFace && !cardRef.current.querySelector("style")) {
         const style = document.createElement("style");
         style.textContent = fontFace;
         cardRef.current.appendChild(style);
       }
 
-      // Two-pass render: first warms font cache, second is real capture
-      await toPng(cardRef.current, { pixelRatio: 2, cacheBust: true });
-      const dataUrl = await toPng(cardRef.current, { pixelRatio: 2, cacheBust: true });
+      // Two-pass render: first warms font cache, second is real capture.
+      // Hard timeout so a stuck render (slow mobile, font load hang) can
+      // never leave the button spinning forever with no feedback.
+      await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 8000, "render pass 1");
+      const dataUrl = await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 8000, "render pass 2");
       blob = await fetch(dataUrl).then((r) => r.blob());
-    } catch {
-      // Image generation itself failed — nothing to share/download.
+    } catch (err) {
+      console.error("[ShareStory] image generation failed:", err);
       setState("error");
       setTimeout(() => setState("idle"), 2500);
       return;
@@ -54,11 +66,8 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
 
     const file = new File([blob], "survival-shift-story.png", { type: "image/png" });
 
-    // Try the native share sheet first, but always fall back to a direct
-    // download if it fails for any reason other than the user cancelling —
-    // some mobile browsers (notably iOS Safari) reject navigator.share()
-    // here because the user-gesture context can expire during the async
-    // image generation above, and we don't want that to look like nothing happened.
+    // Native share sheet — works great when available, and is the only path
+    // that still has a valid user-gesture context immediately after capture.
     if (navigator.canShare?.({ files: [file] })) {
       try {
         await navigator.share({ files: [file] });
@@ -69,17 +78,39 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
           setState("idle");
           return;
         }
-        // fall through to download
+        console.error("[ShareStory] navigator.share failed, showing preview instead:", err);
       }
     }
 
-    try {
-      downloadBlob(blob);
+    // Fallback: show the image in an on-page modal. This avoids both (a)
+    // iOS Safari's unreliable <a download> support for blob URLs, and (b)
+    // window.open()/popup-blocker issues — by now we're several awaits past
+    // the original click, so the user-gesture context is gone and any new
+    // popup would likely be silently blocked with no error to catch.
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreviewUrl(reader.result as string);
       setState("idle");
-    } catch {
+    };
+    reader.onerror = () => {
+      console.error("[ShareStory] FileReader failed");
       setState("error");
       setTimeout(() => setState("idle"), 2500);
-    }
+    };
+    reader.readAsDataURL(blob);
+  }
+
+  function handleDownloadFromPreview() {
+    if (!previewUrl) return;
+    // This click is a fresh, direct user gesture (the modal button itself),
+    // so the <a download> trick is reliable here even on browsers that
+    // block it when triggered from stale/async contexts.
+    const a = document.createElement("a");
+    a.href = previewUrl;
+    a.download = "survival-shift-story.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   }
 
   return (
@@ -120,6 +151,43 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
           </>
         )}
       </button>
+
+      {/* Fallback preview modal */}
+      {previewUrl && (
+        <div
+          className="fixed inset-0 z-50 overflow-y-auto"
+          style={{ background: "rgba(10,10,10,0.85)" }}
+          onClick={() => setPreviewUrl(null)}
+        >
+          <div className="min-h-full flex flex-col items-center justify-center gap-4 p-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={previewUrl}
+              alt="The Office Survivor — ผลลัพธ์ของฉัน"
+              onClick={(e) => e.stopPropagation()}
+              className="max-w-full rounded-2xl shadow-2xl"
+              style={{ maxHeight: "55vh" }}
+            />
+            <p className="text-white/90 text-center text-sm" onClick={(e) => e.stopPropagation()}>
+              {isIOS() ? "กดค้างที่รูปภาพเพื่อบันทึกลงอัลบั้ม" : "กดปุ่มด้านล่างเพื่อบันทึกรูปภาพ"}
+            </p>
+            {!isIOS() && (
+              <button
+                onClick={(e) => { e.stopPropagation(); handleDownloadFromPreview(); }}
+                className="px-6 py-3 rounded-xl bg-white text-qgen-black-soft font-ui font-semibold text-sm"
+              >
+                บันทึกรูปภาพ
+              </button>
+            )}
+            <button
+              onClick={(e) => { e.stopPropagation(); setPreviewUrl(null); }}
+              className="px-6 py-2.5 rounded-xl border border-white/30 text-white font-ui text-sm"
+            >
+              ปิด
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
