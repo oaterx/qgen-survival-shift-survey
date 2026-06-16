@@ -18,6 +18,7 @@ type Props = {
   persona: StoryPersona;
   axisResult: Record<"F" | "C" | "W", StoryAxisResult>;
   logoDataUrl?: string;
+  headingDataUrl?: string;
   personaImageDataUrl?: string;
 };
 
@@ -36,7 +37,7 @@ const THAI_FONT = "'Prompt', system-ui, sans-serif";
 const NUM_FONT  = "'CardInter', 'Prompt', system-ui, sans-serif";
 
 const StoryCard = forwardRef<HTMLDivElement, Props>(function StoryCard(
-  { persona, logoDataUrl, personaImageDataUrl },
+  { persona, logoDataUrl, headingDataUrl, personaImageDataUrl },
   ref
 ) {
   const accent = THEME_COLOR[persona.theme] ?? "#C96F3B";
@@ -68,16 +69,25 @@ const StoryCard = forwardRef<HTMLDivElement, Props>(function StoryCard(
       >
         {logoDataUrl ? (
           /* eslint-disable-next-line @next/next/no-img-element */
-          <img src={logoDataUrl} alt="QGEN" style={{ height: 58, objectFit: "contain", marginBottom: 14 }} />
+          <img src={logoDataUrl} alt="QGEN" style={{ height: 46, objectFit: "contain", marginBottom: 14 }} />
         ) : (
           <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 14 }}>
             <span style={{ fontSize: 32, fontWeight: 800, color: INK, fontFamily: NUM_FONT }}>Q</span>
             <span style={{ fontSize: 32, fontWeight: 800, color: accent, fontFamily: NUM_FONT }}>GEN</span>
           </div>
         )}
-        <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.22em", color: accent, textTransform: "uppercase", marginBottom: 36, fontFamily: THAI_FONT }}>
-          The Office Survivor
-        </div>
+        {headingDataUrl ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={headingDataUrl}
+            alt="The Office Survivor"
+            style={{ width: 338, height: 117, objectFit: "contain", marginBottom: 36 }}
+          />
+        ) : (
+          <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.22em", color: accent, textTransform: "uppercase", marginBottom: 36, fontFamily: THAI_FONT }}>
+            The Office Survivor
+          </div>
+        )}
         {personaImageDataUrl && (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img

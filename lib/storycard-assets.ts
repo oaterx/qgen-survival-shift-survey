@@ -31,7 +31,12 @@ export function loadStorycardAssets() {
     "image/png"
   );
 
-  return { fontFace, logoDataUrl };
+  const headingDataUrl = fileToBase64(
+    path.join(pub, "Element", "Heading.png"),
+    "image/png"
+  );
+
+  return { fontFace, logoDataUrl, headingDataUrl };
 }
 
 export function loadPersonaImageDataUrl(personaId: string): string {

@@ -3,7 +3,7 @@ export const questions = [
     "id": "F1",
     "axis": "F",
     "axisName": "Financial Security",
-    "question": "ในช่วงปีที่ผ่านมา รายได้ของคุณเทียบกับค่าครองชีพแล้ว เป็นอย่างไรบ้าง",
+    "question": "ในช่วงปีที่ผ่านมา รายได้ของคุณ|เมื่อเทียบกับ|ค่าครองชีพแล้ว เป็นอย่างไรบ้าง",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -17,7 +17,7 @@ export const questions = [
     "id": "F2",
     "axis": "F",
     "axisName": "Financial Security",
-    "question": "ถ้าวันนี้เกิดเหตุฉุกเฉินขึ้น คุณมีเงินสำรองพอรับมือได้นานแค่ไหน",
+    "question": "ถ้าวันนี้เกิดเหตุฉุกเฉินขึ้น คุณมีเงินสำรอง|พอรับมือได้นานแค่ไหน",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -31,7 +31,7 @@ export const questions = [
     "id": "F3",
     "axis": "F",
     "axisName": "Financial Security",
-    "question": "หลังจากหักค่าใช้จ่ายทุกอย่างในแต่ละเดือนแล้ว ปกติเหลือเงินแค่ไหน",
+    "question": "หลังจากหักค่าใช้จ่ายทุกอย่าง|ในแต่ละเดือนแล้ว ปกติเหลือเงินแค่ไหน",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -45,7 +45,7 @@ export const questions = [
     "id": "F4",
     "axis": "F",
     "axisName": "Financial Security",
-    "question": "ค่าเดินทางมาทำงานในแต่ละเดือน กระทบกระเป๋าตังค์คุณมากน้อยแค่ไหน",
+    "question": "ค่าเดินทางมาทำงาน|ในแต่ละเดือน กระทบกระเป๋าตังค์คุณ|มากน้อยแค่ไหน",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -59,7 +59,7 @@ export const questions = [
     "id": "F5",
     "axis": "F",
     "axisName": "Financial Security",
-    "question": "หนี้สิน หรือภาระครอบครัว สร้างความกดดันให้คุณขนาดไหน",
+    "question": "หนี้สิน หรือภาระครอบครัว สร้างความกดดัน|ให้คุณขนาดไหน",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -87,7 +87,7 @@ export const questions = [
     "id": "C1",
     "axis": "C",
     "axisName": "Career Path",
-    "question": "ตอนนี้คุณรู้สึกผูกพันกับองค์กรแค่ไหน",
+    "question": "ตอนนี้คุณรู้สึกผูกพัน|กับองค์กรแค่ไหน",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -101,7 +101,7 @@ export const questions = [
     "id": "C2",
     "axis": "C",
     "axisName": "Career Path",
-    "question": "เหตุผลหลักที่ทำให้คุณยังเลือกทำงานอยู่ที่นี่คืออะไร",
+    "question": "เหตุผลหลักที่ทำให้คุณ|ยังเลือกทำงานอยู่ที่นี่|คืออะไร",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -115,7 +115,7 @@ export const questions = [
     "id": "C3",
     "axis": "C",
     "axisName": "Career Path",
-    "question": "ตอนนี้คุณเห็นเส้นทางการเติบโต (Career Path) ในงานที่ทำชัดแค่ไหน",
+    "question": "ตอนนี้คุณเห็นเส้นทาง|การเติบโต (Career Path) ในงานที่ทำ|ชัดแค่ไหน",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -129,7 +129,7 @@ export const questions = [
     "id": "C4",
     "axis": "C",
     "axisName": "Career Path",
-    "question": "คุณมองเห็นภาพตัวเองในอีก 2–3 ปีข้างหน้าเป็นอย่างไรบ้าง",
+    "question": "คุณมองเห็นภาพตัวเอง|ในอีก 2–3 ปีข้างหน้า|เป็นอย่างไรบ้าง",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -143,7 +143,7 @@ export const questions = [
     "id": "C5",
     "axis": "C",
     "axisName": "Career Path",
-    "question": "คุณรู้สึกว่าตัวเองได้พัฒนาทักษะใหม่ ๆ ในการทำงานบ้างไหม",
+    "question": "คุณรู้สึกว่าตัวเอง|ได้พัฒนาทักษะใหม่ ๆ ในการทำงานบ้างไหม",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -157,7 +157,7 @@ export const questions = [
     "id": "C6",
     "axis": "C",
     "axisName": "Career Path",
-    "question": "ช่วง 6 เดือนที่ผ่านมา คุณเคยคิดจะหางานใหม่บ้างไหม",
+    "question": "ช่วง 6 เดือนที่ผ่านมา คุณเคยคิด|จะหางานใหม่บ้างไหม",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -171,7 +171,7 @@ export const questions = [
     "id": "W1",
     "axis": "W",
     "axisName": "Well-being",
-    "question": "คุณมีพลังกายพอสำหรับการทำงานแต่ละวันแค่ไหน",
+    "question": "คุณมีพลังกาย|พอสำหรับการทำงาน|แต่ละวันแค่ไหน",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -185,7 +185,7 @@ export const questions = [
     "id": "W2",
     "axis": "W",
     "axisName": "Well-being",
-    "question": "การเดินทางไปทำงานในแต่ละวัน สูบพลังชีวิตคุณไปมากน้อยแค่ไหน",
+    "question": "การเดินทางไปทำงาน|ในแต่ละวัน สูบพลังชีวิตคุณ|ไปมากน้อยแค่ไหน",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -199,7 +199,7 @@ export const questions = [
     "id": "W3",
     "axis": "W",
     "axisName": "Well-being",
-    "question": "ในช่วงเดือนที่ผ่านมา คุณมีอาการทางกาย เช่น ปวดหลัง ปวดหัว หรือนอนไม่หลับ บ้างไหม",
+    "question": "ในช่วงเดือนที่ผ่านมา คุณมีอาการป่วยทางกาย|บ้างไหม (เช่น ปวดหลัง ปวดหัว หรือนอนไม่หลับ)",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -213,7 +213,7 @@ export const questions = [
     "id": "W4",
     "axis": "W",
     "axisName": "Well-being",
-    "question": "ทุกวันนี้คุณยังมีเวลาและพลังเหลือพอที่จะดูแลตัวเองไหม (เช่น นอนเต็มอิ่ม กินของดี ๆ ออกกำลังกาย)",
+    "question": "ทุกวันนี้คุณยังมีเวลา|และพลังงานเหลือพอ|ที่จะดูแลตัวเองไหม (เช่น พักผ่อนเต็มอิ่ม ออกกำลังกาย เป็นต้น)",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -227,7 +227,7 @@ export const questions = [
     "id": "W5",
     "axis": "W",
     "axisName": "Well-being",
-    "question": "ช่วงนี้สภาพจิตใจของคุณเป็นอย่างไรบ้าง เช่น มีความรู้สึกเศร้า ดิ่ง หดหู่ หรือหมดไฟ",
+    "question": "ช่วงนี้สภาพจิตใจของคุณ|เป็นอย่างไรบ้าง เช่น มีความรู้สึกเศร้า ดิ่ง หดหู่ หรือหมดไฟ",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
@@ -241,7 +241,7 @@ export const questions = [
     "id": "W6",
     "axis": "W",
     "axisName": "Well-being",
-    "question": "ความเครียดสะสมในชีวิต ส่งผลต่อสมาธิและการโฟกัสในงานคุณแค่ไหน",
+    "question": "ความเครียดสะสมในชีวิต ส่งผลต่อสมาธิ|และการโฟกัส|ในงานคุณแค่ไหน",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [

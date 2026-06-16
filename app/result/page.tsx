@@ -4,7 +4,7 @@ import Link from "next/link";
 import { routePersona } from "../../lib/persona-router";
 import { getAxisResult } from "../../lib/scoring";
 import { loadStorycardAssets, loadPersonaImageDataUrl } from "../../lib/storycard-assets";
-import QGenLogo from "../../components/QGenLogo";
+import SignalTopBar from "../../components/survival-shift/SignalTopBar";
 import SurvivalScoreSection from "./SurvivalScoreSection";
 import ShareStoryButton from "./ShareStoryButton";
 import ShareLinkButton from "./ShareLinkButton";
@@ -51,16 +51,18 @@ export default async function ResultPage({
   const personaAccent = THEME_COLOR[persona.theme] ?? "#C96F3B";
 
   const actionPlan = (persona as { actionPlan?: Record<string, { titleTH: string; actions: string[] }> }).actionPlan;
-  const { fontFace, logoDataUrl } = loadStorycardAssets();
+  const { fontFace, logoDataUrl, headingDataUrl } = loadStorycardAssets();
   const personaImageDataUrl = loadPersonaImageDataUrl(persona.id);
 
   return (
     <main className="min-h-screen pb-16">
 
-      {/* Header — logo + heading */}
-      <header className="flex flex-col items-center pt-7 pb-5 animate-fade-in">
-        <QGenLogo height={56} />
-        <div className="relative w-full max-w-[300px] mt-3" style={{ aspectRatio: "1022 / 356" }}>
+      {/* Header — shared top bar + heading */}
+      <div className="animate-fade-in">
+        <SignalTopBar />
+      </div>
+      <div className="flex justify-center pt-6 pb-1">
+        <div className="relative w-full max-w-[300px]" style={{ aspectRatio: "1022 / 356" }}>
           <Image
             src="/Element/Heading.png"
             alt="The Office Survivor — มนุษย์ออฟฟิศต้องรอด"
@@ -70,13 +72,13 @@ export default async function ResultPage({
             priority
           />
         </div>
-      </header>
+      </div>
 
       <div className="px-5 max-w-lg mx-auto flex flex-col gap-5">
 
         {/* ── Persona ── */}
         <section className="relative animate-fade-up" style={{ animationDelay: "60ms" }}>
-          <div className="px-6 pt-2 pb-6 flex flex-col items-center text-center">
+          <div className="px-6 pt-2 pb-1 flex flex-col items-center text-center">
             <div className="w-[270px] h-[360px] relative mb-6">
               <Image
                 src={`/personas/${persona.id}.png`}
@@ -94,7 +96,7 @@ export default async function ResultPage({
               className="w-40 h-[3px] rounded-full mb-4"
               style={{ background: personaAccent }}
             />
-            <p className="text-[15px] text-qgen-gray-ash leading-relaxed mb-5 max-w-[320px]">
+            <p className="text-[15px] text-qgen-gray-ash leading-relaxed max-w-[320px]">
               {persona.description}
             </p>
           </div>
@@ -165,6 +167,7 @@ export default async function ResultPage({
             buttonColor={personaAccent}
             fontFace={fontFace}
             logoDataUrl={logoDataUrl}
+            headingDataUrl={headingDataUrl}
             personaImageDataUrl={personaImageDataUrl}
           />
 
@@ -180,6 +183,10 @@ export default async function ResultPage({
           >
             กลับหน้าแรก
           </Link>
+
+          <p className="text-center text-qgen-gray-ash/60 mt-2" style={{ fontSize: 10.5, fontWeight: 300 }}>
+            All images in this survey are AI-generated.
+          </p>
         </div>
 
       </div>

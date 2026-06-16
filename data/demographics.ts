@@ -23,24 +23,17 @@ const opt = (value: string, label?: string): DemographicOption => ({
 export const demographicFields: DemographicField[] = [
   {
     id: "positionLevel",
-    label: "ระดับตำแหน่งงาน",
+    label: "ตำแหน่งงาน",
     required: true,
     options: [
-      opt("student_intern",          "นักศึกษา / ฝึกงาน"),
-      opt("entry_junior",            "พนักงานระดับเริ่มต้น"),
-      opt("officer",                 "เจ้าหน้าที่"),
-      opt("specialist",              "ผู้เชี่ยวชาญ"),
-      opt("senior_officer",          "เจ้าหน้าที่อาวุโส"),
-      opt("senior_specialist",       "ผู้เชี่ยวชาญอาวุโส"),
-      opt("supervisor_teamlead",     "หัวหน้างาน"),
-      opt("manager",                 "ผู้จัดการ"),
-      opt("senior_manager_head",     "ผู้จัดการอาวุโส / หัวหน้าแผนก"),
-      opt("director_vp",             "ผู้อำนวยการ / VP"),
-      opt("c_level",                 "ผู้บริหารระดับสูง (C-Level)"),
-      opt("owner",                   "เจ้าของกิจการ"),
-      opt("freelancer",              "ฟรีแลนซ์"),
+      opt("student_intern",          "Student / Intern"),
+      opt("officer_staff",           "Officer / Staff"),
+      opt("senior_officer_supervisor", "Senior Officer / Supervisor"),
+      opt("manager",                 "Manager"),
+      opt("director_clevel",         "Director / C-Level"),
+      opt("business_owner",          "Business Owner"),
+      opt("freelance",               "Freelance"),
       opt("other",                   "อื่น ๆ"),
-      opt("prefer_not_to_say",       "ไม่สะดวกตอบ"),
     ],
   },
   {
@@ -63,7 +56,6 @@ export const demographicFields: DemographicField[] = [
       opt("consulting",              "ที่ปรึกษา / บริการวิชาชีพ"),
       opt("government_ngo",          "ราชการ / รัฐวิสาหกิจ / NGO"),
       opt("other",                   "อื่น ๆ"),
-      opt("prefer_not_to_say",       "ไม่สะดวกตอบ"),
     ],
   },
   {
@@ -79,7 +71,6 @@ export const demographicFields: DemographicField[] = [
       opt("41_45",      "41–45 ปี"),
       opt("46_50",      "46–50 ปี"),
       opt("51_plus",    "51 ปีขึ้นไป"),
-      opt("prefer_not_to_say", "ไม่สะดวกตอบ"),
     ],
   },
   {
