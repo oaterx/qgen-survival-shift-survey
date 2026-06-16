@@ -57,9 +57,19 @@ export default async function ResultPage({
   return (
     <main className="min-h-screen pb-16">
 
-      {/* Header — logo only */}
+      {/* Header — logo + heading */}
       <header className="flex flex-col items-center pt-7 pb-5 animate-fade-in">
         <QGenLogo height={56} />
+        <div className="relative w-full max-w-[300px] mt-3" style={{ aspectRatio: "1022 / 356" }}>
+          <Image
+            src="/Element/Heading.png"
+            alt="The Office Survivor — มนุษย์ออฟฟิศต้องรอด"
+            fill
+            className="object-contain"
+            sizes="300px"
+            priority
+          />
+        </div>
       </header>
 
       <div className="px-5 max-w-lg mx-auto flex flex-col gap-5">

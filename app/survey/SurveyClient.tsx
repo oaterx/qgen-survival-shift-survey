@@ -14,7 +14,7 @@ import SignalProgress from "../../components/survival-shift/SignalProgress";
 import SignalLine from "../../components/survival-shift/SignalLine";
 import OptionCard from "../../components/survival-shift/OptionCard";
 
-type Phase = "demo" | "storyIntro" | "chapterIntro" | "storyContinue" | "chapterOpen" | "chapterOpen2" | "survey" | "ending";
+type Phase = "demo" | "storyIntro" | "chapterIntro" | "storyContinue" | "chapterOpen" | "chapterOpen2" | "chapterOpen3" | "survey" | "ending";
 type AxisId = "F" | "C" | "W";
 
 const AXIS_LABEL: Record<AxisId, string> = {
@@ -129,8 +129,7 @@ export default function SurveyClient() {
     }
     if (nextIndex === 12) {
       setCurrentIndex(12);
-      setChapterIntroAxis("W");
-      setPhase("chapterIntro");
+      setPhase("chapterOpen3");
       return;
     }
     if (nextIndex >= total) {
@@ -175,8 +174,7 @@ export default function SurveyClient() {
       return;
     }
     if (currentIndex === 12) {
-      setPhase("chapterIntro");
-      setChapterIntroAxis("W");
+      setPhase("chapterOpen3");
       return;
     }
 
@@ -194,11 +192,11 @@ export default function SurveyClient() {
   }
 
   function handleChapterIntroBack() {
-    if (chapterIntroAxis === "F") {
-      setPhase("storyIntro");
-      return;
-    }
-    const prevPairIndex = 10;
+    setPhase("storyIntro");
+  }
+
+  function handleChapterOpen2Back() {
+    const prevPairIndex = 4;
     const pq1 = questions[prevPairIndex];
     const pq2 = questions[prevPairIndex + 1];
     const last2 = answers.slice(-2);
@@ -212,8 +210,8 @@ export default function SurveyClient() {
     setDirection("back");
   }
 
-  function handleChapterOpen2Back() {
-    const prevPairIndex = 4;
+  function handleChapterOpen3Back() {
+    const prevPairIndex = 10;
     const pq1 = questions[prevPairIndex];
     const pq2 = questions[prevPairIndex + 1];
     const last2 = answers.slice(-2);
@@ -308,6 +306,32 @@ export default function SurveyClient() {
                 </div>
               </div>
             ))}
+
+            <div>
+              <label className="block font-ui font-semibold text-qgen-black-soft mb-2"
+                style={{ fontSize: 13 }}>
+                Email
+                <span className="ml-1.5 font-normal text-qgen-gray-ash" style={{ fontSize: 11 }}>(ไม่บังคับ)</span>
+              </label>
+              <p className="text-qgen-gray-ash mb-2" style={{ fontSize: 12 }}>
+                กรอกอีเมลเพื่อรับข้อมูล ความรู้ และข่าวสารจากทาง QGEN Consultant ก่อนใคร
+              </p>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                className={[
+                  "w-full px-4 rounded-[10px] border bg-qgen-paper-alt",
+                  "font-ui transition-colors duration-150",
+                  "focus:outline-none focus:ring-2 focus:ring-qgen-signal/30 focus:border-qgen-signal",
+                  email
+                    ? "text-qgen-black-soft border-qgen-gray-ash/60"
+                    : "text-qgen-gray-ash border-qgen-gray-border",
+                ].join(" ")}
+                style={{ height: 46, fontSize: 14 }}
+              />
+            </div>
           </div>
 
           <div className="mt-10 flex flex-col gap-3">
@@ -728,7 +752,85 @@ export default function SurveyClient() {
     );
   }
 
-  // ── Ending + Email ─────────────────────────────────────────────────────────
+  // ── Chapter Open 3 (Chapter 3 cold-open) ────────────────────────────────────
+  if (phase === "chapterOpen3") {
+    const startIdx = AXIS_START_INDEX["W"];
+    return (
+      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+        <SignalTopBar />
+
+        <div className="flex-1 flex flex-col justify-between px-5 py-8 max-w-lg mx-auto w-full animate-slide-in pt-12">
+          <div>
+            <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
+              style={{ fontSize: 11, letterSpacing: "0.18em" }}>
+              Chapter 3
+            </p>
+            <div className="text-center mb-6">
+              <div
+                className="font-display text-qgen-black-soft"
+                style={{ fontSize: 32, lineHeight: "38px", fontWeight: 800, letterSpacing: "-0.02em" }}
+              >
+                Well Being
+              </div>
+              <div
+                className="font-bold text-qgen-signal"
+                style={{ fontSize: 16, lineHeight: "24px", marginTop: 6 }}
+              >
+                ร่างกายยังเดินต่อไป แต่ใจเริ่มไปต่อไม่ไหว
+              </div>
+            </div>
+
+            <div className="relative w-[220px] h-[220px] mx-auto mb-6">
+              <Image
+                src="/Element/Health.png"
+                alt="ความเหนื่อยล้าทางร่างกายและใจ"
+                fill
+                className="object-contain"
+                sizes="220px"
+                priority
+              />
+            </div>
+
+            <div className="flex flex-col gap-3.5">
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                วันทำงานดำเนินไปเรื่อย ๆ ช่วงบ่ายมาถึง
+              </p>
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                กาแฟแก้วแรกเริ่มหมดฤทธิ์
+              </p>
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                ตาเริ่มล้า ไหล่เริ่มตึง คุณอาจยังทำงานได้
+              </p>
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                แต่ร่างกายเริ่มส่งสัญญาณเล็ก ๆ ว่า มันเหนื่อยมาสักพักแล้ว
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => {
+                setCurrentIndex(startIdx);
+                setDirection("forward");
+                setPhase("survey");
+              }}
+              className="w-full font-ui font-bold text-white rounded-[12px]
+                bg-qgen-signal shadow-[0_12px_32px_rgba(201,111,59,0.25)]
+                hover:bg-qgen-signal-deep active:scale-[0.98] transition-all duration-200"
+              style={{ height: 48, fontSize: 15 }}
+            >
+              เริ่ม Chapter 3
+            </button>
+            <div className="flex justify-start pt-1">
+              <BackButton onClick={handleChapterOpen3Back} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Ending (closing screen, no image, no email) ─────────────────────────────
   if (phase === "ending") {
     return (
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
@@ -736,36 +838,30 @@ export default function SurveyClient() {
         <SignalProgress value={100} />
 
         <div className="flex-1 flex flex-col justify-between px-5 py-8 max-w-lg mx-auto w-full animate-slide-in">
-          <div>
-            <div
-              className="font-display text-qgen-black-soft mb-5 text-center"
-              style={{ fontSize: 26, lineHeight: "34px", fontWeight: 700, letterSpacing: "-0.01em" }}
-            >
-              คุณตอบคำถามครบแล้ว
-            </div>
-
-            <p className="text-qgen-black-soft mb-6 text-center" style={{ fontSize: 16, lineHeight: "26px" }}>
-              กำลังวิเคราะห์คำตอบทั้ง 3 แกนของคุณ
-            </p>
-
-            <div className="rounded-[14px] bg-qgen-paper-alt border border-qgen-gray-border p-5">
-              <p className="font-ui font-semibold text-qgen-black-soft mb-1" style={{ fontSize: 13 }}>
-                Your Email
+          <div className="flex flex-col justify-center flex-1">
+            <div className="flex flex-col gap-3.5">
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                หลังจากผ่านมาทั้งวัน คุณอาจยังยืนไหว ยังทำงานต่อได้
               </p>
-              <p className="text-qgen-gray-ash mb-3" style={{ fontSize: 12, lineHeight: "18px" }}>
-                กรอกอีเมลเพื่อรับข้อมูล ความรู้ และข่าวสารจากทาง QGEN Consultant ก่อนใคร
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                และยังเตรียมตัวสำหรับวันพรุ่งนี้เหมือนเดิม
               </p>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="w-full px-4 rounded-[10px] border bg-qgen-paper font-ui
-                  focus:outline-none focus:ring-2 focus:ring-qgen-signal/30 focus:border-qgen-signal
-                  text-qgen-black-soft border-qgen-gray-border placeholder:text-qgen-gray-ash/60
-                  transition-colors duration-150"
-                style={{ height: 44, fontSize: 14 }}
-              />
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                แต่คำถามสำคัญคือ
+              </p>
+              <p className="text-center" style={{ fontSize: 18, lineHeight: "27px" }}>
+                <span className="font-bold text-qgen-signal">
+                  วันนี้คุณกำลังใช้พลังไปกับอะไรมากที่สุด?
+                </span>
+              </p>
+              <p className="text-qgen-black-soft text-center mt-2" style={{ fontSize: 15, lineHeight: "25px" }}>
+                กดดูผลลัพธ์ แล้วมาดูกันว่า
+              </p>
+              <p className="text-center" style={{ fontSize: 16, lineHeight: "26px" }}>
+                <span className="font-bold text-qgen-black-soft">
+                  &ldquo;คุณกำลังเป็นมนุษย์ออฟฟิศประเภทไหนอยู่&rdquo;
+                </span>
+              </p>
             </div>
           </div>
 
