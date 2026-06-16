@@ -23,8 +23,9 @@ function flattenForSheet(
   c: number,
   w: number,
   personaId: string,
-  demographics: DemographicAnswers & { gender?: string },
+  demographics: DemographicAnswers,
   answers: SurveyAnswer[],
+  email?: string,
 ) {
   const flat: Record<string, unknown> = {
     timestamp: new Date().toISOString(),
@@ -32,11 +33,11 @@ function flattenForSheet(
     f,
     c,
     w,
-    gender: demographics.gender ?? "",
     positionLevel: demographics.positionLevel ?? "",
     industry: demographics.industry ?? "",
     ageRange: demographics.ageRange ?? "",
     incomeRange: demographics.incomeRange ?? "",
+    email: email ?? "",
   };
   for (const a of answers) {
     flat[a.questionId] = a.value;
@@ -52,7 +53,7 @@ export async function POST(request: Request) {
       c: unknown;
       w: unknown;
       personaId: unknown;
-      demographics?: DemographicAnswers & { gender?: string };
+      demographics?: DemographicAnswers;
       answers?: SurveyAnswer[];
     };
 
@@ -82,6 +83,7 @@ export async function POST(request: Request) {
       String(personaId ?? ""),
       demographics ?? {},
       answers ?? [],
+      body.email as string | undefined,
     );
     pushToGoogleSheet(flat);
 

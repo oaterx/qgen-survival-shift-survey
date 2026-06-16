@@ -1,33 +1,41 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { useState } from "react";
 
 export default function StartButton() {
   const router = useRouter();
+  const [pressed, setPressed] = useState(false);
 
   function handleStart() {
+    setPressed(true);
     sessionStorage.setItem("survey_entry", Date.now().toString());
-    router.push("/survey");
+    setTimeout(() => router.push("/survey"), 180);
   }
 
   return (
     <button
       onClick={handleStart}
-      className="group relative flex items-center justify-center gap-2 w-full rounded-[12px]
-        bg-qgen-signal text-white text-center font-ui font-bold tracking-wide
-        shadow-[0_12px_32px_rgba(201,111,59,0.25)]
-        transition-all duration-200 hover:bg-qgen-signal-deep hover:shadow-[0_16px_40px_rgba(201,111,59,0.32)]
-        active:scale-[0.98]"
-      style={{ height: 48, fontSize: 15 }}
+      aria-label="เริ่มทำแบบสำรวจ"
+      className="relative w-full cursor-pointer transition-transform duration-150 ease-out"
+      style={{
+        aspectRatio: "1672 / 941",
+        maxHeight: 130,
+        transform: pressed ? "scale(1.1)" : undefined,
+      }}
     >
-      เริ่มทำแบบสำรวจ
-      <svg
-        className="transition-transform duration-300 group-hover:translate-x-1"
-        width="18" height="18" viewBox="0 0 18 18" fill="none"
-        stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
-      >
-        <path d="M3 9h11M10 4l5 5-5 5" />
-      </svg>
+      <Image
+        src="/Element/ปุ่ม Start.png"
+        alt="เริ่มทำแบบสำรวจ"
+        fill
+        className={`object-contain animate-start-bounce transition-all duration-150 ease-out
+          ${pressed
+            ? "drop-shadow-[0_16px_30px_rgba(150,73,28,1)]"
+            : "hover:scale-105 hover:drop-shadow-[0_12px_24px_rgba(150,73,28,0.9)] active:scale-110 active:drop-shadow-[0_16px_30px_rgba(150,73,28,1)]"}`}
+        sizes="400px"
+        priority
+      />
     </button>
   );
 }

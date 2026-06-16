@@ -10,7 +10,7 @@ export default function ShareLinkButton() {
 
     if (navigator.share) {
       try {
-        await navigator.share({ title: "The Survival Shift — ผลลัพธ์ของฉัน", url });
+        await navigator.share({ title: "The Office Survivor — ผลลัพธ์ของฉัน", url });
       } catch {
         // user cancelled
       }

@@ -241,7 +241,7 @@ export const questions = [
     "id": "W6",
     "axis": "W",
     "axisName": "Well-being",
-    "question": "ความเครียดสะสมในชีวิต ส่งผลต่อสมาธิและการโฟกัสในงานของคุณแค่ไหน",
+    "question": "ความเครียดสะสมในชีวิต ส่งผลต่อสมาธิและการโฟกัสในงานคุณแค่ไหน",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [

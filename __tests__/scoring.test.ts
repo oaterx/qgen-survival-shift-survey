@@ -11,16 +11,13 @@ describe("Survival Shift scoring", () => {
     expect(calculateSurvivalScore([4, 4, 4, 4, 4])).toBe(0);
   });
 
-  it("maps score boundaries to 5 bands", () => {
-    expect(getStatusFromScore(80)).toBe("stable");
-    expect(getStatusFromScore(79)).toBe("atRisk");
-    expect(getStatusFromScore(60)).toBe("atRisk");
-    expect(getStatusFromScore(59)).toBe("crisisVisible");
-    expect(getStatusFromScore(40)).toBe("crisisVisible");
-    expect(getStatusFromScore(39)).toBe("emerging");
-    expect(getStatusFromScore(20)).toBe("emerging");
-    expect(getStatusFromScore(19)).toBe("deepeningSevere");
-    expect(getStatusFromScore(0)).toBe("deepeningSevere");
+  it("maps score boundaries to 3 bands", () => {
+    expect(getStatusFromScore(100)).toBe("stable");
+    expect(getStatusFromScore(67)).toBe("stable");
+    expect(getStatusFromScore(66)).toBe("atRisk");
+    expect(getStatusFromScore(34)).toBe("atRisk");
+    expect(getStatusFromScore(33)).toBe("crisis");
+    expect(getStatusFromScore(0)).toBe("crisis");
   });
 });
 

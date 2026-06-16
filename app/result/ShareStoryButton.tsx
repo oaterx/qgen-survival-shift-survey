@@ -11,9 +11,10 @@ type Props = {
   buttonColor?: string;
   fontFace?: string;
   logoDataUrl?: string;
+  personaImageDataUrl?: string;
 };
 
-export default function ShareStoryButton({ persona, axisResult, buttonColor, fontFace, logoDataUrl }: Props) {
+export default function ShareStoryButton({ persona, axisResult, buttonColor, fontFace, logoDataUrl, personaImageDataUrl }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<"idle" | "loading">("idle");
 
@@ -60,7 +61,7 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
         style={{ position: "fixed", top: -9999, left: -9999, pointerEvents: "none" }}
         aria-hidden="true"
       >
-        <StoryCard ref={cardRef} persona={persona} axisResult={axisResult} logoDataUrl={logoDataUrl} />
+        <StoryCard ref={cardRef} persona={persona} axisResult={axisResult} logoDataUrl={logoDataUrl} personaImageDataUrl={personaImageDataUrl} />
       </div>
 
       <button

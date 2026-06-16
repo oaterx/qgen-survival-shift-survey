@@ -47,6 +47,7 @@
   --animate-fade-up: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-fade-in: fade-in 0.4s ease-out both;
   --animate-slide-in: slide-from-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-start-bounce: start-bounce 1.6s ease-in-out infinite;
 }
 
 @keyframes fade-up {
@@ -62,6 +63,22 @@
 @keyframes slide-from-right {
   from { opacity: 0; transform: translateX(24px); }
   to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes start-bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-6px) scale(1.03); }
+}
+
+@keyframes clock-ring {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  10%      { transform: rotate(-12deg) scale(1.08); }
+  20%      { transform: rotate(10deg) scale(0.95); }
+  30%      { transform: rotate(-10deg) scale(1.08); }
+  40%      { transform: rotate(8deg) scale(0.95); }
+  50%      { transform: rotate(-6deg) scale(1.05); }
+  60%      { transform: rotate(4deg) scale(0.98); }
+  70%, 100% { transform: rotate(0deg) scale(1); }
 }
 
 body {

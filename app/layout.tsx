@@ -31,7 +31,7 @@ const prompt = Prompt({
 });
 
 export const metadata: Metadata = {
-  title: "The Survival Shift Survey — QGEN",
+  title: "The Office Survivor Survey — QGEN",
   description: "วัดความมั่นคงทางการเงิน เส้นทางอาชีพ และสุขภาพของคุณ",
 };
 

@@ -19,7 +19,7 @@ export default function ScoreRing({ score, size = 160 }: Props) {
 
   const fill = animated ? (score / 100) * CIRCUMFERENCE : 0;
   const gap = CIRCUMFERENCE - fill;
-  const color = `hsl(${(score * 1.2).toFixed(0)}, 68%, 42%)`;
+  const color = score >= 67 ? "#4F9B45" : score >= 33 ? "#E1A300" : "#E66A2C";
   const scale = size / 160;
 
   return (
@@ -41,7 +41,7 @@ export default function ScoreRing({ score, size = 160 }: Props) {
         style={{ transition: "stroke-dasharray 0.9s cubic-bezier(0.16,1,0.3,1)" }}
       />
       <text
-        x="80" y="82"
+        x="80" y="74"
         textAnchor="middle"
         fontFamily="var(--font-inter), system-ui, sans-serif"
         fontSize={Math.round(50 * scale)}
@@ -52,7 +52,7 @@ export default function ScoreRing({ score, size = 160 }: Props) {
         {score}
       </text>
       <text
-        x="80" y="112"
+        x="80" y="104"
         textAnchor="middle"
         fontFamily="var(--font-inter), system-ui, sans-serif"
         fontSize="14"

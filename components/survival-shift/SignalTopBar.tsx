@@ -23,15 +23,15 @@ export default function SignalTopBar({ rightLabel, current, currentEnd, total }:
     >
       <div className="flex items-center gap-2.5">
         <img
-          src="/Logo QGEN Black.png"
+          src="/Qgen Logo Black Orange.png"
           alt="QGEN"
-          style={{ height: 18, width: "auto" }}
+          style={{ height: 22, width: "auto" }}
         />
         <span
           className="font-ui font-bold text-qgen-black-soft"
           style={{ fontSize: 12.5, letterSpacing: "0.01em" }}
         >
-          The Survival Shift
+          The Office Survivor
         </span>
       </div>
       {right && (

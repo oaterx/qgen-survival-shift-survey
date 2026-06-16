@@ -27,9 +27,14 @@ export function loadStorycardAssets() {
     .join("");
 
   const logoDataUrl = fileToBase64(
-    path.join(pub, "Logo QGEN Black.png"),
+    path.join(pub, "Qgen Logo Black Orange.png"),
     "image/png"
   );
 
   return { fontFace, logoDataUrl };
+}
+
+export function loadPersonaImageDataUrl(personaId: string): string {
+  const pub = path.join(process.cwd(), "public");
+  return fileToBase64(path.join(pub, "personas", `${personaId}.png`), "image/png");
 }

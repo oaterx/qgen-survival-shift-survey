@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { questions } from "../../data/questions";
 import { demographicFields } from "../../data/demographics";
 import type { DemographicAnswers, DemographicFieldId } from "../../data/demographics";
@@ -13,8 +14,7 @@ import SignalProgress from "../../components/survival-shift/SignalProgress";
 import SignalLine from "../../components/survival-shift/SignalLine";
 import OptionCard from "../../components/survival-shift/OptionCard";
 
-type Gender = "unspecified";
-type Phase = "demo" | "storyIntro" | "chapterIntro" | "survey" | "ending";
+type Phase = "demo" | "storyIntro" | "chapterIntro" | "storyContinue" | "chapterOpen" | "chapterOpen2" | "survey" | "ending";
 type AxisId = "F" | "C" | "W";
 
 const AXIS_LABEL: Record<AxisId, string> = {
@@ -23,11 +23,16 @@ const AXIS_LABEL: Record<AxisId, string> = {
   W: "Well-being",
 };
 
-const CHAPTER_META: Record<AxisId, { no: string; desc: string; cta: string }> = {
+const CHAPTER_META: Record<AxisId, { no: string; desc: string; story?: string[]; cta: string }> = {
   F: {
     no: "บทที่ 1",
     desc: "เราจะเริ่มที่เรื่องเงิน — แรงกดดันที่ทุกคนรู้สึกอยู่ แต่ไม่ค่อยพูดออกมา",
-    cta: "เริ่มบทที่ 1",
+    story: [
+      "เช้าวันใหม่...|ที่ไม่สดใสเหมือนเดิม",
+      "เสียงนาฬิกาปลุกดังขึ้น คุณลุกขึ้นแต่งตัวเหมือนทุกวัน",
+      "ภายนอกดูพร้อมไปทำงาน แต่ข้างในกลับรู้สึกว่างเปล่า",
+    ],
+    cta: "ถัดไป",
   },
   C: {
     no: "บทที่ 2",
@@ -71,7 +76,6 @@ export default function SurveyClient() {
 
   const [phase, setPhase] = useState<Phase>("demo");
   const [chapterIntroAxis, setChapterIntroAxis] = useState<AxisId>("F");
-  const gender: Gender = "unspecified";
   const [demoAnswers, setDemoAnswers] = useState<DemographicAnswers>({});
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -120,8 +124,7 @@ export default function SurveyClient() {
 
     if (nextIndex === 6) {
       setCurrentIndex(6);
-      setChapterIntroAxis("C");
-      setPhase("chapterIntro");
+      setPhase("chapterOpen2");
       return;
     }
     if (nextIndex === 12) {
@@ -150,7 +153,7 @@ export default function SurveyClient() {
       body: JSON.stringify({
         f: Math.round(scores.F), c: Math.round(scores.C), w: Math.round(scores.W),
         personaId,
-        demographics: { ...demoAnswers, gender },
+        demographics: demoAnswers,
         answers,
         email: email.trim() || undefined,
       }),
@@ -164,13 +167,11 @@ export default function SurveyClient() {
     setPageSelections({});
 
     if (currentIndex === 0) {
-      setPhase("chapterIntro");
-      setChapterIntroAxis("F");
+      setPhase("chapterOpen");
       return;
     }
     if (currentIndex === 6) {
-      setPhase("chapterIntro");
-      setChapterIntroAxis("C");
+      setPhase("chapterOpen2");
       return;
     }
     if (currentIndex === 12) {
@@ -197,7 +198,22 @@ export default function SurveyClient() {
       setPhase("storyIntro");
       return;
     }
-    const prevPairIndex = chapterIntroAxis === "C" ? 4 : 10;
+    const prevPairIndex = 10;
+    const pq1 = questions[prevPairIndex];
+    const pq2 = questions[prevPairIndex + 1];
+    const last2 = answers.slice(-2);
+    setPageSelections({
+      [pq1.id]: last2[0].value as 1 | 2 | 3 | 4,
+      [pq2.id]: last2[1].value as 1 | 2 | 3 | 4,
+    });
+    setAnswers((a) => a.slice(0, -2));
+    setCurrentIndex(prevPairIndex);
+    setPhase("survey");
+    setDirection("back");
+  }
+
+  function handleChapterOpen2Back() {
+    const prevPairIndex = 4;
     const pq1 = questions[prevPairIndex];
     const pq2 = questions[prevPairIndex + 1];
     const last2 = answers.slice(-2);
@@ -318,43 +334,59 @@ export default function SurveyClient() {
   // ── Story Intro ────────────────────────────────────────────────────────────
   if (phase === "storyIntro") {
     const STORY_AXES = [
-      { label: "Financial\nSecurity" },
-      { label: "Career Path" },
-      { label: "Well-being" },
+      {
+        label: "Financial Security",
+        labelTH: "ความมั่นคงทางการเงิน",
+        desc: "มีรายได้และเงินสำรองเพียงพอ ดูแลค่าใช้จ่ายได้โดยไม่ต้องกังวลเรื่องเงิน",
+      },
+      {
+        label: "Career Path",
+        labelTH: "ความก้าวหน้าในสายอาชีพ",
+        desc: "มองเห็นโอกาสการเติบโตในสายงาน และเติบโตไปพร้อมกับองค์กรได้อย่างมั่นคง",
+      },
+      {
+        label: "Well-being",
+        labelTH: "สุขภาพและความเป็นอยู่",
+        desc: "มีสุขภาพกายและใจที่ดี จัดการความเครียดและความเหนื่อยล้าได้อย่างเหมาะสม",
+      },
     ];
     return (
-      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="min-h-screen flex flex-col bg-qgen-paper">
         <SignalTopBar />
 
         <div className="flex-1 flex flex-col justify-between px-5 py-8 max-w-lg mx-auto w-full animate-slide-in">
           <div>
             <div
-              className="mb-6 font-display text-qgen-black-soft text-center whitespace-nowrap"
-              style={{ fontSize: "clamp(28px, 8vw, 40px)", lineHeight: 1.1, fontWeight: 800, letterSpacing: "-0.02em" }}
+              className="relative w-full max-w-[300px] mx-auto mb-4"
+              style={{ aspectRatio: "1022 / 356" }}
             >
-              The Survival Shift
+              <Image
+                src="/Element/Heading.png"
+                alt="The Office Survivor — มนุษย์ออฟฟิศต้องรอด"
+                fill
+                className="object-contain"
+                sizes="300px"
+                priority
+              />
             </div>
 
-            <p className="text-qgen-black-soft mb-3" style={{ fontSize: 15, lineHeight: "24px" }}>
-              ในยุคที่ค่าครองชีพสูงขึ้นทุกปี แต่รายได้ไม่ตาม — พนักงานหลายคนกำลังเอาตัวรอดอยู่อย่างเงียบ ๆ
-            </p>
-            <p className="text-qgen-gray-ash mb-6" style={{ fontSize: 14, lineHeight: "22px" }}>
-              แบบสำรวจนี้จะพาคุณผ่าน 3 บท เพื่อช่วยให้คุณเห็นว่าตอนนี้ชีวิตของคุณอยู่ที่จุดไหน
+            <p className="text-qgen-gray-ash text-center mb-6" style={{ fontSize: 14, lineHeight: "22px" }}>
+              ในแบบสำรวจนี้เราจะพาคุณไปสำรวจปัญหาใน 3 ด้านหลัก ๆ ของชีวิตมนุษย์ออฟฟิศ
             </p>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-2">
               {STORY_AXES.map((ax, i) => (
                 <div
                   key={i}
-                  className="flex-1 flex items-center justify-center rounded-xl border border-qgen-gray-border bg-qgen-paper-alt"
-                  style={{ padding: "12px 8px", boxShadow: "0 2px 8px rgba(10,10,10,0.04)" }}
+                  className="w-full rounded-xl border border-qgen-gray-border bg-qgen-paper-alt"
+                  style={{ padding: "12px 14px", boxShadow: "0 2px 8px rgba(10,10,10,0.04)" }}
                 >
-                  <span
-                    className="font-ui font-semibold text-qgen-black-soft text-center whitespace-pre-line"
-                    style={{ fontSize: 13, lineHeight: "18px" }}
-                  >
-                    {ax.label}
-                  </span>
+                  <p className="font-ui font-semibold text-qgen-black-soft" style={{ fontSize: 13, lineHeight: "18px" }}>
+                    {ax.label} <span className="text-qgen-gray-ash font-normal">· {ax.labelTH}</span>
+                  </p>
+                  <p className="font-ui text-qgen-gray-ash mt-1" style={{ fontSize: 11.5, lineHeight: "17px" }}>
+                    {ax.desc}
+                  </p>
                 </div>
               ))}
             </div>
@@ -393,27 +425,204 @@ export default function SurveyClient() {
 
     return (
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
-        <SignalTopBar rightLabel={AXIS_LABEL[chapterIntroAxis]} />
-        <SignalProgress value={(startIdx / total) * 100} />
+        <SignalTopBar />
 
-        <div className="flex-1 flex flex-col justify-between px-5 py-8 max-w-lg mx-auto w-full animate-slide-in">
+        <div className={`flex-1 flex flex-col justify-between px-5 py-8 max-w-lg mx-auto w-full animate-slide-in ${meta.story ? "pt-32" : ""}`}>
           <div>
-            <p className="font-ui font-semibold text-qgen-signal uppercase mb-3"
-              style={{ fontSize: 11, letterSpacing: "0.18em" }}>
-              {meta.no}
-            </p>
-            <div
-              className="font-display text-qgen-black-soft"
-              style={{ fontSize: 34, lineHeight: "40px", fontWeight: 800, letterSpacing: "-0.02em" }}
+            {meta.story && (
+              <div className="relative w-[220px] h-[220px] mx-auto mb-5" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
+                <Image
+                  src="/Element/Clock.png"
+                  alt="นาฬิกาปลุก"
+                  fill
+                  className="object-contain"
+                  sizes="220px"
+                  priority
+                />
+              </div>
+            )}
+
+            {!meta.story && (
+              <>
+                <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
+                  style={{ fontSize: 11, letterSpacing: "0.18em" }}>
+                  {meta.no}
+                </p>
+                <div
+                  className="font-display text-qgen-black-soft text-center"
+                  style={{ fontSize: 34, lineHeight: "40px", fontWeight: 800, letterSpacing: "-0.02em" }}
+                >
+                  {AXIS_LABEL[chapterIntroAxis]}
+                </div>
+                <div className="w-12 rounded-full mx-auto" style={{ height: 3, background: "#C96F3B", marginTop: 18, marginBottom: 18 }} />
+              </>
+            )}
+            {meta.story && <div style={{ marginTop: 40 }} />}
+
+            {meta.story ? (
+              <div className="flex flex-col gap-3.5">
+                {meta.story.map((line, i) => {
+                  if (i === 0 && line.includes("|")) {
+                    const [highlight, rest] = line.split("|");
+                    return (
+                      <p key={i} className="text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                        <span className="font-bold text-qgen-signal" style={{ fontSize: 23 }}>{highlight}</span>
+                        <span className="text-qgen-black-soft">{rest}</span>
+                      </p>
+                    );
+                  }
+                  return (
+                    <p key={i} className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                      {line}
+                    </p>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-qgen-black-soft" style={{ fontSize: 15, lineHeight: "25px" }}>
+                {meta.desc}
+              </p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => {
+                if (meta.story) {
+                  setPhase("storyContinue");
+                  return;
+                }
+                setCurrentIndex(startIdx);
+                setDirection("forward");
+                setPhase("survey");
+              }}
+              className="w-full font-ui font-bold text-white rounded-[12px]
+                bg-qgen-signal shadow-[0_12px_32px_rgba(201,111,59,0.25)]
+                hover:bg-qgen-signal-deep active:scale-[0.98] transition-all duration-200"
+              style={{ height: 48, fontSize: 15 }}
             >
-              {AXIS_LABEL[chapterIntroAxis]}
+              {meta.cta}
+            </button>
+            <div className="flex justify-start pt-1">
+              <BackButton onClick={handleChapterIntroBack} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Story Continue (pre-Chapter 1 survey) ───────────────────────────────────
+  if (phase === "storyContinue") {
+    return (
+      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+        <SignalTopBar />
+
+        <div className="flex-1 flex flex-col justify-between px-5 py-8 max-w-lg mx-auto w-full animate-slide-in pt-32">
+          <div>
+            <div className="relative w-[220px] h-[220px] mx-auto mb-5">
+              <Image
+                src="/Element/Phone.png"
+                alt="โทรศัพท์แจ้งเตือน"
+                fill
+                className="object-contain"
+                sizes="220px"
+                priority
+              />
             </div>
 
-            <div className="w-12 rounded-full" style={{ height: 3, background: "#C96F3B", marginTop: 18, marginBottom: 18 }} />
+            <div style={{ marginTop: 40 }} />
 
-            <p className="text-qgen-black-soft" style={{ fontSize: 15, lineHeight: "25px" }}>
-              {meta.desc}
+            <div className="flex flex-col gap-3.5">
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                ก่อนออกจากห้อง โทรศัพท์สว่างขึ้นพร้อมแจ้งเตือนค่าใช้จ่าย
+              </p>
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                และคำถามในหัวก็เด้งขึ้นมาเบา ๆ ว่า
+              </p>
+              <p className="text-center mx-auto" style={{ fontSize: 18, lineHeight: "27px", width: "100vw", marginLeft: "calc(-50vw + 50%)" }}>
+                <span className="font-bold text-qgen-signal">
+                  &ldquo;เรากำลังใช้ชีวิตอยู่จริง ๆ หรือแค่พยายามเอาตัวเองให้รอดไปวัน ๆ&rdquo;
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => setPhase("chapterOpen")}
+              className="w-full font-ui font-bold text-white rounded-[12px]
+                bg-qgen-signal shadow-[0_12px_32px_rgba(201,111,59,0.25)]
+                hover:bg-qgen-signal-deep active:scale-[0.98] transition-all duration-200"
+              style={{ height: 48, fontSize: 15 }}
+            >
+              ถัดไป
+            </button>
+            <div className="flex justify-start pt-1">
+              <BackButton onClick={() => {
+                setChapterIntroAxis("F");
+                setPhase("chapterIntro");
+              }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Chapter Open (Chapter 1 cold-open) ──────────────────────────────────────
+  if (phase === "chapterOpen") {
+    const startIdx = AXIS_START_INDEX["F"];
+    return (
+      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+        <SignalTopBar />
+
+        <div className="flex-1 flex flex-col justify-between px-5 py-8 max-w-lg mx-auto w-full animate-slide-in pt-12">
+          <div>
+            <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
+              style={{ fontSize: 11, letterSpacing: "0.18em" }}>
+              Chapter 1
             </p>
+            <div className="text-center mb-6">
+              <div
+                className="font-display text-qgen-black-soft"
+                style={{ fontSize: 32, lineHeight: "38px", fontWeight: 800, letterSpacing: "-0.02em" }}
+              >
+                Financial Security
+              </div>
+              <div
+                className="font-bold text-qgen-signal"
+                style={{ fontSize: 16, lineHeight: "24px", marginTop: 6 }}
+              >
+                เงินเดือนเข้า แต่ชีวิตเรายังหนักอึ้ง
+              </div>
+            </div>
+
+            <div className="relative w-[220px] h-[220px] mx-auto mb-6">
+              <Image
+                src="/Element/Money.png"
+                alt="เงินเดือนกับค่าใช้จ่าย"
+                fill
+                className="object-contain"
+                sizes="220px"
+                priority
+              />
+            </div>
+
+            <div className="flex flex-col gap-3.5">
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                ระหว่างทางไปทำงาน คุณเปิดแอปธนาคารขึ้นมาดูแบบไม่ตั้งใจ
+              </p>
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                เงินเดือนเพิ่งเข้าได้ไม่นาน แต่ค่าใช้จ่ายเหมือนรออยู่ก่อนแล้ว
+              </p>
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                บางครั้งคุณไม่ได้อยากประหยัดทุกอย่าง
+              </p>
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                แต่ทุกครั้งที่ใช้เงิน คุณก็เริ่มคิดมากขึ้นเรื่อย ๆ
+              </p>
+            </div>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -428,10 +637,90 @@ export default function SurveyClient() {
                 hover:bg-qgen-signal-deep active:scale-[0.98] transition-all duration-200"
               style={{ height: 48, fontSize: 15 }}
             >
-              {meta.cta}
+              เริ่ม Chapter 1
             </button>
             <div className="flex justify-start pt-1">
-              <BackButton onClick={handleChapterIntroBack} />
+              <BackButton onClick={() => setPhase("storyContinue")} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Chapter Open 2 (Chapter 2 cold-open) ────────────────────────────────────
+  if (phase === "chapterOpen2") {
+    const startIdx = AXIS_START_INDEX["C"];
+    return (
+      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+        <SignalTopBar />
+
+        <div className="flex-1 flex flex-col justify-between px-5 py-8 max-w-lg mx-auto w-full animate-slide-in pt-12">
+          <div>
+            <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
+              style={{ fontSize: 11, letterSpacing: "0.18em" }}>
+              Chapter 2
+            </p>
+            <div className="text-center mb-6">
+              <div
+                className="font-display text-qgen-black-soft"
+                style={{ fontSize: 32, lineHeight: "38px", fontWeight: 800, letterSpacing: "-0.02em" }}
+              >
+                Career Path
+              </div>
+              <div
+                className="font-bold text-qgen-signal"
+                style={{ fontSize: 16, lineHeight: "24px", marginTop: 6 }}
+              >
+                งานที่ทำอยู่ กำลังพาเราไปไหน
+              </div>
+            </div>
+
+            <div className="relative w-[220px] h-[220px] mx-auto mb-6">
+              <Image
+                src="/Element/Career.png"
+                alt="เส้นทางอาชีพ"
+                fill
+                className="object-contain"
+                sizes="220px"
+                priority
+              />
+            </div>
+
+            <div className="flex flex-col gap-3.5">
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                คุณมาถึงออฟฟิศ เปิดคอม และเข้าสู่โหมดพร้อมทำงาน
+              </p>
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                อีเมลค้างเต็ม Inbox ประชุมรออยู่ งานเก่ารอแก้ และงานใหม่รอเริ่ม
+              </p>
+              <p className="text-qgen-black-soft text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                คุณไม่ได้ไม่ตั้งใจหรือไม่พยายาม แต่บางวันคุณก็เริ่มสงสัยว่า
+              </p>
+              <p className="text-center" style={{ fontSize: 15, lineHeight: "25px" }}>
+                <span className="font-bold text-qgen-signal">
+                  &ldquo;งานที่ทำอยู่กำลังพาคุณไปข้างหน้าจริงไหม&rdquo;
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => {
+                setCurrentIndex(startIdx);
+                setDirection("forward");
+                setPhase("survey");
+              }}
+              className="w-full font-ui font-bold text-white rounded-[12px]
+                bg-qgen-signal shadow-[0_12px_32px_rgba(201,111,59,0.25)]
+                hover:bg-qgen-signal-deep active:scale-[0.98] transition-all duration-200"
+              style={{ height: 48, fontSize: 15 }}
+            >
+              เริ่ม Chapter 2
+            </button>
+            <div className="flex justify-start pt-1">
+              <BackButton onClick={handleChapterOpen2Back} />
             </div>
           </div>
         </div>
@@ -534,12 +823,6 @@ export default function SurveyClient() {
         key={`pair-${currentIndex}-${direction}`}
         className="flex-1 flex flex-col px-5 pt-6 pb-40 max-w-lg mx-auto w-full animate-slide-in"
       >
-        {/* Axis label — centered, display font */}
-        <p className="text-center font-display font-bold text-qgen-black-soft uppercase mb-6"
-          style={{ fontSize: 15, letterSpacing: "0.14em" }}>
-          {AXIS_LABEL[q1.axis as AxisId]}
-        </p>
-
         {/* Question 1 */}
         <div className="mb-8">
           <p className="font-ui text-qgen-gray-ash mb-2"

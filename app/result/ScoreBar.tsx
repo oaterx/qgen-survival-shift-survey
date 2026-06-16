@@ -15,7 +15,7 @@ export default function ScoreBar({ score, delay = 0 }: Props) {
     return () => clearTimeout(t);
   }, [score, delay]);
 
-  const color = `hsl(${(score * 1.2).toFixed(0)}, 68%, 42%)`;
+  const color = score >= 67 ? "#4F9B45" : score >= 33 ? "#E1A300" : "#E66A2C";
 
   return (
     <div className="w-full h-1.5 bg-qgen-paper-wash/60 rounded-full overflow-hidden mt-2.5">
