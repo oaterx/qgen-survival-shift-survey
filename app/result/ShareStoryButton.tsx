@@ -29,7 +29,6 @@ function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise
 
 export default function ShareStoryButton({ persona, axisResult, buttonColor, fontFace, logoDataUrl, headingDataUrl, personaImageDataUrl }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const fileRef = useRef<File | null>(null);
   const startedRef = useRef(false);
 
   const [open, setOpen] = useState(false);
@@ -37,13 +36,7 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
   // "error" → render failed, offer retry.
   const [status, setStatus] = useState<"generating" | "ready" | "error">("generating");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [canNativeShare, setCanNativeShare] = useState(false);
-
-  // Render the share image in the background as soon as the result page mounts,
-  // so tapping the button can open a modal that's already populated — the tap
-  // feels instant ("ปึ้ป") instead of staring at a frozen button for seconds.
   useEffect(() => {
-    setCanNativeShare(typeof navigator !== "undefined" && typeof navigator.canShare === "function");
     generate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -62,8 +55,6 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
       // capture. Hard timeout so a stuck render can't hang forever.
       await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 8000, "render pass 1");
       const dataUrl = await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 8000, "render pass 2");
-      const blob = await fetch(dataUrl).then((r) => r.blob());
-      fileRef.current = new File([blob], "survival-shift-story.png", { type: "image/png" });
       setPreviewUrl(dataUrl);
       setStatus("ready");
     } catch (err) {
@@ -79,35 +70,6 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
     if (status !== "ready") generate();
   }
 
-  // Fired directly from the in-modal button tap — a fresh user-gesture context,
-  // which is exactly what iOS Safari requires for navigator.share to actually
-  // open the share sheet (the old flow shared after async work, by which point
-  // the gesture had expired and the call silently failed).
-  async function handleShare() {
-    const file = fileRef.current;
-    if (!file) return;
-    // Try native share sheet first (works on iOS/Android; lets user Save to
-    // Photos or share to IG Stories). Skip the canShare({files}) pre-check —
-    // it returns false on some iOS versions even when share actually works,
-    // causing the button to do nothing. Just call share and handle errors.
-    try {
-      await navigator.share({ files: [file], title: "The Office Survivor" });
-    } catch (err) {
-      if (err instanceof Error && err.name === "AbortError") return;
-      // Share not supported or failed — fall back to direct download.
-      handleDownload();
-    }
-  }
-
-  function handleDownload() {
-    if (!previewUrl) return;
-    const a = document.createElement("a");
-    a.href = previewUrl;
-    a.download = "survival-shift-story.png";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  }
 
   return (
     <>
@@ -176,24 +138,11 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
                   src={previewUrl}
                   alt="The Office Survivor — ผลลัพธ์ของฉัน"
                   className="max-w-full rounded-2xl shadow-2xl"
-                  style={{ maxHeight: "55vh" }}
+                  style={{ maxHeight: "68vh" }}
                 />
-                {/* Single action button: native share sheet on iOS/Android
-                    (lets user Save to Photos or share to IG Stories in one tap),
-                    plain download on desktop where share isn't supported. */}
-                <button
-                  onClick={handleShare}
-                  className="w-full max-w-[280px] px-6 py-4 rounded-xl bg-white text-qgen-black-soft
-                    font-ui font-bold text-[15px] active:scale-[0.97] transition-transform duration-200 ease-out
-                    flex items-center justify-center gap-2.5"
-                >
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                    <polyline points="16 6 12 2 8 6" />
-                    <line x1="12" y1="2" x2="12" y2="15" />
-                  </svg>
-                  แชร์ / บันทึก
-                </button>
+                <p className="text-white/80 text-center text-sm px-4 leading-relaxed">
+                  กดค้างที่รูปเพื่อบันทึกหรือแชร์ลง Story
+                </p>
               </>
             )}
 
