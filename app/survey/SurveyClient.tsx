@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { questions } from "../../data/questions";
 import { demographicFields } from "../../data/demographics";
 import type { DemographicAnswers, DemographicFieldId } from "../../data/demographics";
@@ -581,16 +580,14 @@ export default function SurveyClient() {
 
         <div className="flex-1 overflow-y-auto px-5 py-3 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-8 sm:pt-16">
           <div
-            className="relative w-full max-w-[190px] sm:max-w-[300px] mx-auto mb-4 sm:mb-4"
+            className="w-full max-w-[190px] sm:max-w-[300px] mx-auto mb-4 sm:mb-4"
             style={{ aspectRatio: "1022 / 356" }}
           >
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="/Element/Heading.png"
               alt="The Office Survivor — มนุษย์ออฟฟิศต้องรอด"
-              fill
-              className="object-contain"
-              sizes="300px"
-              priority
+              className="w-full h-full object-contain"
             />
           </div>
 
@@ -656,15 +653,9 @@ export default function SurveyClient() {
 
         <div className={`flex-1 overflow-y-auto px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block ${meta.story ? "pt-12 sm:pt-32" : ""}`}>
           {meta.story && (
-            <div className="relative w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-5" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
-              <Image
-                src="/Element/Clock.png"
-                alt="นาฬิกาปลุก"
-                fill
-                className="object-contain"
-                sizes="220px"
-                priority
-              />
+            <div className="w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-5" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/Element/Clock.webp" alt="นาฬิกาปลุก" className="w-full h-full object-contain" />
             </div>
           )}
 
@@ -749,15 +740,9 @@ export default function SurveyClient() {
         <SignalTopBar />
 
         <div className="flex-1 overflow-y-auto px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-12 sm:pt-32">
-          <div className="relative w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-5">
-            <Image
-              src="/Element/Phone.png"
-              alt="โทรศัพท์แจ้งเตือน"
-              fill
-              className="object-contain"
-              sizes="220px"
-              priority
-            />
+          <div className="w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/Element/Phone.webp" alt="โทรศัพท์แจ้งเตือน" className="w-full h-full object-contain" />
           </div>
 
           <div className="mt-5 sm:mt-10" />
@@ -829,15 +814,9 @@ export default function SurveyClient() {
             </div>
           </div>
 
-          <div className="relative w-[150px] h-[150px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-6">
-            <Image
-              src="/Element/Money.png"
-              alt="เงินเดือนกับค่าใช้จ่าย"
-              fill
-              className="object-contain"
-              sizes="220px"
-              priority
-            />
+          <div className="w-[150px] h-[150px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/Element/Money.webp" alt="เงินเดือนกับค่าใช้จ่าย" className="w-full h-full object-contain" />
           </div>
 
           <div className="flex flex-col gap-2 sm:gap-3.5">
@@ -909,15 +888,9 @@ export default function SurveyClient() {
             </div>
           </div>
 
-          <div className="relative w-[150px] h-[150px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-6">
-            <Image
-              src="/Element/Career.png"
-              alt="เส้นทางอาชีพ"
-              fill
-              className="object-contain"
-              sizes="220px"
-              priority
-            />
+          <div className="w-[150px] h-[150px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/Element/Career.webp" alt="เส้นทางอาชีพ" className="w-full h-full object-contain" />
           </div>
 
           <div className="flex flex-col gap-2 sm:gap-3.5">
@@ -991,15 +964,9 @@ export default function SurveyClient() {
             </div>
           </div>
 
-          <div className="relative w-[150px] h-[150px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-6">
-            <Image
-              src="/Element/Health.png"
-              alt="ความเหนื่อยล้าทางร่างกายและใจ"
-              fill
-              className="object-contain"
-              sizes="220px"
-              priority
-            />
+          <div className="w-[150px] h-[150px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/Element/Health.webp" alt="ความเหนื่อยล้าทางร่างกายและใจ" className="w-full h-full object-contain" />
           </div>
 
           <div className="flex flex-col gap-2 sm:gap-3.5">

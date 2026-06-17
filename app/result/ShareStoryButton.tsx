@@ -85,13 +85,17 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
   // the gesture had expired and the call silently failed).
   async function handleShare() {
     const file = fileRef.current;
-    if (!file || !navigator.canShare?.({ files: [file] })) return;
+    if (!file) return;
+    // Try native share sheet first (works on iOS/Android; lets user Save to
+    // Photos or share to IG Stories). Skip the canShare({files}) pre-check —
+    // it returns false on some iOS versions even when share actually works,
+    // causing the button to do nothing. Just call share and handle errors.
     try {
-      await navigator.share({ files: [file] });
+      await navigator.share({ files: [file], title: "The Office Survivor" });
     } catch (err) {
-      if (!(err instanceof Error && err.name === "AbortError")) {
-        console.error("[ShareStory] navigator.share failed:", err);
-      }
+      if (err instanceof Error && err.name === "AbortError") return;
+      // Share not supported or failed — fall back to direct download.
+      handleDownload();
     }
   }
 
@@ -178,7 +182,7 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
                     (lets user Save to Photos or share to IG Stories in one tap),
                     plain download on desktop where share isn't supported. */}
                 <button
-                  onClick={canNativeShare ? handleShare : handleDownload}
+                  onClick={handleShare}
                   className="w-full max-w-[280px] px-6 py-4 rounded-xl bg-white text-qgen-black-soft
                     font-ui font-bold text-[15px] active:scale-[0.97] transition-transform duration-200 ease-out
                     flex items-center justify-center gap-2.5"

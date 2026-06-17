@@ -74,7 +74,7 @@ export default function ShareLinkButton() {
             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M2 8l4 4 8-8" />
           </svg>
-          คัดลอกลิ้งค์แล้ว
+          คัดลอกลิงก์แล้ว
         </>
       ) : error ? (
         <span className="text-qgen-signal-deep">คัดลอกไม่สำเร็จ ลองอีกครั้ง</span>
@@ -88,7 +88,7 @@ export default function ShareLinkButton() {
             <line x1="10.55" y1="4.22" x2="5.45" y2="6.78" />
             <line x1="10.55" y1="11.78" x2="5.45" y2="9.22" />
           </svg>
-          แชร์ผลลัพธ์เป็นลิ้งค์
+          แชร์ผลลัพธ์เป็นลิงก์
         </>
       )}
     </button>
