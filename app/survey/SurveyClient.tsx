@@ -431,13 +431,13 @@ export default function SurveyClient() {
   // output exactly (no sessionStorage-derived state), avoiding any hydration
   // mismatch. The restore effect flips `hydrated` and reveals the real phase.
   if (!hydrated) {
-    return <div className="h-screen bg-qgen-paper" />;
+    return <div className="h-dvh bg-qgen-paper" />;
   }
 
   // ── Demographics ───────────────────────────────────────────────────────────
   if (phase === "demo") {
     return (
-      <div className="h-screen flex flex-col bg-qgen-paper">
+      <div className="h-dvh flex flex-col bg-qgen-paper">
         <SignalTopBar />
 
         <div className="flex-1 overflow-y-auto px-5 pt-6 pb-36 max-w-lg mx-auto w-full animate-slide-in">
@@ -575,7 +575,7 @@ export default function SurveyClient() {
       },
     ];
     return (
-      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
         <div className="flex-1 overflow-y-auto px-5 py-3 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-8 sm:pt-16">
@@ -650,7 +650,7 @@ export default function SurveyClient() {
     const startIdx = AXIS_START_INDEX[chapterIntroAxis];
 
     return (
-      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
         <div className={`flex-1 overflow-hidden px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block ${meta.story ? "pt-12 sm:pt-32" : ""}`}>
@@ -738,7 +738,7 @@ export default function SurveyClient() {
   // ── Story Continue (pre-Chapter 1 survey) ───────────────────────────────────
   if (phase === "storyContinue") {
     return (
-      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
         <div className="flex-1 overflow-hidden px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-12 sm:pt-32">
@@ -794,7 +794,7 @@ export default function SurveyClient() {
   if (phase === "chapterOpen") {
     const startIdx = AXIS_START_INDEX["F"];
     return (
-      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
         <div className="flex-1 overflow-hidden px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
@@ -868,7 +868,7 @@ export default function SurveyClient() {
   if (phase === "chapterOpen2") {
     const startIdx = AXIS_START_INDEX["C"];
     return (
-      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
         <div className="flex-1 overflow-hidden px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
@@ -944,7 +944,7 @@ export default function SurveyClient() {
   if (phase === "chapterOpen3") {
     const startIdx = AXIS_START_INDEX["W"];
     return (
-      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
         <div className="flex-1 overflow-hidden px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
@@ -1017,7 +1017,7 @@ export default function SurveyClient() {
   // ── Ending (closing screen, no image, no email) ─────────────────────────────
   if (phase === "ending") {
     return (
-      <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
         <SignalProgress value={100} />
 

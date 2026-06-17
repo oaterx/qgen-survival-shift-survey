@@ -4,7 +4,7 @@ import QGenLogo from "../components/QGenLogo";
 
 export default function LandingPage() {
   return (
-    <main className="h-screen overflow-hidden flex flex-col items-center bg-qgen-paper px-6 pt-16 sm:pt-12 pb-6">
+    <main className="h-dvh overflow-hidden flex flex-col items-center bg-qgen-paper px-6 pt-16 sm:pt-12 pb-6">
 
       {/* Top group — grows to fill, content centered within it */}
       <div className="flex-1 flex flex-col items-center justify-center w-full">
