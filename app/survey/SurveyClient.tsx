@@ -604,7 +604,7 @@ export default function SurveyClient() {
             {STORY_AXES.map((ax, i) => (
               <div
                 key={i}
-                className={`px-3.5 py-2.5 sm:px-4 sm:py-3.5${i < STORY_AXES.length - 1 ? " border-b border-qgen-gray-border/60" : ""}`}
+                className="px-3.5 py-2.5 sm:px-4 sm:py-3.5"
               >
                 <p className="font-ui font-semibold text-qgen-black-soft text-[13.5px] leading-[17px] sm:text-[16px] sm:leading-[21px]">
                   {ax.label} <span className="text-qgen-gray-ash font-semibold text-[11.5px] sm:text-[13px]">· {ax.labelTH}</span>
