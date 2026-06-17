@@ -16,11 +16,6 @@ type Props = {
   personaImageDataUrl?: string;
 };
 
-function isIOS(): boolean {
-  if (typeof navigator === "undefined") return false;
-  const ua = navigator.userAgent;
-  return /iPad|iPhone|iPod/.test(ua) || (ua.includes("Macintosh") && navigator.maxTouchPoints > 1);
-}
 
 function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -177,37 +172,24 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
                   src={previewUrl}
                   alt="The Office Survivor — ผลลัพธ์ของฉัน"
                   className="max-w-full rounded-2xl shadow-2xl"
-                  style={{ maxHeight: "52vh" }}
+                  style={{ maxHeight: "55vh" }}
                 />
-                <div className="flex flex-col items-stretch gap-2.5 w-full max-w-[280px]">
-                  {canNativeShare && (
-                    <button
-                      onClick={handleShare}
-                      className="px-6 py-3.5 rounded-xl bg-white text-qgen-black-soft font-ui font-semibold text-sm
-                        active:scale-[0.97] transition-transform duration-200 ease-out flex items-center justify-center gap-2"
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                        <polyline points="16 6 12 2 8 6" />
-                        <line x1="12" y1="2" x2="12" y2="15" />
-                      </svg>
-                      แชร์ / บันทึก
-                    </button>
-                  )}
-                  <button
-                    onClick={handleDownload}
-                    className={`px-6 py-3.5 rounded-xl font-ui font-semibold text-sm
-                      active:scale-[0.97] transition-transform duration-200 ease-out
-                      ${canNativeShare ? "border border-white/40 text-white" : "bg-white text-qgen-black-soft"}`}
-                  >
-                    บันทึกรูปภาพ
-                  </button>
-                </div>
-                <p className="text-white/70 text-center text-xs px-4">
-                  {isIOS()
-                    ? "หากบันทึกไม่ได้ ให้กดค้างที่รูปเพื่อบันทึกลงอัลบั้ม"
-                    : "บันทึกรูป แล้วนำไปโพสต์ลง Story ได้เลย"}
-                </p>
+                {/* Single action button: native share sheet on iOS/Android
+                    (lets user Save to Photos or share to IG Stories in one tap),
+                    plain download on desktop where share isn't supported. */}
+                <button
+                  onClick={canNativeShare ? handleShare : handleDownload}
+                  className="w-full max-w-[280px] px-6 py-4 rounded-xl bg-white text-qgen-black-soft
+                    font-ui font-bold text-[15px] active:scale-[0.97] transition-transform duration-200 ease-out
+                    flex items-center justify-center gap-2.5"
+                >
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                    <polyline points="16 6 12 2 8 6" />
+                    <line x1="12" y1="2" x2="12" y2="15" />
+                  </svg>
+                  แชร์ / บันทึก
+                </button>
               </>
             )}
 
