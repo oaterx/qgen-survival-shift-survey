@@ -494,7 +494,7 @@ export default function SurveyClient() {
                       ? "text-qgen-black-soft border-qgen-gray-ash/60"
                       : "text-qgen-gray-ash border-qgen-gray-border",
                 ].join(" ")}
-                style={{ height: 46, fontSize: 14 }}
+                style={{ height: 46, fontSize: 16 }}
               />
               {!emailValid && (
                 <p className="mt-1.5 text-qgen-signal-deep" style={{ fontSize: 11.5 }}>
