@@ -597,12 +597,14 @@ export default function SurveyClient() {
             เพื่อดูความเสี่ยงที่อาจเกิดขึ้นและแนวทางการรับมือสถานการณ์เบื้องต้น
           </p>
 
-          <div className="flex flex-col gap-1.5 sm:gap-2">
+          <div
+            className="w-full rounded-xl border border-qgen-gray-border bg-qgen-paper-alt overflow-hidden"
+            style={{ boxShadow: "0 2px 8px rgba(10,10,10,0.04)" }}
+          >
             {STORY_AXES.map((ax, i) => (
               <div
                 key={i}
-                className="w-full rounded-xl border border-qgen-gray-border bg-qgen-paper-alt px-3.5 py-2 sm:px-4 sm:py-3.5"
-                style={{ boxShadow: "0 2px 8px rgba(10,10,10,0.04)" }}
+                className={`px-3.5 py-2.5 sm:px-4 sm:py-3.5${i < STORY_AXES.length - 1 ? " border-b border-qgen-gray-border/60" : ""}`}
               >
                 <p className="font-ui font-semibold text-qgen-black-soft text-[13.5px] leading-[17px] sm:text-[16px] sm:leading-[21px]">
                   {ax.label} <span className="text-qgen-gray-ash font-semibold text-[11.5px] sm:text-[13px]">· {ax.labelTH}</span>
@@ -651,7 +653,7 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className={`flex-1 overflow-y-auto px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block ${meta.story ? "pt-12 sm:pt-32" : ""}`}>
+        <div className={`flex-1 overflow-hidden px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block ${meta.story ? "pt-12 sm:pt-32" : ""}`}>
           {meta.story && (
             <div className="w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-5" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -739,7 +741,7 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-12 sm:pt-32">
+        <div className="flex-1 overflow-hidden px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-12 sm:pt-32">
           <div className="w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Element/Phone.webp" alt="โทรศัพท์แจ้งเตือน" className="w-full h-full object-contain" />
@@ -795,7 +797,7 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
+        <div className="flex-1 overflow-hidden px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 1
@@ -869,7 +871,7 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
+        <div className="flex-1 overflow-hidden px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 2
@@ -945,7 +947,7 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
+        <div className="flex-1 overflow-hidden px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 3

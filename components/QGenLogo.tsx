@@ -6,7 +6,7 @@ interface Props {
 export default function QGenLogo({ height = 36, className = "" }: Props) {
   return (
     <img
-      src="/Qgen Logo Black Orange.png"
+      src="/Element/Logo.png"
       alt="QGEN"
       height={height}
       style={{ height: `${height}px`, width: "auto" }}

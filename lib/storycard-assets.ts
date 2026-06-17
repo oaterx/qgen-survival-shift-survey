@@ -27,7 +27,7 @@ export function loadStorycardAssets() {
     .join("");
 
   const logoDataUrl = fileToBase64(
-    path.join(pub, "Qgen Logo Black Orange.png"),
+    path.join(pub, "Element", "Logo.png"),
     "image/png"
   );
 

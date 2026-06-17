@@ -23,7 +23,7 @@ export default function SignalTopBar({ rightLabel, current, currentEnd, total }:
     >
       <div className="flex items-center gap-2.5">
         <img
-          src="/Qgen Logo Black Orange.png"
+          src="/Element/Logo.png"
           alt="QGEN"
           style={{ height: 36, width: "auto" }}
         />
