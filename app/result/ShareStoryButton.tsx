@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { toPng } from "html-to-image";
 import StoryCard from "./StoryCard";
 import type { StoryPersona, StoryAxisResult } from "./StoryCard";
@@ -33,78 +34,74 @@ function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise
 
 export default function ShareStoryButton({ persona, axisResult, buttonColor, fontFace, logoDataUrl, headingDataUrl, personaImageDataUrl }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [state, setState] = useState<"idle" | "loading" | "error">("idle");
-  // When share isn't available/fails, we show the generated image in an
-  // on-page modal instead of trying download/popup tricks that depend on a
-  // user-gesture context that's already expired by the time we get here.
+  const fileRef = useRef<File | null>(null);
+  const startedRef = useRef(false);
+
+  const [open, setOpen] = useState(false);
+  // "generating" → image is being rendered; "ready" → preview + actions shown;
+  // "error" → render failed, offer retry.
+  const [status, setStatus] = useState<"generating" | "ready" | "error">("generating");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [canNativeShare, setCanNativeShare] = useState(false);
 
-  async function handleShare() {
-    if (!cardRef.current || state === "loading") return;
-    setState("loading");
+  // Render the share image in the background as soon as the result page mounts,
+  // so tapping the button can open a modal that's already populated — the tap
+  // feels instant ("ปึ้ป") instead of staring at a frozen button for seconds.
+  useEffect(() => {
+    setCanNativeShare(typeof navigator !== "undefined" && typeof navigator.canShare === "function");
+    generate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    let blob: Blob;
+  async function generate() {
+    if (startedRef.current || !cardRef.current) return;
+    startedRef.current = true;
+    setStatus("generating");
     try {
       if (fontFace && !cardRef.current.querySelector("style")) {
         const style = document.createElement("style");
         style.textContent = fontFace;
         cardRef.current.appendChild(style);
       }
-
-      // Two-pass render: first warms font cache, second is real capture.
-      // Hard timeout so a stuck render (slow mobile, font load hang) can
-      // never leave the button spinning forever with no feedback.
+      // Two-pass render: first warms the font/image cache, second is the real
+      // capture. Hard timeout so a stuck render can't hang forever.
       await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 8000, "render pass 1");
       const dataUrl = await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 8000, "render pass 2");
-      blob = await fetch(dataUrl).then((r) => r.blob());
+      const blob = await fetch(dataUrl).then((r) => r.blob());
+      fileRef.current = new File([blob], "survival-shift-story.png", { type: "image/png" });
+      setPreviewUrl(dataUrl);
+      setStatus("ready");
     } catch (err) {
       console.error("[ShareStory] image generation failed:", err);
-      setState("error");
-      setTimeout(() => setState("idle"), 2500);
-      return;
+      startedRef.current = false; // allow retry
+      setStatus("error");
     }
-
-    const file = new File([blob], "survival-shift-story.png", { type: "image/png" });
-
-    // Native share sheet — works great when available, and is the only path
-    // that still has a valid user-gesture context immediately after capture.
-    if (navigator.canShare?.({ files: [file] })) {
-      try {
-        await navigator.share({ files: [file] });
-        setState("idle");
-        return;
-      } catch (err) {
-        if (err instanceof Error && err.name === "AbortError") {
-          setState("idle");
-          return;
-        }
-        console.error("[ShareStory] navigator.share failed, showing preview instead:", err);
-      }
-    }
-
-    // Fallback: show the image in an on-page modal. This avoids both (a)
-    // iOS Safari's unreliable <a download> support for blob URLs, and (b)
-    // window.open()/popup-blocker issues — by now we're several awaits past
-    // the original click, so the user-gesture context is gone and any new
-    // popup would likely be silently blocked with no error to catch.
-    const reader = new FileReader();
-    reader.onload = () => {
-      setPreviewUrl(reader.result as string);
-      setState("idle");
-    };
-    reader.onerror = () => {
-      console.error("[ShareStory] FileReader failed");
-      setState("error");
-      setTimeout(() => setState("idle"), 2500);
-    };
-    reader.readAsDataURL(blob);
   }
 
-  function handleDownloadFromPreview() {
+  function handleOpen() {
+    setOpen(true);
+    // If a previous attempt errored (or never started), kick it off now.
+    if (status !== "ready") generate();
+  }
+
+  // Fired directly from the in-modal button tap — a fresh user-gesture context,
+  // which is exactly what iOS Safari requires for navigator.share to actually
+  // open the share sheet (the old flow shared after async work, by which point
+  // the gesture had expired and the call silently failed).
+  async function handleShare() {
+    const file = fileRef.current;
+    if (!file || !navigator.canShare?.({ files: [file] })) return;
+    try {
+      await navigator.share({ files: [file] });
+    } catch (err) {
+      if (!(err instanceof Error && err.name === "AbortError")) {
+        console.error("[ShareStory] navigator.share failed:", err);
+      }
+    }
+  }
+
+  function handleDownload() {
     if (!previewUrl) return;
-    // This click is a fresh, direct user gesture (the modal button itself),
-    // so the <a download> trick is reliable here even on browsers that
-    // block it when triggered from stale/async contexts.
     const a = document.createElement("a");
     a.href = previewUrl;
     a.download = "survival-shift-story.png";
@@ -124,69 +121,105 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
       </div>
 
       <button
-        onClick={handleShare}
-        disabled={state === "loading"}
+        onClick={handleOpen}
         className="w-full py-4 rounded-2xl text-white font-semibold text-sm
-          disabled:opacity-60 active:scale-[0.98] transition-all duration-300
+          active:scale-[0.97] transition-transform duration-200 ease-out
           flex items-center justify-center gap-2.5"
         style={{
           background: buttonColor ?? "linear-gradient(135deg, #833ab4, #e1306c, #f77737)",
         }}
       >
-        {state === "loading" ? (
-          <>
-            <span className="inline-block w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-            กำลังสร้างภาพ…
-          </>
-        ) : state === "error" ? (
-          <>สร้างภาพไม่สำเร็จ ลองอีกครั้ง</>
-        ) : (
-          <>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-              <circle cx="12" cy="12" r="4.5" />
-              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-            </svg>
-            แชร์ลง Story IG
-          </>
-        )}
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+          <circle cx="12" cy="12" r="4.5" />
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+        </svg>
+        แชร์ลง Story IG
       </button>
 
-      {/* Fallback preview modal */}
-      {previewUrl && (
+      {/* Share / download modal — portalled to <body> so it escapes the
+          result page's animate-fade-up wrapper, whose transform would
+          otherwise become the containing block for position:fixed and pin the
+          modal partway down the page instead of over the full viewport. */}
+      {open && typeof document !== "undefined" && createPortal(
         <div
-          className="fixed inset-0 z-50 overflow-y-auto"
+          className="fixed inset-0 z-50 overflow-y-auto animate-modal-backdrop"
           style={{ background: "rgba(10,10,10,0.85)" }}
-          onClick={() => setPreviewUrl(null)}
+          onClick={() => setOpen(false)}
         >
-          <div className="min-h-full flex flex-col items-center justify-center gap-4 p-6">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={previewUrl}
-              alt="The Office Survivor — ผลลัพธ์ของฉัน"
-              onClick={(e) => e.stopPropagation()}
-              className="max-w-full rounded-2xl shadow-2xl"
-              style={{ maxHeight: "55vh" }}
-            />
-            <p className="text-white/90 text-center text-sm" onClick={(e) => e.stopPropagation()}>
-              {isIOS() ? "กดค้างที่รูปภาพเพื่อบันทึกลงอัลบั้ม" : "กดปุ่มด้านล่างเพื่อบันทึกรูปภาพ"}
-            </p>
-            {!isIOS() && (
-              <button
-                onClick={(e) => { e.stopPropagation(); handleDownloadFromPreview(); }}
-                className="px-6 py-3 rounded-xl bg-white text-qgen-black-soft font-ui font-semibold text-sm"
-              >
-                บันทึกรูปภาพ
-              </button>
+          <div
+            className="min-h-full flex flex-col items-center justify-center gap-4 p-6 animate-modal-panel"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {status === "generating" && (
+              <div className="flex flex-col items-center gap-3 text-white/90">
+                <span className="inline-block w-7 h-7 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                <p className="text-sm">กำลังสร้างภาพ…</p>
+              </div>
             )}
+
+            {status === "error" && (
+              <div className="flex flex-col items-center gap-4">
+                <p className="text-white/90 text-center text-sm">สร้างภาพไม่สำเร็จ</p>
+                <button
+                  onClick={generate}
+                  className="px-6 py-3 rounded-xl bg-white text-qgen-black-soft font-ui font-semibold text-sm active:scale-[0.97] transition-transform duration-200 ease-out"
+                >
+                  ลองอีกครั้ง
+                </button>
+              </div>
+            )}
+
+            {status === "ready" && previewUrl && (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={previewUrl}
+                  alt="The Office Survivor — ผลลัพธ์ของฉัน"
+                  className="max-w-full rounded-2xl shadow-2xl"
+                  style={{ maxHeight: "52vh" }}
+                />
+                <div className="flex flex-col items-stretch gap-2.5 w-full max-w-[280px]">
+                  {canNativeShare && (
+                    <button
+                      onClick={handleShare}
+                      className="px-6 py-3.5 rounded-xl bg-white text-qgen-black-soft font-ui font-semibold text-sm
+                        active:scale-[0.97] transition-transform duration-200 ease-out flex items-center justify-center gap-2"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                        <polyline points="16 6 12 2 8 6" />
+                        <line x1="12" y1="2" x2="12" y2="15" />
+                      </svg>
+                      แชร์ / บันทึก
+                    </button>
+                  )}
+                  <button
+                    onClick={handleDownload}
+                    className={`px-6 py-3.5 rounded-xl font-ui font-semibold text-sm
+                      active:scale-[0.97] transition-transform duration-200 ease-out
+                      ${canNativeShare ? "border border-white/40 text-white" : "bg-white text-qgen-black-soft"}`}
+                  >
+                    บันทึกรูปภาพ
+                  </button>
+                </div>
+                <p className="text-white/70 text-center text-xs px-4">
+                  {isIOS()
+                    ? "หากบันทึกไม่ได้ ให้กดค้างที่รูปเพื่อบันทึกลงอัลบั้ม"
+                    : "บันทึกรูป แล้วนำไปโพสต์ลง Story ได้เลย"}
+                </p>
+              </>
+            )}
+
             <button
-              onClick={(e) => { e.stopPropagation(); setPreviewUrl(null); }}
-              className="px-6 py-2.5 rounded-xl border border-white/30 text-white font-ui text-sm"
+              onClick={() => setOpen(false)}
+              className="px-6 py-2.5 rounded-xl border border-white/30 text-white font-ui text-sm active:scale-[0.97] transition-transform duration-200 ease-out"
             >
               ปิด
             </button>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );

@@ -382,7 +382,7 @@ export const personas = [
   {
     "id": "11",
     "group": "3 แกน",
-    "name": "ชีวิตปรุงจืด",
+    "name": "หน้าปรุงจืด ชีวิตปรุงจัด",
     "tagline": "ทุกอย่างพอไปได้ แต่รู้ว่าไม่ดี",
     "conditionText": "F, C, W ทั้งหมด 34–66%",
     "axisStatusTextTH": { "F": "ตึง", "C": "ตึง", "W": "ตึง" },

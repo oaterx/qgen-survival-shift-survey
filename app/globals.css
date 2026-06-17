@@ -44,9 +44,9 @@
   --color-qgen-status-deepening-severe: #A72F1D;
 
   /* Animations */
-  --animate-fade-up: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-fade-in: fade-in 0.4s ease-out both;
-  --animate-slide-in: slide-from-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-slide-in: slide-from-right 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-start-bounce: start-bounce 1.6s ease-in-out infinite;
 }
 
@@ -61,9 +61,21 @@
 }
 
 @keyframes slide-from-right {
-  from { opacity: 0; transform: translateX(24px); }
+  from { opacity: 0; transform: translateX(14px); }
   to   { opacity: 1; transform: translateX(0); }
 }
+
+/* Share modal: backdrop fades in, panel eases up + scales for a smooth pop */
+@keyframes modal-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes modal-panel-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-modal-backdrop { animation: modal-backdrop-in 0.22s ease-out both; }
+.animate-modal-panel    { animation: modal-panel-in 0.34s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
 @keyframes start-bounce {
   0%, 100% { transform: translateY(0) scale(1); }
