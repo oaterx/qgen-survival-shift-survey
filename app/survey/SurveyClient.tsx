@@ -166,39 +166,58 @@ export default function SurveyClient() {
   const router = useRouter();
   const q2Ref = useRef<HTMLDivElement>(null);
   const incomeRef = useRef<HTMLDivElement>(null);
-  const restored = useRef<SavedProgress | null>(null);
-  if (restored.current === null && typeof window !== "undefined") {
-    restored.current = loadProgress();
-  }
-  const saved = restored.current;
+
+  // Saved progress is restored AFTER mount (in the effect below), never during
+  // render — reading sessionStorage at render time makes the client's first
+  // paint differ from the server's (which always renders the defaults) and
+  // triggers a hydration mismatch. We render nothing until `hydrated`, so the
+  // server and client first render agree, then restore + reveal the real UI.
+  const [hydrated, setHydrated] = useState(false);
+  const [phase, setPhase] = useState<Phase>("storyIntro");
+  const [chapterIntroAxis, setChapterIntroAxis] = useState<AxisId>("F");
+  const [demoAnswers, setDemoAnswers] = useState<DemographicAnswers>({});
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [answers, setAnswers] = useState<SurveyAnswer[]>([]);
+  const [pageSelections, setPageSelections] = useState<Record<string, 1 | 2 | 3 | 4>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [direction, setDirection] = useState<"forward" | "back">("forward");
+  const [email, setEmail] = useState("");
+  const [consentAccepted, setConsentAccepted] = useState(false); // required — gates submit
+  const [marketingConsent, setMarketingConsent] = useState(false); // optional — gates email send
 
   useEffect(() => {
     // Allow entry if the user just came from Start (within 10s) OR has saved
     // progress to resume; otherwise bounce direct/stale visits to the landing.
+    const saved = loadProgress();
     const ts = Number(sessionStorage.getItem("survey_entry") ?? 0);
     const fresh = Date.now() - ts <= 10_000;
-    if (!fresh && !loadProgress()) router.replace("/");
+    if (!fresh && !saved) {
+      router.replace("/");
+      return;
+    }
+    if (saved) {
+      setPhase(saved.phase);
+      setChapterIntroAxis(saved.chapterIntroAxis);
+      setDemoAnswers(saved.demoAnswers);
+      setCurrentIndex(saved.currentIndex);
+      setAnswers(saved.answers);
+      setPageSelections(saved.pageSelections);
+      setEmail(saved.email);
+      setConsentAccepted(saved.consentAccepted);
+      setMarketingConsent(saved.marketingConsent);
+    }
+    setHydrated(true);
   }, []);
-
-  const [phase, setPhase] = useState<Phase>(saved?.phase ?? "storyIntro");
-  const [chapterIntroAxis, setChapterIntroAxis] = useState<AxisId>(saved?.chapterIntroAxis ?? "F");
-  const [demoAnswers, setDemoAnswers] = useState<DemographicAnswers>(saved?.demoAnswers ?? {});
-  const [currentIndex, setCurrentIndex] = useState(saved?.currentIndex ?? 0);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [currentIndex]);
-  const [answers, setAnswers] = useState<SurveyAnswer[]>(saved?.answers ?? []);
-  const [pageSelections, setPageSelections] = useState<Record<string, 1 | 2 | 3 | 4>>(saved?.pageSelections ?? {});
-  const [submitting, setSubmitting] = useState(false);
-  const [direction, setDirection] = useState<"forward" | "back">("forward");
-  const [email, setEmail] = useState(saved?.email ?? "");
-  const [consentAccepted, setConsentAccepted] = useState(saved?.consentAccepted ?? false); // required — gates submit
-  const [marketingConsent, setMarketingConsent] = useState(saved?.marketingConsent ?? false); // optional — gates email send
 
-  // Save progress whenever any persisted field changes.
+  // Save progress whenever any persisted field changes — but only after the
+  // restore effect has run, so we never overwrite saved progress with the
+  // defaults during the first mount.
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (!hydrated) return;
     const data: SavedProgress = {
       phase, chapterIntroAxis, demoAnswers, currentIndex,
       answers, pageSelections, email, consentAccepted, marketingConsent,
@@ -208,7 +227,7 @@ export default function SurveyClient() {
     } catch {
       // storage full / unavailable — non-fatal, just no resume
     }
-  }, [phase, chapterIntroAxis, demoAnswers, currentIndex, answers, pageSelections, email, consentAccepted, marketingConsent]);
+  }, [hydrated, phase, chapterIntroAxis, demoAnswers, currentIndex, answers, pageSelections, email, consentAccepted, marketingConsent]);
 
   const total = questions.length;
   const q1 = questions[currentIndex];
@@ -406,6 +425,13 @@ export default function SurveyClient() {
         </div>
       </div>
     );
+  }
+
+  // Until mounted, render a paper-colored placeholder that matches the server
+  // output exactly (no sessionStorage-derived state), avoiding any hydration
+  // mismatch. The restore effect flips `hydrated` and reveals the real phase.
+  if (!hydrated) {
+    return <div className="h-screen bg-qgen-paper" />;
   }
 
   // ── Demographics ───────────────────────────────────────────────────────────
