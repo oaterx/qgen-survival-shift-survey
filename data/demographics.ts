@@ -63,8 +63,7 @@ export const demographicFields: DemographicField[] = [
     label: "ช่วงอายุ",
     required: true,
     options: [
-      opt("under_22",   "ต่ำกว่า 22 ปี"),
-      opt("22_25",      "22–25 ปี"),
+      opt("20_25",      "20–25 ปี"),
       opt("26_30",      "26–30 ปี"),
       opt("31_35",      "31–35 ปี"),
       opt("36_40",      "36–40 ปี"),

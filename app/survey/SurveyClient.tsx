@@ -508,7 +508,7 @@ export default function SurveyClient() {
             <div className="flex flex-col gap-3 pt-1">
               <div>
                 <ConsentCheckbox checked={consentAccepted} onChange={setConsentAccepted}>
-                  (สำหรับผู้มีอายุ 20 ปีขึ้นไป) ฉันได้อ่าน
+                  ฉันได้อ่าน
                   <a
                     href="https://qgen.co/the-office-survivor-privacy"
                     target="_blank"
