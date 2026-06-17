@@ -10,12 +10,12 @@ export default function LandingPage() {
       <div className="flex-1 flex flex-col items-center justify-center w-full">
 
       {/* Logo */}
-      <div className="mb-5">
-        <QGenLogo height={114} />
+      <div className="mb-2">
+        <QGenLogo height={137} />
       </div>
 
       {/* Title */}
-      <div className="relative w-full max-w-[500px] mt-2" style={{ aspectRatio: "1022 / 356" }}>
+      <div className="relative w-full max-w-[500px]" style={{ aspectRatio: "1022 / 356" }}>
         <Image
           src="/Element/Heading.png"
           alt="The Office Survivor — มนุษย์ออฟฟิศต้องรอด"
