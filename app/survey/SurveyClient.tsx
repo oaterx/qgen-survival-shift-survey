@@ -55,7 +55,10 @@ function WrapSafeText({ text }: { text: string }) {
   // "|" marks a manually-chosen safe break point inside a long unspaced
   // Thai run. Chromium ignores word-break: keep-all for Thai script and
   // will break anywhere, so each chunk is forced nowrap and only the
-  // space/"|" boundaries are left as actual break opportunities.
+  // space/"|" boundaries are left as actual break opportunities. A <wbr>
+  // is inserted between adjacent chunks so WebKit/Safari (which won't break
+  // between two touching nowrap spans on its own) still has a real wrap
+  // opportunity there — without it long piped runs overflow the right edge.
   const words = text.split(" ");
   return (
     <>
@@ -64,8 +67,9 @@ function WrapSafeText({ text }: { text: string }) {
         return (
           <span key={wi}>
             {chunks.map((chunk, ci) => (
-              <span key={ci} style={{ whiteSpace: "nowrap" }}>
-                {chunk}
+              <span key={ci}>
+                {ci > 0 ? <wbr /> : null}
+                <span style={{ whiteSpace: "nowrap" }}>{chunk}</span>
               </span>
             ))}
             {wi < words.length - 1 ? " " : ""}
@@ -161,6 +165,7 @@ function loadProgress(): SavedProgress | null {
 export default function SurveyClient() {
   const router = useRouter();
   const q2Ref = useRef<HTMLDivElement>(null);
+  const incomeRef = useRef<HTMLDivElement>(null);
   const restored = useRef<SavedProgress | null>(null);
   if (restored.current === null && typeof window !== "undefined") {
     restored.current = loadProgress();
@@ -220,6 +225,11 @@ export default function SurveyClient() {
 
   function handleDemoChange(id: DemographicFieldId, value: string) {
     setDemoAnswers((prev) => ({ ...prev, [id]: value }));
+    // Income is the last demographic; selecting it auto-scrolls so the
+    // Email + consent fields (and the "ถัดไป" button) below it come into view.
+    if (id === "incomeRange") {
+      setTimeout(() => incomeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
+    }
   }
 
   function handleSelect(questionId: string, value: 1 | 2 | 3 | 4) {
@@ -421,7 +431,7 @@ export default function SurveyClient() {
 
           <div className="flex flex-col gap-6">
             {demographicFields.map((field) => (
-              <div key={field.id}>
+              <div key={field.id} ref={field.id === "incomeRange" ? incomeRef : undefined}>
                 <label className="block font-ui font-semibold text-qgen-black-soft mb-2"
                   style={{ fontSize: 14.5 }}>
                   {field.label}
@@ -545,9 +555,9 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-3 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-3 sm:pt-16">
+        <div className="flex-1 overflow-y-auto px-5 py-3 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-8 sm:pt-16">
           <div
-            className="relative w-full max-w-[190px] sm:max-w-[300px] mx-auto mb-1.5 sm:mb-4"
+            className="relative w-full max-w-[190px] sm:max-w-[300px] mx-auto mb-4 sm:mb-4"
             style={{ aspectRatio: "1022 / 356" }}
           >
             <Image
@@ -560,7 +570,7 @@ export default function SurveyClient() {
             />
           </div>
 
-          <p className="text-qgen-gray-ash text-center mb-3 sm:mb-6 text-[12.5px] leading-[18px] sm:text-[15.5px] sm:leading-[24px]">
+          <p className="text-qgen-gray-ash text-center mb-5 sm:mb-6 text-[12.5px] leading-[18px] sm:text-[15.5px] sm:leading-[24px]">
             สำรวจปัญหา 3 ด้านหลัก ของชีวิตมนุษย์ออฟฟิศ
             <br />
             เพื่อดูความเสี่ยงที่อาจเกิดขึ้นและแนวทางการรับมือสถานการณ์เบื้องต้น
@@ -620,7 +630,7 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className={`flex-1 overflow-y-auto px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in ${meta.story ? "pt-12 sm:pt-32" : ""}`}>
+        <div className={`flex-1 overflow-y-auto px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block ${meta.story ? "pt-12 sm:pt-32" : ""}`}>
           {meta.story && (
             <div className="relative w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-5" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
               <Image
@@ -714,7 +724,7 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-12 sm:pt-32">
+        <div className="flex-1 overflow-y-auto px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-12 sm:pt-32">
           <div className="relative w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-5">
             <Image
               src="/Element/Phone.png"
@@ -776,7 +786,7 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-6 sm:pt-12">
+        <div className="flex-1 overflow-y-auto px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 1
@@ -856,7 +866,7 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-6 sm:pt-12">
+        <div className="flex-1 overflow-y-auto px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 2
@@ -938,7 +948,7 @@ export default function SurveyClient() {
       <div className="h-screen flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-6 sm:pt-12">
+        <div className="flex-1 overflow-y-auto px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 3
@@ -1031,7 +1041,7 @@ export default function SurveyClient() {
             </p>
             <p className="text-center" style={{ fontSize: 21, lineHeight: "30px" }}>
               <span className="font-bold text-qgen-signal">
-                วันนี้คุณกำลังใช้พลังงานไปกับอะไรมากที่สุด?
+                วันนี้คุณใช้พลังงานไปกับอะไรมากที่สุด
               </span>
             </p>
           </div>

@@ -420,7 +420,7 @@ export const personas = [
   {
     "id": "12",
     "group": "3 แกน",
-    "name": "สภาพพพพพพ",
+    "name": "ทางออกใกล้ฉัน",
     "tagline": "ไม่รู้จะเริ่มแก้ตรงไหน",
     "conditionText": "F, C, W ทั้งหมด ≤ 66%  ·  อย่างน้อย 1 ≤ 33%  ·  ไม่ใช่ทุกแกน ≤ 33%",
     "axisStatusTextTH": { "F": "ตึง/วิกฤต", "C": "ตึง/วิกฤต", "W": "ตึง/วิกฤต" },
@@ -458,7 +458,7 @@ export const personas = [
   {
     "id": "13",
     "group": "3 แกน",
-    "name": "รับจบ",
+    "name": "สภาพพพพพ",
     "tagline": "ถึงขีดสุด วิกฤติแล้ว",
     "conditionText": "F, C, W ทั้งหมด 0–33%",
     "axisStatusTextTH": { "F": "วิกฤต", "C": "วิกฤต", "W": "วิกฤต" },

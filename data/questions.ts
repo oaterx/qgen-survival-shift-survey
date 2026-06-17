@@ -129,7 +129,7 @@ export const questions = [
     "id": "C4",
     "axis": "C",
     "axisName": "Career Path",
-    "question": "คุณมองเห็นภาพตัวเอง|ในอีก 2–3 ปีข้างหน้า|เป็นอย่างไรบ้าง",
+    "question": "คุณมองเห็นภาพตัวเอง|ในอีก 2–3 ปีข้างหน้า|เป็นอย่างไรบ้าง",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
