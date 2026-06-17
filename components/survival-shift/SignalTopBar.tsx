@@ -25,7 +25,7 @@ export default function SignalTopBar({ rightLabel, current, currentEnd, total }:
         <img
           src="/Element/Logo.png"
           alt="QGEN"
-          style={{ height: 36, width: "auto" }}
+          style={{ height: 44, width: "auto" }}
         />
       </div>
       {right && (
