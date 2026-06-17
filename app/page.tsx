@@ -10,7 +10,7 @@ export default function LandingPage() {
       <div className="flex-1 flex flex-col items-center justify-center w-full">
 
       {/* Logo */}
-      <div className="mb-2">
+      <div>
         <QGenLogo height={137} />
       </div>
 
