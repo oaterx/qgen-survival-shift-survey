@@ -244,8 +244,9 @@ export default function SurveyClient() {
 
   function handleDemoChange(id: DemographicFieldId, value: string) {
     setDemoAnswers((prev) => ({ ...prev, [id]: value }));
-    // Income is the last demographic; selecting it auto-scrolls so the
-    // Email + consent fields (and the "ถัดไป" button) below it come into view.
+    if (id === "ageRange") {
+      setTimeout(() => incomeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
+    }
     if (id === "incomeRange") {
       setTimeout(() => incomeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
     }
@@ -507,7 +508,7 @@ export default function SurveyClient() {
             <div className="flex flex-col gap-3 pt-1">
               <div>
                 <ConsentCheckbox checked={consentAccepted} onChange={setConsentAccepted}>
-                  ฉันได้อ่าน
+                  (สำหรับผู้มีอายุ 20 ปีขึ้นไป) ฉันได้อ่าน
                   <a
                     href="https://qgen.co/the-office-survivor-privacy"
                     target="_blank"
@@ -518,9 +519,6 @@ export default function SurveyClient() {
                   </a>
                   {" "}และยินยอมให้ QGEN เก็บและประมวลผลข้อมูลของฉันเพื่อแสดงผลการประเมิน
                 </ConsentCheckbox>
-                <p className="text-qgen-gray-ash mt-1.5 ml-[30px]" style={{ fontSize: 11, lineHeight: "15px" }}>
-                  สำหรับผู้มีอายุ 20 ปีขึ้นไป
-                </p>
               </div>
 
               <ConsentCheckbox checked={marketingConsent} onChange={setMarketingConsent} align="center">
@@ -1145,7 +1143,7 @@ export default function SurveyClient() {
             ข้อที่ {currentIndex + 1}
           </p>
           <h2 className="text-qgen-black-soft font-semibold mb-3"
-            style={{ fontSize: 17, lineHeight: "26px", wordBreak: "keep-all", overflowWrap: "normal" }}>
+            style={{ fontSize: 17, lineHeight: "26px", overflowWrap: "anywhere" }}>
             <WrapSafeText text={q1.question} />
           </h2>
           <div className="flex flex-col gap-2">
@@ -1171,7 +1169,7 @@ export default function SurveyClient() {
             ข้อที่ {currentIndex + 2}
           </p>
           <h2 className="text-qgen-black-soft font-semibold mb-3"
-            style={{ fontSize: 17, lineHeight: "26px", wordBreak: "keep-all", overflowWrap: "normal" }}>
+            style={{ fontSize: 17, lineHeight: "26px", overflowWrap: "anywhere" }}>
             <WrapSafeText text={q2.question} />
           </h2>
           <div className="flex flex-col gap-2">

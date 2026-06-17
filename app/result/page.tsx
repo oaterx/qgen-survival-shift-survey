@@ -79,13 +79,13 @@ export default async function ResultPage({
         {/* ── Persona ── */}
         <section className="relative animate-fade-up" style={{ animationDelay: "60ms" }}>
           <div className="px-6 pt-2 pb-1 flex flex-col items-center text-center">
-            <div className="w-[270px] h-[360px] relative mb-6">
+            <div className="mb-6">
               <Image
-                src={`/personas/${persona.id}.png`}
+                src={`/personas/${persona.id}.webp`}
                 alt={persona.name}
-                fill
+                width={270}
+                height={360}
                 className="object-contain"
-                sizes="270px"
                 priority
               />
             </div>

@@ -41,5 +41,5 @@ export function loadStorycardAssets() {
 
 export function loadPersonaImageDataUrl(personaId: string): string {
   const pub = path.join(process.cwd(), "public");
-  return fileToBase64(path.join(pub, "personas", `${personaId}.png`), "image/png");
+  return fileToBase64(path.join(pub, "personas", `${personaId}.webp`), "image/webp");
 }
