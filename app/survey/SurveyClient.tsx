@@ -437,10 +437,10 @@ export default function SurveyClient() {
   // ── Demographics ───────────────────────────────────────────────────────────
   if (phase === "demo") {
     return (
-      <div className="h-dvh flex flex-col bg-qgen-paper">
+      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 pt-6 pb-36 max-w-lg mx-auto w-full animate-slide-in">
+        <div className="flex-1 sm:flex-none overflow-y-auto sm:overflow-visible px-5 pt-6 pb-36 max-w-lg mx-auto w-full animate-slide-in">
           <div className="text-center mb-2">
             <h1 className="font-ui font-bold text-qgen-black-absolute"
               style={{ fontSize: 26, lineHeight: "34px", letterSpacing: "-0.01em" }}>
@@ -575,10 +575,10 @@ export default function SurveyClient() {
       },
     ];
     return (
-      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-y-auto px-5 py-3 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-8 sm:pt-16">
+        <div className="flex-1 sm:flex-none overflow-y-auto sm:overflow-visible px-5 py-3 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in pt-8 sm:pt-16">
           <div
             className="w-full max-w-[190px] sm:max-w-[300px] mx-auto mb-4 sm:mb-4"
             style={{ aspectRatio: "1022 / 356" }}
@@ -650,10 +650,10 @@ export default function SurveyClient() {
     const startIdx = AXIS_START_INDEX[chapterIntroAxis];
 
     return (
-      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className={`flex-1 overflow-hidden px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block ${meta.story ? "pt-12 sm:pt-32" : ""}`}>
+        <div className={`flex-1 sm:flex-none overflow-hidden sm:overflow-visible px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block ${meta.story ? "pt-12 sm:pt-32" : ""}`}>
           {meta.story && (
             <div className="w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-5" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -738,10 +738,10 @@ export default function SurveyClient() {
   // ── Story Continue (pre-Chapter 1 survey) ───────────────────────────────────
   if (phase === "storyContinue") {
     return (
-      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-12 sm:pt-32">
+        <div className="flex-1 sm:flex-none overflow-hidden sm:overflow-visible px-5 py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-12 sm:pt-32">
           <div className="w-[170px] h-[170px] sm:w-[220px] sm:h-[220px] mx-auto mb-3 sm:mb-5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Element/Phone.webp" alt="โทรศัพท์แจ้งเตือน" className="w-full h-full object-contain" />
@@ -794,10 +794,10 @@ export default function SurveyClient() {
   if (phase === "chapterOpen") {
     const startIdx = AXIS_START_INDEX["F"];
     return (
-      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
+        <div className="flex-1 sm:flex-none overflow-hidden sm:overflow-visible px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 1
@@ -868,10 +868,10 @@ export default function SurveyClient() {
   if (phase === "chapterOpen2") {
     const startIdx = AXIS_START_INDEX["C"];
     return (
-      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
+        <div className="flex-1 sm:flex-none overflow-hidden sm:overflow-visible px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 2
@@ -944,10 +944,10 @@ export default function SurveyClient() {
   if (phase === "chapterOpen3") {
     const startIdx = AXIS_START_INDEX["W"];
     return (
-      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
+        <div className="flex-1 sm:flex-none overflow-hidden sm:overflow-visible px-5 py-4 sm:py-8 pb-32 sm:pb-36 max-w-lg mx-auto w-full animate-slide-in flex flex-col justify-center sm:block pt-6 sm:pt-12">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 3
@@ -1017,11 +1017,11 @@ export default function SurveyClient() {
   // ── Ending (closing screen, no image, no email) ─────────────────────────────
   if (phase === "ending") {
     return (
-      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
+      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
         <SignalProgress value={100} />
 
-        <div className="flex-1 flex flex-col justify-center px-5 py-8 max-w-lg mx-auto w-full animate-slide-in">
+        <div className="flex-1 sm:flex-none flex flex-col justify-center px-5 py-8 max-w-lg mx-auto w-full animate-slide-in">
           <div className="flex flex-col gap-3 sm:gap-4">
             <p className="text-qgen-black-soft text-center text-[15px] leading-[24px] sm:text-[18px] sm:leading-[28px]">
               หลังจากผ่านมาทั้งวัน คุณอาจยังยืนไหว ยังทำงานต่อได้
