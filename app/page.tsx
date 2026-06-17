@@ -43,7 +43,7 @@ export default function LandingPage() {
         className="flex items-stretch justify-center gap-2.5 mt-6 w-full max-w-sm"
         style={{ fontSize: 12 }}
       >
-        {["18 คำถาม", "8–10 นาที"].map((item) => (
+        {["18 คำถาม", "5–8 นาที"].map((item) => (
           <span
             key={item}
             className="flex-1 flex items-center justify-center rounded-xl border border-qgen-gray-border bg-qgen-paper-alt
