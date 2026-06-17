@@ -11,7 +11,7 @@ export default function LandingPage() {
 
       {/* Logo */}
       <div className="mb-5">
-        <QGenLogo height={76} />
+        <QGenLogo height={114} />
       </div>
 
       {/* Title */}
