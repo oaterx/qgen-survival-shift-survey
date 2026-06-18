@@ -82,13 +82,11 @@ export default function ShareLinkButton() {
         <>
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor"
             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="3" r="1.5" />
-            <circle cx="12" cy="13" r="1.5" />
-            <circle cx="4" cy="8" r="1.5" />
-            <line x1="10.55" y1="4.22" x2="5.45" y2="6.78" />
-            <line x1="10.55" y1="11.78" x2="5.45" y2="9.22" />
+            <rect x="1" y="9" width="3" height="6" rx="0.5" />
+            <rect x="6" y="5" width="3" height="10" rx="0.5" />
+            <rect x="11" y="1" width="3" height="14" rx="0.5" />
           </svg>
-          แชร์ผลลัพธ์
+          แชร์ลิงก์ผลลัพธ์
         </>
       )}
     </button>
