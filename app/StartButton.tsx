@@ -18,21 +18,18 @@ export default function StartButton() {
     <button
       onClick={handleStart}
       aria-label="เริ่มทำแบบสำรวจ"
-      className="relative w-full cursor-pointer transition-transform duration-150 ease-out"
-      style={{
-        aspectRatio: "1672 / 941",
-        maxHeight: 130,
-        transform: pressed ? "scale(1.1)" : undefined,
-      }}
+      className="relative w-full cursor-pointer"
+      style={{ aspectRatio: "1672 / 941", maxHeight: 130 }}
     >
       <Image
         src="/Element/ปุ่ม Start.png"
         alt="เริ่มทำแบบสำรวจ"
         fill
-        className={`object-contain animate-start-bounce transition-all duration-150 ease-out
+        className={`object-contain transition-all duration-150 ease-out
           ${pressed
-            ? "drop-shadow-[0_16px_30px_rgba(150,73,28,1)]"
-            : "hover:scale-105 hover:drop-shadow-[0_12px_24px_rgba(150,73,28,0.9)] active:scale-110 active:drop-shadow-[0_16px_30px_rgba(150,73,28,1)]"}`}
+            ? "scale-110 drop-shadow-[0_16px_30px_rgba(150,73,28,1)]"
+            : "animate-start-bounce hover:drop-shadow-[0_12px_24px_rgba(150,73,28,0.9)] active:scale-105 active:drop-shadow-[0_16px_30px_rgba(150,73,28,1)]"
+          }`}
         sizes="400px"
         priority
       />
