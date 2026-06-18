@@ -669,10 +669,10 @@ export default function SurveyClient() {
       },
     ];
     return (
-      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-3 pb-32 sm:pb-24 max-w-lg mx-auto w-full animate-slide-in pt-4 sm:pt-12">
+        <div className="flex-1 overflow-hidden px-5 py-3 pb-32 sm:pb-20 max-w-lg mx-auto w-full animate-slide-in pt-4">
           <div
             className="w-full max-w-[190px] sm:max-w-[300px] mx-auto mb-4 sm:mb-4"
             style={{ aspectRatio: "1022 / 356" }}
@@ -744,10 +744,10 @@ export default function SurveyClient() {
     const startIdx = AXIS_START_INDEX[chapterIntroAxis];
 
     return (
-      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className={`flex-1 overflow-hidden sm:overflow-visible px-5 py-8 pb-32 sm:pb-24 sm:pt-24 max-w-lg mx-auto w-full animate-slide-in ${meta.story ? "pt-16" : ""}`}>
+        <div className={`flex-1 overflow-hidden px-5 py-8 pb-32 sm:pb-20 max-w-lg mx-auto w-full animate-slide-in ${meta.story ? "pt-16" : ""}`}>
           {meta.story && (
             <div className="w-[170px] h-[170px] sm:w-[160px] sm:h-[160px] mx-auto mb-3 sm:mb-4" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -832,10 +832,10 @@ export default function SurveyClient() {
   // ── Story Continue (pre-Chapter 1 survey) ───────────────────────────────────
   if (phase === "storyContinue") {
     return (
-      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-8 pb-32 sm:pb-24 sm:pt-24 max-w-lg mx-auto w-full animate-slide-in pt-16">
+        <div className="flex-1 overflow-hidden px-5 py-8 pb-32 sm:pb-20 max-w-lg mx-auto w-full animate-slide-in pt-16">
           <div className="w-[170px] h-[170px] sm:w-[160px] sm:h-[160px] mx-auto mb-3 sm:mb-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Element/Phone.webp" alt="โทรศัพท์แจ้งเตือน" className="w-full h-full object-contain" />
@@ -1111,11 +1111,11 @@ export default function SurveyClient() {
   // ── Ending (closing screen, no image, no email) ─────────────────────────────
   if (phase === "ending") {
     return (
-      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
         <SignalProgress value={100} />
 
-        <div className="flex-1 flex flex-col justify-center px-5 py-8 sm:pt-20 sm:pb-10 max-w-lg mx-auto w-full animate-slide-in">
+        <div className="flex-1 flex flex-col justify-center px-5 py-8 max-w-lg mx-auto w-full animate-slide-in">
           <div className="flex flex-col gap-3 sm:gap-4">
             <p className="text-qgen-black-soft text-center text-[15px] leading-[24px] sm:text-[18px] sm:leading-[28px]">
               หลังจากผ่านมาทั้งวัน คุณอาจยังยืนไหว ยังทำงานต่อได้
