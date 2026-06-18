@@ -605,7 +605,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-3 pb-32 sm:pb-24 max-w-lg mx-auto w-full animate-slide-in pt-8 sm:pt-20">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-3 pb-32 sm:pb-24 max-w-lg mx-auto w-full animate-slide-in pt-4 sm:pt-12">
           <div
             className="w-full max-w-[190px] sm:max-w-[300px] mx-auto mb-4 sm:mb-4"
             style={{ aspectRatio: "1022 / 356" }}
