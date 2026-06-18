@@ -9,7 +9,7 @@ export default function LandingPage() {
       <ScrollLock />
 
       {/* Top group — grows to fill, content centered within it */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full">
+      <div className="flex-1 flex flex-col items-center justify-start pt-6 sm:pt-4 w-full">
 
       {/* Logo */}
       <div>
