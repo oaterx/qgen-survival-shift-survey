@@ -9,6 +9,7 @@ import SignalTopBar from "../../components/survival-shift/SignalTopBar";
 import SurvivalScoreSection from "./SurvivalScoreSection";
 import ShareStoryButton from "./ShareStoryButton";
 import ShareLinkButton from "./ShareLinkButton";
+import ShareSurveyButton from "./ShareSurveyButton";
 import type { StatusId } from "../../data/types";
 
 const THEME_COLOR: Record<string, string> = {
@@ -174,22 +175,7 @@ export default async function ResultPage({
           {/* Share row: ผลลัพธ์ + แชร์แบบทดสอบ */}
           <div className="flex gap-2">
             <div className="flex-1"><ShareLinkButton /></div>
-            <a
-              href="https://qgen.co/en/the-office-survivor"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 py-3.5 rounded-2xl border border-qgen-gray-border
-                font-ui font-semibold text-qgen-black-soft text-sm text-center
-                hover:bg-qgen-paper-alt active:scale-[0.98] transition-all duration-200
-                flex items-center justify-center gap-1.5"
-            >
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M10 3H13V6" /><path d="M13 3L7 9" />
-                <path d="M6 4H3a1 1 0 00-1 1v8a1 1 0 001 1h8a1 1 0 001-1v-3" />
-              </svg>
-              แชร์แบบทดสอบ
-            </a>
+            <div className="flex-1"><ShareSurveyButton /></div>
           </div>
 
           {/* Back to home */}
