@@ -824,12 +824,12 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:flex sm:flex-col sm:justify-center max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-16 sm:pt-14 max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 1
           </p>
-          <div className="text-center mb-3 sm:mb-6">
+          <div className="text-center mb-3 sm:mb-4">
             <div
               className="font-display text-qgen-black-soft text-[25px] leading-[30px] sm:text-[32px] sm:leading-[38px]"
               style={{ fontWeight: 800, letterSpacing: "-0.02em" }}
@@ -843,12 +843,12 @@ export default function SurveyClient() {
             </div>
           </div>
 
-          <div className="w-[150px] h-[150px] sm:w-[160px] sm:h-[160px] mx-auto mb-3 sm:mb-5">
+          <div className="w-[150px] h-[150px] sm:w-[130px] sm:h-[130px] mx-auto mb-3 sm:mb-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Element/Money.webp" alt="เงินเดือนกับค่าใช้จ่าย" className="w-full h-full object-contain" />
           </div>
 
-          <div className="flex flex-col gap-2 sm:gap-3.5">
+          <div className="flex flex-col gap-2 sm:gap-2.5">
             <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               ระหว่างทางไปทำงาน คุณเปิดแอปธนาคารขึ้นมาดูแบบไม่ตั้งใจ
             </p>
@@ -898,12 +898,12 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:flex sm:flex-col sm:justify-center max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-16 sm:pt-14 max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 2
           </p>
-          <div className="text-center mb-3 sm:mb-6">
+          <div className="text-center mb-3 sm:mb-4">
             <div
               className="font-display text-qgen-black-soft text-[25px] leading-[30px] sm:text-[32px] sm:leading-[38px]"
               style={{ fontWeight: 800, letterSpacing: "-0.02em" }}
@@ -917,12 +917,12 @@ export default function SurveyClient() {
             </div>
           </div>
 
-          <div className="w-[150px] h-[150px] sm:w-[160px] sm:h-[160px] mx-auto mb-3 sm:mb-5">
+          <div className="w-[150px] h-[150px] sm:w-[130px] sm:h-[130px] mx-auto mb-3 sm:mb-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Element/Career.webp" alt="เส้นทางอาชีพ" className="w-full h-full object-contain" />
           </div>
 
-          <div className="flex flex-col gap-2 sm:gap-3.5">
+          <div className="flex flex-col gap-2 sm:gap-2.5">
             <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               คุณมาถึงออฟฟิศ เปิดคอม และเข้าสู่โหมดพร้อมทำงาน
             </p>
@@ -974,12 +974,12 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:flex sm:flex-col sm:justify-center max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-16 sm:pt-14 max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 3
           </p>
-          <div className="text-center mb-3 sm:mb-6">
+          <div className="text-center mb-3 sm:mb-4">
             <div
               className="font-display text-qgen-black-soft text-[25px] leading-[30px] sm:text-[32px] sm:leading-[38px]"
               style={{ fontWeight: 800, letterSpacing: "-0.02em" }}
@@ -993,12 +993,12 @@ export default function SurveyClient() {
             </div>
           </div>
 
-          <div className="w-[150px] h-[150px] sm:w-[160px] sm:h-[160px] mx-auto mb-3 sm:mb-5">
+          <div className="w-[150px] h-[150px] sm:w-[130px] sm:h-[130px] mx-auto mb-3 sm:mb-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Element/Health.webp" alt="ความเหนื่อยล้าทางร่างกายและใจ" className="w-full h-full object-contain" />
           </div>
 
-          <div className="flex flex-col gap-2 sm:gap-3.5">
+          <div className="flex flex-col gap-2 sm:gap-2.5">
             <p className="text-qgen-black-soft text-center text-[13px] leading-[20px] sm:text-[15px] sm:leading-[25px]">
               วันทำงานดำเนินไปเรื่อย ๆ ช่วงบ่ายมาถึง
             </p>
