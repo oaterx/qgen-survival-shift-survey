@@ -212,15 +212,30 @@ export default function SurveyClient() {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [currentIndex]);
 
-  // Lock body scroll on non-scrollable phases; reset position on every phase change
+  // Lock body scroll on non-scrollable phases; reset position on every phase change.
+  // position:fixed is required for iOS Safari — overflow:hidden alone is ignored.
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
     const locked = phase !== "demo" && phase !== "survey";
-    document.documentElement.style.overflow = locked ? "hidden" : "";
-    document.body.style.overflow = locked ? "hidden" : "";
+    if (locked) {
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+      document.body.style.top = "0px";
+    } else {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
+    }
     return () => {
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
     };
   }, [phase]);
 
@@ -590,7 +605,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-3 pb-32 sm:pb-24 max-w-lg mx-auto w-full animate-slide-in pt-8 sm:pt-16">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-3 pb-32 sm:pb-24 max-w-lg mx-auto w-full animate-slide-in pt-8 sm:pt-20">
           <div
             className="w-full max-w-[190px] sm:max-w-[300px] mx-auto mb-4 sm:mb-4"
             style={{ aspectRatio: "1022 / 356" }}
@@ -665,7 +680,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className={`flex-1 overflow-hidden sm:overflow-visible px-5 py-8 pb-32 sm:pb-24 sm:pt-16 max-w-lg mx-auto w-full animate-slide-in ${meta.story ? "pt-12" : ""}`}>
+        <div className={`flex-1 overflow-hidden sm:overflow-visible px-5 py-8 pb-32 sm:pb-24 sm:pt-20 max-w-lg mx-auto w-full animate-slide-in ${meta.story ? "pt-12" : ""}`}>
           {meta.story && (
             <div className="w-[170px] h-[170px] sm:w-[160px] sm:h-[160px] mx-auto mb-3 sm:mb-4" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -753,7 +768,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-8 pb-32 sm:pb-24 sm:pt-16 max-w-lg mx-auto w-full animate-slide-in pt-12">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-8 pb-32 sm:pb-24 sm:pt-20 max-w-lg mx-auto w-full animate-slide-in pt-12">
           <div className="w-[170px] h-[170px] sm:w-[160px] sm:h-[160px] mx-auto mb-3 sm:mb-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Element/Phone.webp" alt="โทรศัพท์แจ้งเตือน" className="w-full h-full object-contain" />
@@ -809,7 +824,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:pt-16 max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:pt-20 max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 1
@@ -883,7 +898,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:pt-16 max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:pt-20 max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 2
@@ -959,7 +974,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:pt-16 max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:pt-20 max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 3
@@ -1033,7 +1048,7 @@ export default function SurveyClient() {
         <SignalTopBar />
         <SignalProgress value={100} />
 
-        <div className="flex-1 flex flex-col justify-center px-5 py-8 sm:pt-16 sm:pb-10 max-w-lg mx-auto w-full animate-slide-in">
+        <div className="flex-1 flex flex-col justify-center px-5 py-8 sm:pt-20 sm:pb-10 max-w-lg mx-auto w-full animate-slide-in">
           <div className="flex flex-col gap-3 sm:gap-4">
             <p className="text-qgen-black-soft text-center text-[15px] leading-[24px] sm:text-[18px] sm:leading-[28px]">
               หลังจากผ่านมาทั้งวัน คุณอาจยังยืนไหว ยังทำงานต่อได้

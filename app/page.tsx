@@ -1,10 +1,12 @@
 import Image from "next/image";
 import StartButton from "./StartButton";
 import QGenLogo from "../components/QGenLogo";
+import ScrollLock from "./ScrollLock";
 
 export default function LandingPage() {
   return (
     <main className="h-dvh overflow-hidden flex flex-col items-center bg-qgen-paper px-6 pt-16 sm:pt-12 pb-6">
+      <ScrollLock />
 
       {/* Top group — grows to fill, content centered within it */}
       <div className="flex-1 flex flex-col items-center justify-center w-full">
