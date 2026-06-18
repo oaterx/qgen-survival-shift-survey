@@ -165,6 +165,7 @@ export default function SurveyClient() {
   const router = useRouter();
   const q2Ref = useRef<HTMLDivElement>(null);
   const incomeRef = useRef<HTMLDivElement>(null);
+  const isPoppingRef = useRef(false);
 
   // Saved progress is restored AFTER mount (in the effect below), never during
   // render — reading sessionStorage at render time makes the client's first
@@ -254,6 +255,57 @@ export default function SurveyClient() {
       // storage full / unavailable — non-fatal, just no resume
     }
   }, [hydrated, phase, chapterIntroAxis, demoAnswers, currentIndex, answers, pageSelections, email, consentAccepted, marketingConsent]);
+
+  // Push a history entry on every phase/index change so the browser back button
+  // has entries to pop. Skip the push when we're already handling a popstate.
+  useEffect(() => {
+    if (!hydrated) return;
+    if (isPoppingRef.current) {
+      isPoppingRef.current = false;
+      return;
+    }
+    history.pushState(null, "", "/survey");
+  }, [hydrated, phase, currentIndex]);
+
+  // Map browser back button → the correct in-app back handler for each phase.
+  useEffect(() => {
+    function onPopState() {
+      isPoppingRef.current = true;
+      switch (phase) {
+        case "storyIntro":
+          router.replace("/");
+          break;
+        case "demo":
+          setPhase("storyIntro");
+          break;
+        case "chapterIntro":
+          handleChapterIntroBack();
+          break;
+        case "storyContinue":
+          setChapterIntroAxis("F");
+          setPhase("chapterIntro");
+          break;
+        case "chapterOpen":
+          setPhase("storyContinue");
+          break;
+        case "survey":
+          handleSurveyBack();
+          break;
+        case "chapterOpen2":
+          handleChapterOpen2Back();
+          break;
+        case "chapterOpen3":
+          handleChapterOpen3Back();
+          break;
+        case "ending":
+          handleEndingBack();
+          break;
+      }
+    }
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, currentIndex, answers]);
 
   const total = questions.length;
   const q1 = questions[currentIndex];
@@ -421,6 +473,21 @@ export default function SurveyClient() {
 
   function handleChapterOpen3Back() {
     const prevPairIndex = 10;
+    const pq1 = questions[prevPairIndex];
+    const pq2 = questions[prevPairIndex + 1];
+    const last2 = answers.slice(-2);
+    setPageSelections({
+      [pq1.id]: last2[0].value as 1 | 2 | 3 | 4,
+      [pq2.id]: last2[1].value as 1 | 2 | 3 | 4,
+    });
+    setAnswers((a) => a.slice(0, -2));
+    setCurrentIndex(prevPairIndex);
+    setPhase("survey");
+    setDirection("back");
+  }
+
+  function handleEndingBack() {
+    const prevPairIndex = 16;
     const pq1 = questions[prevPairIndex];
     const pq2 = questions[prevPairIndex + 1];
     const last2 = answers.slice(-2);
