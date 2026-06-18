@@ -34,12 +34,13 @@ function scoreLevel(score: number): { label: string; description: string } {
 export default async function ResultPage({
   searchParams,
 }: {
-  searchParams: Promise<{ r?: string }>;
+  searchParams: Promise<{ r?: string; g?: string }>;
 }) {
   const sp = await searchParams;
   const decoded = sp.r ? decodeScoreToken(sp.r) : null;
   if (!decoded) return notFound();
   const { f, c, w } = decoded;
+  const personaGender = sp.g === "M" || sp.g === "F" ? sp.g : undefined;
 
   const scores = { F: f, C: c, W: w };
   const persona = routePersona(scores);
@@ -53,7 +54,7 @@ export default async function ResultPage({
 
   const actionPlan = (persona as { actionPlan?: Record<string, { titleTH: string; actions: string[] }> }).actionPlan;
   const { fontFace, logoDataUrl, headingDataUrl } = loadStorycardAssets();
-  const personaImageDataUrl = loadPersonaImageDataUrl(persona.id);
+  const personaImageDataUrl = loadPersonaImageDataUrl(persona.id, personaGender);
 
   return (
     <main className="min-h-screen pb-16">
@@ -82,7 +83,7 @@ export default async function ResultPage({
           <div className="px-4 pt-1 pb-1 flex flex-col items-center text-center">
             <div className="mb-3 sm:mb-6">
               <Image
-                src={`/personas/${persona.id}.webp`}
+                src={personaGender ? `/personas/${persona.id}-${personaGender}.png` : `/personas/${persona.id}.webp`}
                 alt={persona.name}
                 width={270}
                 height={360}

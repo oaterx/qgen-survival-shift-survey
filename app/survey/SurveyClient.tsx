@@ -184,6 +184,7 @@ export default function SurveyClient() {
   const [email, setEmail] = useState("");
   const [consentAccepted, setConsentAccepted] = useState(false); // required — gates submit
   const [marketingConsent, setMarketingConsent] = useState(false); // optional — gates email send
+  const [showGenderPicker, setShowGenderPicker] = useState(false);
 
   useEffect(() => {
     // Allow entry if the user just came from Start (within 10s) OR has saved
@@ -385,7 +386,7 @@ export default function SurveyClient() {
     return false;
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(personaGender: "M" | "F") {
     if (submitting) return; // guard against double-submit → duplicate Sheet rows
     if (!consentAccepted) return; // PDPA: required consent must be given
     setSubmitting(true);
@@ -397,6 +398,7 @@ export default function SurveyClient() {
     const payload = JSON.stringify({
       f: Math.round(scores.F), c: Math.round(scores.C), w: Math.round(scores.W),
       personaId,
+      personaGender,
       demographics: demoAnswers,
       answers,
       // PDPA ม.19 no-bundle: email is only sent when the user opts in to
@@ -420,7 +422,7 @@ export default function SurveyClient() {
       // ignore
     }
 
-    router.push(`/result?r=${encodeScoreToken(scores.F, scores.C, scores.W)}`);
+    router.push(`/result?r=${encodeScoreToken(scores.F, scores.C, scores.W)}&g=${personaGender}`);
   }
 
   function handleSurveyBack() {
@@ -1147,7 +1149,7 @@ export default function SurveyClient() {
 
           <div className="flex flex-col gap-3 mt-10">
             <button
-              onClick={handleSubmit}
+              onClick={() => setShowGenderPicker(true)}
               disabled={submitting}
               className="w-full font-ui font-bold text-white rounded-[12px]
                 bg-qgen-signal shadow-[0_12px_32px_rgba(201,111,59,0.25)]
@@ -1272,6 +1274,54 @@ export default function SurveyClient() {
           </div>
         </div>
       </div>
+
+      {/* Gender picker modal */}
+      {showGenderPicker && (
+        <div
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6"
+          style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl overflow-hidden"
+            style={{ background: "rgba(247,246,243,0.97)" }}
+          >
+            <div className="px-6 pt-7 pb-5 text-center border-b border-qgen-gray-border">
+              <p className="font-ui font-semibold text-qgen-black-soft" style={{ fontSize: 15.5 }}>
+                โปรดเลือกเพศสำหรับ Persona ของคุณ
+              </p>
+              <p className="font-ui text-qgen-gray-ash mt-1" style={{ fontSize: 12.5 }}>
+                จะใช้แสดงรูปภาพ Persona ในผลลัพธ์
+              </p>
+            </div>
+            <div className="flex flex-col divide-y divide-qgen-gray-border">
+              {([
+                { label: "ชาย", gender: "M" as const },
+                { label: "หญิง", gender: "F" as const },
+                { label: "ไม่ระบุ (สุ่ม)", gender: Math.random() < 0.5 ? "M" as const : "F" as const },
+              ]).map(({ label, gender }) => (
+                <button
+                  key={label}
+                  onClick={() => {
+                    setShowGenderPicker(false);
+                    handleSubmit(gender);
+                  }}
+                  className="w-full py-4 font-ui font-medium text-qgen-black-soft text-center
+                    hover:bg-qgen-paper-alt active:bg-qgen-paper-wash transition-colors duration-150"
+                  style={{ fontSize: 15 }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <button
+            onClick={() => setShowGenderPicker(false)}
+            className="mt-4 font-ui text-white/70 text-sm active:text-white transition-colors"
+          >
+            ยกเลิก
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -39,7 +39,10 @@ export function loadStorycardAssets() {
   return { fontFace, logoDataUrl, headingDataUrl };
 }
 
-export function loadPersonaImageDataUrl(personaId: string): string {
+export function loadPersonaImageDataUrl(personaId: string, gender?: "M" | "F"): string {
   const pub = path.join(process.cwd(), "public");
+  if (gender) {
+    return fileToBase64(path.join(pub, "personas", `${personaId}-${gender}.png`), "image/png");
+  }
   return fileToBase64(path.join(pub, "personas", `${personaId}.webp`), "image/webp");
 }

@@ -57,6 +57,7 @@ function flattenForSheet(
   c: number,
   w: number,
   personaId: string,
+  personaGender: string,
   demographics: DemographicAnswers,
   answers: SurveyAnswer[],
   email: string | undefined,
@@ -82,6 +83,7 @@ function flattenForSheet(
       flat[a.questionId] = a.value;
     }
   }
+  flat.personaGender = personaGender;
   return flat;
 }
 
@@ -111,6 +113,7 @@ export async function POST(request: Request) {
     c,
     w,
     String(personaId ?? ""),
+    typeof body.personaGender === "string" ? body.personaGender : "",
     demographics ?? {},
     Array.isArray(answers) ? answers : [],
     typeof body.email === "string" ? body.email : undefined,
