@@ -19,6 +19,7 @@ const HEADERS = [
   "F1", "F2", "F3", "F4", "F5", "F6",
   "C1", "C2", "C3", "C4", "C5", "C6",
   "W1", "W2", "W3", "W4", "W5", "W6",
+  "personaGender",
 ];
 
 // ── Receive POST from Next.js and append a row ───────────────────────────────
@@ -97,6 +98,7 @@ function formatResponseSheet() {
   headerGroup(14, 19, "#1D5E54"); // Financial    — deep teal
   headerGroup(20, 25, "#1E3A8A"); // Career       — deep blue
   headerGroup(26, 31, "#4C1D95"); // Well-being   — deep purple
+  headerGroup(32, 32, "#1A1A1A"); // personaGender — near-black
 
   // ── 3. Outer border (table look) ────────────────────────────────────────────
   const tableRange = sheet.getRange(1, 1, totalRows, numCols);
@@ -155,6 +157,7 @@ function formatResponseSheet() {
   sheet.setColumnWidth(12, 130); // marketingConsent
   sheet.setColumnWidth(13, 190); // consentTimestamp
   for (let col = 14; col <= 31; col++) sheet.setColumnWidth(col, 48);
+  sheet.setColumnWidth(32, 110); // personaGender
 
   // ── 7. Row height for data rows ─────────────────────────────────────────────
   for (let r = 2; r <= totalRows; r++) sheet.setRowHeight(r, 32);
