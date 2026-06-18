@@ -88,11 +88,10 @@ function ShareModal({ url, onClose }: { url: string; onClose: () => void }) {
   );
 }
 
-export default function ShareLinkButton() {
+export default function ShareLinkButton({ url }: { url: string }) {
   const [showModal, setShowModal] = useState(false);
 
   function handleShare() {
-    const url = window.location.href;
     if (navigator.share) {
       navigator.share({ title: "The Office Survivor — ผลลัพธ์ของฉัน", url })
         .catch((err) => {
@@ -122,7 +121,7 @@ export default function ShareLinkButton() {
         </svg>
         แชร์ลิงก์ผลลัพธ์
       </button>
-      {showModal && <ShareModal url={window.location.href} onClose={() => setShowModal(false)} />}
+      {showModal && <ShareModal url={url} onClose={() => setShowModal(false)} />}
     </>
   );
 }

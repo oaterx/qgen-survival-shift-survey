@@ -50,6 +50,7 @@ export default async function ResultPage({
     (axisResult.F.roundedScore + axisResult.C.roundedScore + axisResult.W.roundedScore) / 3
   );
   const level = scoreLevel(overallScore);
+  const resultShareUrl = `https://qgen.co/result?r=${sp.r}${sp.g ? `&g=${sp.g}` : ""}`;
   const personaAccent = THEME_COLOR[persona.theme] ?? "#C96F3B";
 
   const actionPlan = (persona as { actionPlan?: Record<string, { titleTH: string; actions: string[] }> }).actionPlan;
@@ -175,7 +176,7 @@ export default async function ResultPage({
 
           {/* Share row: ผลลัพธ์ + แชร์แบบทดสอบ */}
           <div className="flex gap-2">
-            <div className="flex-1"><ShareLinkButton /></div>
+            <div className="flex-1"><ShareLinkButton url={resultShareUrl} /></div>
             <div className="flex-1"><ShareSurveyButton /></div>
           </div>
 
