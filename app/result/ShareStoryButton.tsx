@@ -82,14 +82,16 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
       onClick={() => setShowModal(false)}
     >
       <div
-        className="w-full max-w-[280px] flex flex-col items-center"
+        className="w-full max-w-[280px] flex flex-col items-center overflow-y-auto"
+        style={{ maxHeight: "calc(100dvh - 32px)" }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={previewUrl}
           alt="Story card"
-          className="w-full rounded-2xl shadow-2xl mb-4"
+          className="w-full rounded-2xl shadow-2xl mb-4 flex-shrink-0"
+          style={{ maxHeight: "52vh", objectFit: "contain" }}
           draggable
         />
 
