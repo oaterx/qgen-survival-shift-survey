@@ -1200,14 +1200,14 @@ export default function SurveyClient() {
           style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
         >
           <div
-            className="w-full max-w-sm rounded-3xl overflow-hidden"
+            className="w-full max-w-[280px] rounded-2xl overflow-hidden"
             style={{ background: "rgba(247,246,243,0.97)" }}
           >
-            <div className="px-6 pt-7 pb-5 text-center border-b border-qgen-gray-border">
-              <p className="font-ui font-semibold text-qgen-black-soft" style={{ fontSize: 15.5 }}>
+            <div className="px-5 pt-5 pb-3.5 text-center border-b border-qgen-gray-border">
+              <p className="font-ui font-semibold text-qgen-black-soft" style={{ fontSize: 14 }}>
                 โปรดเลือกเพศสำหรับ Persona ของคุณ
               </p>
-              <p className="font-ui text-qgen-gray-ash mt-1" style={{ fontSize: 12.5 }}>
+              <p className="font-ui text-qgen-gray-ash mt-0.5" style={{ fontSize: 11.5 }}>
                 จะใช้แสดงรูปภาพ Persona ในผลลัพธ์
               </p>
             </div>
@@ -1223,9 +1223,9 @@ export default function SurveyClient() {
                     setShowGenderPicker(false);
                     handleSubmit(gender);
                   }}
-                  className="w-full py-4 font-ui font-medium text-qgen-black-soft text-center
+                  className="w-full py-3 font-ui font-medium text-qgen-black-soft text-center
                     hover:bg-qgen-paper-alt active:bg-qgen-paper-wash transition-colors duration-150"
-                  style={{ fontSize: 15 }}
+                  style={{ fontSize: 14 }}
                 >
                   {label}
                 </button>
@@ -1234,7 +1234,7 @@ export default function SurveyClient() {
           </div>
           <button
             onClick={() => setShowGenderPicker(false)}
-            className="mt-4 font-ui text-white/70 text-sm active:text-white transition-colors"
+            className="mt-3 font-ui text-white/70 text-sm active:text-white transition-colors"
           >
             ยกเลิก
           </button>
