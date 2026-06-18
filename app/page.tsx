@@ -5,7 +5,7 @@ import ScrollLock from "./ScrollLock";
 
 export default function LandingPage() {
   return (
-    <main className="h-dvh overflow-hidden flex flex-col items-center bg-qgen-paper px-6 pt-8 sm:pt-6 pb-6">
+    <main className="h-dvh overflow-hidden sm:h-auto sm:min-h-screen sm:overflow-y-auto flex flex-col items-center bg-qgen-paper px-6 pt-8 sm:pt-6 pb-6">
       <ScrollLock />
 
       {/* Top group — grows to fill, content centered within it */}

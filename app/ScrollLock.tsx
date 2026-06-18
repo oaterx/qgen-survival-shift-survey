@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 export default function ScrollLock() {
   useEffect(() => {
+    if (window.innerWidth >= 640) return;
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     document.body.style.position = "fixed";
