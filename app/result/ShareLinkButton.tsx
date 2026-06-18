@@ -91,15 +91,16 @@ function ShareModal({ url, onClose }: { url: string; onClose: () => void }) {
 export default function ShareLinkButton() {
   const [showModal, setShowModal] = useState(false);
 
-  async function handleShare() {
+  function handleShare() {
     const url = window.location.href;
     if (navigator.share) {
-      try {
-        await navigator.share({ title: "The Office Survivor — ผลลัพธ์ของฉัน", url });
-        return;
-      } catch (err) {
-        if (err instanceof Error && err.name === "AbortError") return;
-      }
+      navigator.share({ title: "The Office Survivor — ผลลัพธ์ของฉัน", url })
+        .catch((err) => {
+          if (!(err instanceof Error && err.name === "AbortError")) {
+            setShowModal(true);
+          }
+        });
+      return;
     }
     setShowModal(true);
   }

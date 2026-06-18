@@ -93,14 +93,15 @@ function ShareModal({ url, onClose }: { url: string; onClose: () => void }) {
 export default function ShareSurveyButton() {
   const [showModal, setShowModal] = useState(false);
 
-  async function handleShare() {
+  function handleShare() {
     if (navigator.share) {
-      try {
-        await navigator.share({ title: "The Office Survivor — มนุษย์ออฟฟิศต้องรอด", url: SURVEY_URL });
-        return;
-      } catch (err) {
-        if (err instanceof Error && err.name === "AbortError") return;
-      }
+      navigator.share({ title: "The Office Survivor — มนุษย์ออฟฟิศต้องรอด", url: SURVEY_URL })
+        .catch((err) => {
+          if (!(err instanceof Error && err.name === "AbortError")) {
+            setShowModal(true);
+          }
+        });
+      return;
     }
     setShowModal(true);
   }
