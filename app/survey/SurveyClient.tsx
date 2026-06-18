@@ -821,10 +821,10 @@ export default function SurveyClient() {
   if (phase === "chapterOpen") {
     const startIdx = AXIS_START_INDEX["F"];
     return (
-      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-16 sm:pt-14 max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden px-5 py-4 pb-32 sm:pb-16 sm:pt-14 max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 1
@@ -895,10 +895,10 @@ export default function SurveyClient() {
   if (phase === "chapterOpen2") {
     const startIdx = AXIS_START_INDEX["C"];
     return (
-      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-16 sm:pt-14 max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden px-5 py-4 pb-32 sm:pb-16 sm:pt-14 max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 2
@@ -971,10 +971,10 @@ export default function SurveyClient() {
   if (phase === "chapterOpen3") {
     const startIdx = AXIS_START_INDEX["W"];
     return (
-      <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
+      <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-16 sm:pt-14 max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden px-5 py-4 pb-32 sm:pb-16 sm:pt-14 max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 3
