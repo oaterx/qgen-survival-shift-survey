@@ -1207,9 +1207,6 @@ export default function SurveyClient() {
               <p className="font-ui font-semibold text-qgen-black-soft" style={{ fontSize: 14 }}>
                 โปรดเลือกเพศสำหรับ Persona ของคุณ
               </p>
-              <p className="font-ui text-qgen-gray-ash mt-0.5" style={{ fontSize: 11.5 }}>
-                จะใช้แสดงรูปภาพ Persona ในผลลัพธ์
-              </p>
             </div>
             <div className="flex flex-col divide-y divide-qgen-gray-border">
               {([
