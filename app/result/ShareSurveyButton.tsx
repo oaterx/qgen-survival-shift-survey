@@ -7,19 +7,41 @@ const SURVEY_URL = "https://qgen.co/en/the-office-survivor";
 export default function ShareSurveyButton() {
   const [copied, setCopied] = useState(false);
 
-  function handleShare() {
-    const title = "The Office Survivor — มนุษย์ออฟฟิศต้องรอด";
-
-    if (typeof navigator !== "undefined" && navigator.share) {
-      navigator.share({ title, url: SURVEY_URL }).catch(() => {});
-      return;
+  function copyText(text: string) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }).catch(() => execCopy(text));
+    } else {
+      execCopy(text);
     }
+  }
 
-    // Desktop fallback: copy to clipboard
-    navigator.clipboard?.writeText(SURVEY_URL).then(() => {
+  function execCopy(text: string) {
+    try {
+      const el = document.createElement("textarea");
+      el.value = text;
+      el.style.cssText = "position:fixed;top:-9999px;left:-9999px";
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    }).catch(() => {});
+    } catch {}
+  }
+
+  function handleShare() {
+    const shareData = { title: "The Office Survivor — มนุษย์ออฟฟิศต้องรอด", url: SURVEY_URL };
+
+    if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
+      navigator.share(shareData).catch((err) => {
+        if (err?.name !== "AbortError") copyText(SURVEY_URL);
+      });
+      return;
+    }
+    copyText(SURVEY_URL);
   }
 
   return (
