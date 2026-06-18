@@ -174,9 +174,8 @@ export default async function ResultPage({
             personaImageDataUrl={personaImageDataUrl}
           />
 
-          {/* Share row: ผลลัพธ์ + แชร์แบบทดสอบ */}
+          {/* Share row: แชร์แบบทดสอบ (ShareLinkButton hidden until result routing is ready) */}
           <div className="flex gap-2">
-            <div className="flex-1"><ShareLinkButton url={resultShareUrl} /></div>
             <div className="flex-1"><ShareSurveyButton /></div>
           </div>
 
