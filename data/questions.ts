@@ -157,7 +157,7 @@ export const questions = [
     "id": "C6",
     "axis": "C",
     "axisName": "Career Path",
-    "question": "ช่วง 6 เดือนที่ผ่านมา คุณเคยคิด|จะหางานใหม่บ้างไหม",
+    "question": "ช่วง 6 เดือนที่ผ่านมา คุณเคยคิดจะหางานใหม่|บ้างไหม",
     "scale": { "min": 1, "max": 4, "direction": "1 = best / 4 = most pressured" },
     "reverse": false,
     "options": [
