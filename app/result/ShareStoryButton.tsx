@@ -91,7 +91,7 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
           src={previewUrl}
           alt="Story card"
           className="w-full rounded-2xl shadow-2xl mb-4 flex-shrink-0"
-          style={{ maxHeight: "52vh", objectFit: "contain" }}
+          style={{ maxHeight: "52vh", objectFit: "contain", WebkitTapHighlightColor: "transparent" }}
           draggable
         />
 
