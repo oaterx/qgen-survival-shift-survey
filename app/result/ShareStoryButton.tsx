@@ -106,30 +106,46 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
       {/* Preview modal */}
       {showModal && previewUrl && (
         <div
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/70 px-5"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center px-5"
+          style={{ background: "rgba(10,10,10,0.75)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
           onClick={() => setShowModal(false)}
         >
           <div
-            className="relative w-full max-w-xs"
+            className="w-full max-w-xs flex flex-col items-center"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Hint text */}
-            <p className="text-white/80 text-center text-xs mb-3">
-              กดค้างที่รูปเพื่อบันทึก (iOS/Android) · คลิกขวาเพื่อเซฟ (Desktop)
-            </p>
-
+            {/* Image */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={previewUrl}
               alt="Story card"
-              className="w-full rounded-2xl shadow-2xl"
+              className="w-full rounded-2xl shadow-2xl mb-4"
               draggable
             />
 
+            {/* Instructions */}
+            <div className="w-full rounded-2xl mb-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
+              <div className="flex items-start gap-3 px-4 py-3 border-b" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+                <span className="text-base mt-0.5">📱</span>
+                <div>
+                  <p className="text-white text-xs font-semibold mb-0.5">iOS / Android</p>
+                  <p className="text-white/60 text-xs leading-relaxed">กดค้างที่รูปภาพ แล้วเลือก &ldquo;บันทึกรูปภาพ&rdquo; หรือ &ldquo;Save to Photos&rdquo;</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 px-4 py-3">
+                <span className="text-base mt-0.5">🖥️</span>
+                <div>
+                  <p className="text-white text-xs font-semibold mb-0.5">Desktop</p>
+                  <p className="text-white/60 text-xs leading-relaxed">คลิกขวาที่รูปภาพ แล้วเลือก &ldquo;Save Image As…&rdquo;</p>
+                </div>
+              </div>
+            </div>
+
             <button
               onClick={() => setShowModal(false)}
-              className="mt-4 w-full py-3 rounded-2xl bg-white/10 text-white text-sm font-medium
-                active:bg-white/20 transition-colors"
+              className="w-full py-3 rounded-2xl text-white/70 text-sm font-medium
+                active:text-white transition-colors"
+              style={{ background: "rgba(255,255,255,0.06)" }}
             >
               ปิด
             </button>
