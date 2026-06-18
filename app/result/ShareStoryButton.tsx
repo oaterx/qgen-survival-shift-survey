@@ -139,7 +139,7 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
         className="w-full py-4 rounded-2xl text-white font-semibold text-sm
           active:scale-[0.97] transition-transform duration-200 ease-out disabled:opacity-70
           flex items-center justify-center gap-2.5"
-        style={{ background: buttonColor ?? "linear-gradient(135deg, #833ab4, #e1306c, #f77737)" }}
+        style={{ background: "#C96F3B" }}
       >
         {status === "generating" ? (
           <>
