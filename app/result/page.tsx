@@ -50,7 +50,7 @@ export default async function ResultPage({
     (axisResult.F.roundedScore + axisResult.C.roundedScore + axisResult.W.roundedScore) / 3
   );
   const level = scoreLevel(overallScore);
-  const resultShareUrl = `https://qgen.co/en/the-office-survivor/result?r=${sp.r}${sp.g ? `&g=${sp.g}` : ""}`;
+  const resultShareUrl = "https://qgen.co/en/the-office-survivor";
   const personaAccent = THEME_COLOR[persona.theme] ?? "#C96F3B";
 
   const actionPlan = (persona as { actionPlan?: Record<string, { titleTH: string; actions: string[] }> }).actionPlan;
