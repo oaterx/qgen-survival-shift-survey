@@ -622,7 +622,7 @@ export default function SurveyClient() {
         </div>
 
         <div
-          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-6"
+          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-3"
           style={{ background: "rgba(247,246,243,0.92)", backdropFilter: "blur(8px)" }}
         >
           <div className="max-w-lg mx-auto flex flex-col gap-3">
@@ -712,7 +712,7 @@ export default function SurveyClient() {
         </div>
 
         <div
-          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-6"
+          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-3"
           style={{ background: "rgba(247,246,243,0.92)", backdropFilter: "blur(8px)" }}
         >
           <div className="max-w-lg mx-auto flex flex-col gap-3">
@@ -799,7 +799,7 @@ export default function SurveyClient() {
         </div>
 
         <div
-          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-6"
+          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-3"
           style={{ background: "rgba(247,246,243,0.92)", backdropFilter: "blur(8px)" }}
         >
           <div className="max-w-lg mx-auto flex flex-col gap-3">
@@ -859,7 +859,7 @@ export default function SurveyClient() {
         </div>
 
         <div
-          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-6"
+          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-3"
           style={{ background: "rgba(247,246,243,0.92)", backdropFilter: "blur(8px)" }}
         >
           <div className="max-w-lg mx-auto flex flex-col gap-3">
@@ -932,7 +932,7 @@ export default function SurveyClient() {
         </div>
 
         <div
-          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-6"
+          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-3"
           style={{ background: "rgba(247,246,243,0.92)", backdropFilter: "blur(8px)" }}
         >
           <div className="max-w-lg mx-auto flex flex-col gap-3">
@@ -1008,7 +1008,7 @@ export default function SurveyClient() {
         </div>
 
         <div
-          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-6"
+          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-3"
           style={{ background: "rgba(247,246,243,0.92)", backdropFilter: "blur(8px)" }}
         >
           <div className="max-w-lg mx-auto flex flex-col gap-3">
@@ -1082,7 +1082,7 @@ export default function SurveyClient() {
         </div>
 
         <div
-          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-6"
+          className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-3"
           style={{ background: "rgba(247,246,243,0.92)", backdropFilter: "blur(8px)" }}
         >
           <div className="max-w-lg mx-auto flex flex-col gap-3">
@@ -1252,7 +1252,7 @@ export default function SurveyClient() {
 
       {/* Fixed bottom: ถัดไป button + back */}
       <div
-        className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-6"
+        className="fixed bottom-0 left-0 right-0 border-t border-qgen-gray-border px-5 pt-3 pb-3"
         style={{ background: "rgba(247,246,243,0.92)", backdropFilter: "blur(8px)" }}
       >
         <div className="max-w-lg mx-auto flex flex-col gap-3">
