@@ -61,14 +61,14 @@ export default async function ResultPage({
       <div className="animate-fade-in">
         <SignalTopBar />
       </div>
-      <div className="flex justify-center pt-6 pb-1">
-        <div className="relative w-full max-w-[300px]" style={{ aspectRatio: "1022 / 356" }}>
+      <div className="flex justify-center pt-4 pb-1">
+        <div className="relative w-full max-w-[220px] sm:max-w-[300px]" style={{ aspectRatio: "1022 / 356" }}>
           <Image
             src="/Element/Heading.png"
             alt="The Office Survivor — มนุษย์ออฟฟิศต้องรอด"
             fill
             className="object-contain"
-            sizes="300px"
+            sizes="(max-width: 640px) 220px, 300px"
             priority
           />
         </div>
@@ -78,25 +78,25 @@ export default async function ResultPage({
 
         {/* ── Persona ── */}
         <section className="relative animate-fade-up" style={{ animationDelay: "60ms" }}>
-          <div className="px-6 pt-2 pb-1 flex flex-col items-center text-center">
-            <div className="mb-6">
+          <div className="px-4 pt-1 pb-1 flex flex-col items-center text-center">
+            <div className="mb-3 sm:mb-6">
               <Image
                 src={`/personas/${persona.id}.webp`}
                 alt={persona.name}
                 width={270}
                 height={360}
-                className="object-contain"
+                className="object-contain w-[200px] sm:w-[270px]"
                 priority
               />
             </div>
-            <h3 className="text-[30px] font-bold text-qgen-black-absolute leading-tight mb-3 whitespace-pre-line">
+            <h3 className="text-[24px] sm:text-[30px] font-bold text-qgen-black-absolute leading-tight mb-2 sm:mb-3 whitespace-pre-line">
               &ldquo;{persona.name}&rdquo;
             </h3>
             <div
-              className="w-40 h-[3px] rounded-full mb-4"
+              className="w-32 sm:w-40 h-[3px] rounded-full mb-3 sm:mb-4"
               style={{ background: personaAccent }}
             />
-            <p className="text-[15px] text-qgen-gray-ash leading-relaxed max-w-[320px]">
+            <p className="text-[13.5px] sm:text-[15px] text-qgen-gray-ash leading-relaxed max-w-[300px] sm:max-w-[320px]">
               {persona.description}
             </p>
           </div>
@@ -171,8 +171,26 @@ export default async function ResultPage({
             personaImageDataUrl={personaImageDataUrl}
           />
 
-          {/* Share result link */}
-          <ShareLinkButton />
+          {/* Share row: ผลลัพธ์ + แชร์แบบทดสอบ */}
+          <div className="flex gap-2">
+            <div className="flex-1"><ShareLinkButton /></div>
+            <a
+              href="https://qgen.co/en/the-office-survivor"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 py-3.5 rounded-2xl border border-qgen-gray-border
+                font-ui font-semibold text-qgen-black-soft text-sm text-center
+                hover:bg-qgen-paper-alt active:scale-[0.98] transition-all duration-200
+                flex items-center justify-center gap-1.5"
+            >
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10 3H13V6" /><path d="M13 3L7 9" />
+                <path d="M6 4H3a1 1 0 00-1 1v8a1 1 0 001 1h8a1 1 0 001-1v-3" />
+              </svg>
+              แชร์แบบทดสอบ
+            </a>
+          </div>
 
           {/* Back to home */}
           <Link
