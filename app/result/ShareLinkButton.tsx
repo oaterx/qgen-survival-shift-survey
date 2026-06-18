@@ -92,12 +92,9 @@ export default function ShareLinkButton({ url }: { url: string }) {
   const [showModal, setShowModal] = useState(false);
 
   function handleShare() {
-    console.log("[Share] navigator.share available:", !!navigator.share);
-    console.log("[Share] in iframe:", window !== window.parent);
-    if (navigator.share) {
+    if (window === window.parent && navigator.share) {
       navigator.share({ title: "The Office Survivor — ผลลัพธ์ของฉัน", url })
         .catch((err) => {
-          console.error("[Share] navigator.share error:", err?.name, err?.message, err);
           if (!(err instanceof Error && err.name === "AbortError")) {
             setShowModal(true);
           }
