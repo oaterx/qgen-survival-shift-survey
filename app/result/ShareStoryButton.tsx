@@ -82,7 +82,7 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
       onClick={() => setShowModal(false)}
     >
       <div
-        className="w-full max-w-[240px] flex flex-col items-center"
+        className="w-full max-w-[280px] flex flex-col items-center"
         onClick={(e) => e.stopPropagation()}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
