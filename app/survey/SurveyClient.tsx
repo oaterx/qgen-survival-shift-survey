@@ -824,7 +824,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:pt-20 max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:flex sm:flex-col sm:justify-center max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 1
@@ -898,7 +898,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:pt-20 max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:flex sm:flex-col sm:justify-center max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 2
@@ -974,7 +974,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:pt-20 max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:flex sm:flex-col sm:justify-center max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 3
