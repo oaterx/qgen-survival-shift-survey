@@ -50,7 +50,7 @@ export default async function ResultPage({
     (axisResult.F.roundedScore + axisResult.C.roundedScore + axisResult.W.roundedScore) / 3
   );
   const level = scoreLevel(overallScore);
-  const resultShareUrl = "https://qgen.co/en/the-office-survivor";
+  const resultShareUrl = `https://qgen-survival-shift-survey-128904677858.asia-southeast3.run.app/result?r=${sp.r}${sp.g ? `&g=${sp.g}` : ""}`;
   const personaAccent = THEME_COLOR[persona.theme] ?? "#C96F3B";
 
   const actionPlan = (persona as { actionPlan?: Record<string, { titleTH: string; actions: string[] }> }).actionPlan;
