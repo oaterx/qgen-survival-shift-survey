@@ -665,7 +665,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className={`flex-1 overflow-hidden sm:overflow-visible px-5 py-8 pb-32 sm:pb-24 max-w-lg mx-auto w-full animate-slide-in ${meta.story ? "pt-12 sm:pt-0 sm:flex sm:flex-col sm:justify-center" : "sm:pt-16"}`}>
+        <div className={`flex-1 overflow-hidden sm:overflow-visible px-5 py-8 pb-32 sm:pb-24 sm:pt-16 max-w-lg mx-auto w-full animate-slide-in ${meta.story ? "pt-12" : ""}`}>
           {meta.story && (
             <div className="w-[170px] h-[170px] sm:w-[160px] sm:h-[160px] mx-auto mb-3 sm:mb-4" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -753,7 +753,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible sm:flex sm:flex-col sm:justify-center px-5 py-8 pb-32 sm:pb-24 sm:pt-0 max-w-lg mx-auto w-full animate-slide-in pt-12">
+        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-8 pb-32 sm:pb-24 sm:pt-16 max-w-lg mx-auto w-full animate-slide-in pt-12">
           <div className="w-[170px] h-[170px] sm:w-[160px] sm:h-[160px] mx-auto mb-3 sm:mb-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Element/Phone.webp" alt="โทรศัพท์แจ้งเตือน" className="w-full h-full object-contain" />
