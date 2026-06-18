@@ -257,6 +257,16 @@ export default function SurveyClient() {
     }
   }, [hydrated, phase, chapterIntroAxis, demoAnswers, currentIndex, answers, pageSelections, email, consentAccepted, marketingConsent]);
 
+  // Warn before refresh / tab close so the user doesn't lose progress.
+  useEffect(() => {
+    if (!hydrated) return;
+    function onBeforeUnload(e: BeforeUnloadEvent) {
+      e.preventDefault();
+    }
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [hydrated]);
+
   // Push a history entry on every phase/index change so the browser back button
   // has entries to pop. Skip the push when we're already handling a popstate.
   useEffect(() => {
