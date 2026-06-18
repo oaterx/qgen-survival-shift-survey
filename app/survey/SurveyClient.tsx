@@ -684,9 +684,9 @@ export default function SurveyClient() {
       <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden px-5 py-3 pb-32 sm:pb-20 max-w-lg mx-auto w-full animate-slide-in pt-4">
+        <div className="flex-1 flex flex-col justify-center overflow-y-auto px-5 pb-28 max-w-lg mx-auto w-full animate-slide-in">
           <div
-            className="w-full max-w-[190px] sm:max-w-[300px] mx-auto mb-4 sm:mb-4"
+            className="w-full max-w-[190px] sm:max-w-[240px] mx-auto mb-3"
             style={{ aspectRatio: "1022 / 356" }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -697,7 +697,7 @@ export default function SurveyClient() {
             />
           </div>
 
-          <p className="text-qgen-gray-ash text-center mb-5 sm:mb-6 text-[12.5px] leading-[18px] sm:text-[15.5px] sm:leading-[24px]">
+          <p className="text-qgen-gray-ash text-center mb-4 text-[14px] leading-[22px]">
             สำรวจปัญหา 3 ด้านหลัก ของชีวิตมนุษย์ออฟฟิศ
             <br />
             เพื่อดูความเสี่ยงที่อาจเกิดขึ้นและแนวทางการรับมือสถานการณ์เบื้องต้น
@@ -708,14 +708,11 @@ export default function SurveyClient() {
             style={{ boxShadow: "0 2px 8px rgba(10,10,10,0.04)" }}
           >
             {STORY_AXES.map((ax, i) => (
-              <div
-                key={i}
-                className="px-3.5 py-2.5 sm:px-4 sm:py-2.5"
-              >
-                <p className="font-ui font-semibold text-qgen-black-soft text-[13.5px] leading-[17px] sm:text-[16px] sm:leading-[21px]">
-                  {ax.label} <span className="text-qgen-gray-ash font-semibold text-[11.5px] sm:text-[13px]">· {ax.labelTH}</span>
+              <div key={i} className="px-3.5 py-2.5">
+                <p className="font-ui font-semibold text-qgen-black-soft text-[14px] leading-[18px]">
+                  {ax.label} <span className="text-qgen-gray-ash font-semibold text-[12px]">· {ax.labelTH}</span>
                 </p>
-                <p className="font-ui text-qgen-gray-ash mt-1 sm:mt-2 text-[11.5px] leading-[16px] sm:text-[13.5px] sm:leading-[20px]">
+                <p className="font-ui text-qgen-gray-ash mt-1 text-[12px] leading-[17px]">
                   {ax.desc}
                 </p>
               </div>
@@ -759,9 +756,9 @@ export default function SurveyClient() {
       <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className={`flex-1 overflow-hidden px-5 py-8 pb-32 sm:pb-20 max-w-lg mx-auto w-full animate-slide-in ${meta.story ? "pt-16" : ""}`}>
+        <div className="flex-1 flex flex-col justify-center overflow-y-auto px-5 pb-28 max-w-lg mx-auto w-full animate-slide-in">
           {meta.story && (
-            <div className="w-[170px] h-[170px] sm:w-[160px] sm:h-[160px] mx-auto mb-3 sm:mb-4" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
+            <div className="w-[140px] h-[140px] mx-auto mb-3" style={{ animation: "clock-ring 0.9s ease-in-out infinite" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/Element/Clock.webp" alt="นาฬิกาปลุก" className="w-full h-full object-contain" />
             </div>
@@ -782,29 +779,28 @@ export default function SurveyClient() {
               <div className="w-12 rounded-full mx-auto" style={{ height: 3, background: "#C96F3B", marginTop: 18, marginBottom: 18 }} />
             </>
           )}
-          {meta.story && <div className="mt-5 sm:mt-10" />}
 
           {meta.story ? (
-            <div className="flex flex-col gap-2.5 sm:gap-3.5">
+            <div className="flex flex-col gap-2.5">
               {meta.story.map((line, i) => {
                 if (i === 0 && line.includes("|")) {
                   const [highlight, rest] = line.split("|");
                   return (
-                    <p key={i} className="text-center text-[13.5px] leading-[22px] sm:text-[15px] sm:leading-[25px]">
-                      <span className="font-bold text-qgen-signal text-[20px] sm:text-[23px]">{highlight}</span>
+                    <p key={i} className="text-center text-[14px] leading-[22px]">
+                      <span className="font-bold text-qgen-signal text-[20px]">{highlight}</span>
                       <span className="text-qgen-black-soft">{rest}</span>
                     </p>
                   );
                 }
                 return (
-                  <p key={i} className="text-qgen-black-soft text-center text-[13.5px] leading-[22px] sm:text-[15px] sm:leading-[25px]">
+                  <p key={i} className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
                     {line}
                   </p>
                 );
               })}
             </div>
           ) : (
-            <p className="text-qgen-black-soft" style={{ fontSize: 15, lineHeight: "25px" }}>
+            <p className="text-qgen-black-soft text-center" style={{ fontSize: 14, lineHeight: "22px" }}>
               {meta.desc}
             </p>
           )}
@@ -847,22 +843,20 @@ export default function SurveyClient() {
       <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden px-5 py-8 pb-32 sm:pb-20 max-w-lg mx-auto w-full animate-slide-in pt-16">
-          <div className="w-[170px] h-[170px] sm:w-[160px] sm:h-[160px] mx-auto mb-3 sm:mb-4">
+        <div className="flex-1 flex flex-col justify-center overflow-y-auto px-5 pb-28 max-w-lg mx-auto w-full animate-slide-in">
+          <div className="w-[140px] h-[140px] mx-auto mb-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Element/Phone.webp" alt="โทรศัพท์แจ้งเตือน" className="w-full h-full object-contain" />
           </div>
 
-          <div className="mt-5 sm:mt-10" />
-
-          <div className="flex flex-col gap-2.5 sm:gap-3.5">
-            <p className="text-qgen-black-soft text-center text-[13.5px] leading-[22px] sm:text-[15px] sm:leading-[25px]">
+          <div className="flex flex-col gap-2.5">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               ก่อนออกจากห้อง โทรศัพท์สว่างขึ้นพร้อมแจ้งเตือนค่าใช้จ่าย
             </p>
-            <p className="text-qgen-black-soft text-center text-[13.5px] leading-[22px] sm:text-[15px] sm:leading-[25px]">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               และคำถามในหัวก็เด้งขึ้นมาเบา ๆ ว่า
             </p>
-            <p className="text-center mx-auto text-[16px] leading-[24px] sm:text-[18px] sm:leading-[27px]" style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)", padding: "0 28px", boxSizing: "border-box" }}>
+            <p className="text-center text-[16px] leading-[24px]">
               <span className="font-bold text-qgen-signal">
                 &ldquo;เรากำลังใช้ชีวิตอยู่จริง ๆ หรือแค่พยายามเอาตัวเองให้รอดไปวัน ๆ&rdquo;
               </span>
@@ -922,22 +916,22 @@ export default function SurveyClient() {
             </div>
           </div>
 
-          <div className="w-[120px] h-[120px] mx-auto mb-3">
+          <div className="w-[140px] h-[140px] mx-auto mb-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Element/Money.webp" alt="เงินเดือนกับค่าใช้จ่าย" className="w-full h-full object-contain" />
           </div>
 
           <div className="flex flex-col gap-2">
-            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px]">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               ระหว่างทางไปทำงาน คุณเปิดแอปธนาคารขึ้นมาดูแบบไม่ตั้งใจ
             </p>
-            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px]">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               เงินเดือนเพิ่งเข้าได้ไม่นาน แต่ค่าใช้จ่ายเหมือนมารออยู่ก่อนแล้ว
             </p>
-            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px]">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               บางครั้งคุณไม่ได้อยากประหยัดทุกอย่าง
             </p>
-            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px]">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               แต่ทุกครั้งที่ใช้เงิน คุณก็เริ่มคิดมากขึ้นเรื่อย ๆ
             </p>
           </div>
@@ -996,22 +990,22 @@ export default function SurveyClient() {
             </div>
           </div>
 
-          <div className="w-[120px] h-[120px] mx-auto mb-3">
+          <div className="w-[140px] h-[140px] mx-auto mb-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Element/Career.webp" alt="เส้นทางอาชีพ" className="w-full h-full object-contain" />
           </div>
 
           <div className="flex flex-col gap-2">
-            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px]">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               คุณมาถึงออฟฟิศ เปิดคอม และเข้าสู่โหมดพร้อมทำงาน
             </p>
-            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px]">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               อีเมลรอตอบ ประชุมรออยู่ งานเก่ารอแก้ และงานใหม่รอเริ่ม
             </p>
-            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px]">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               ไม่ใช่ว่าคุณไม่ตั้งใจหรือไม่พยายาม แต่บางวันคุณก็เริ่มสงสัยว่า
             </p>
-            <p className="text-center text-[13px] leading-[20px]">
+            <p className="text-center text-[14px] leading-[22px]">
               <span className="font-bold text-qgen-black-soft">
                 &ldquo;งานที่ทำอยู่กำลังพาคุณไปข้างหน้าจริงไหม&rdquo;
               </span>
@@ -1072,22 +1066,22 @@ export default function SurveyClient() {
             </div>
           </div>
 
-          <div className="w-[120px] h-[120px] mx-auto mb-3">
+          <div className="w-[140px] h-[140px] mx-auto mb-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Element/Health.webp" alt="ความเหนื่อยล้าทางร่างกายและใจ" className="w-full h-full object-contain" />
           </div>
 
           <div className="flex flex-col gap-2">
-            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px]">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               วันทำงานดำเนินไปเรื่อย ๆ ช่วงบ่ายมาถึง
             </p>
-            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px]">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               กาแฟแก้วแรกเริ่มหมดฤทธิ์
             </p>
-            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px]">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               ตาเริ่มล้า ไหล่เริ่มตึง คุณอาจยังทำงานได้
             </p>
-            <p className="text-qgen-black-soft text-center text-[13px] leading-[20px]">
+            <p className="text-qgen-black-soft text-center text-[14px] leading-[22px]">
               แต่ร่างกายเริ่มส่งสัญญาณเล็ก ๆ ว่า มันเหนื่อยมาสักพักแล้ว
             </p>
           </div>
