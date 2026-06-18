@@ -7,46 +7,34 @@ const SURVEY_URL = "https://qgen.co/en/the-office-survivor";
 export default function ShareSurveyButton() {
   const [copied, setCopied] = useState(false);
 
-  function copyText(text: string) {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }).catch(() => execCopy(text));
-    } else {
-      execCopy(text);
+  async function handleClick() {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "The Office Survivor — มนุษย์ออฟฟิศต้องรอด", url: SURVEY_URL });
+        return;
+      } catch (err) {
+        if (err instanceof Error && err.name === "AbortError") return;
+      }
     }
-  }
-
-  function execCopy(text: string) {
     try {
+      await navigator.clipboard.writeText(SURVEY_URL);
+    } catch {
       const el = document.createElement("textarea");
-      el.value = text;
-      el.style.cssText = "position:fixed;top:-9999px;left:-9999px";
+      el.value = SURVEY_URL;
+      el.style.position = "fixed";
+      el.style.top = "-9999px";
       document.body.appendChild(el);
       el.select();
       document.execCommand("copy");
       document.body.removeChild(el);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {}
-  }
-
-  function handleShare() {
-    const shareData = { title: "The Office Survivor — มนุษย์ออฟฟิศต้องรอด", url: SURVEY_URL };
-
-    if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
-      navigator.share(shareData).catch((err) => {
-        if (err?.name !== "AbortError") copyText(SURVEY_URL);
-      });
-      return;
     }
-    copyText(SURVEY_URL);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
     <button
-      onClick={handleShare}
+      onClick={handleClick}
       className="w-full py-3.5 rounded-2xl border border-qgen-gray-border
         font-ui font-semibold text-qgen-black-soft text-sm text-center
         hover:bg-qgen-paper-alt active:scale-[0.98] transition-all duration-200
