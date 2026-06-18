@@ -1123,6 +1123,7 @@ export default function SurveyClient() {
   // ── Ending (closing screen, no image, no email) ─────────────────────────────
   if (phase === "ending") {
     return (
+      <>
       <div className="h-dvh flex flex-col bg-qgen-paper overflow-hidden">
         <SignalTopBar />
         <SignalProgress value={100} />
@@ -1191,6 +1192,55 @@ export default function SurveyClient() {
           </div>
         </div>
       </div>
+
+      {/* Gender picker modal */}
+      {showGenderPicker && (
+        <div
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6"
+          style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl overflow-hidden"
+            style={{ background: "rgba(247,246,243,0.97)" }}
+          >
+            <div className="px-6 pt-7 pb-5 text-center border-b border-qgen-gray-border">
+              <p className="font-ui font-semibold text-qgen-black-soft" style={{ fontSize: 15.5 }}>
+                โปรดเลือกเพศสำหรับ Persona ของคุณ
+              </p>
+              <p className="font-ui text-qgen-gray-ash mt-1" style={{ fontSize: 12.5 }}>
+                จะใช้แสดงรูปภาพ Persona ในผลลัพธ์
+              </p>
+            </div>
+            <div className="flex flex-col divide-y divide-qgen-gray-border">
+              {([
+                { label: "ชาย", gender: "M" as const },
+                { label: "หญิง", gender: "F" as const },
+                { label: "ไม่ระบุ (สุ่ม)", gender: Math.random() < 0.5 ? "M" as const : "F" as const },
+              ]).map(({ label, gender }) => (
+                <button
+                  key={label}
+                  onClick={() => {
+                    setShowGenderPicker(false);
+                    handleSubmit(gender);
+                  }}
+                  className="w-full py-4 font-ui font-medium text-qgen-black-soft text-center
+                    hover:bg-qgen-paper-alt active:bg-qgen-paper-wash transition-colors duration-150"
+                  style={{ fontSize: 15 }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <button
+            onClick={() => setShowGenderPicker(false)}
+            className="mt-4 font-ui text-white/70 text-sm active:text-white transition-colors"
+          >
+            ยกเลิก
+          </button>
+        </div>
+      )}
+      </>
     );
   }
 
@@ -1285,53 +1335,6 @@ export default function SurveyClient() {
         </div>
       </div>
 
-      {/* Gender picker modal */}
-      {showGenderPicker && (
-        <div
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center px-6"
-          style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
-        >
-          <div
-            className="w-full max-w-sm rounded-3xl overflow-hidden"
-            style={{ background: "rgba(247,246,243,0.97)" }}
-          >
-            <div className="px-6 pt-7 pb-5 text-center border-b border-qgen-gray-border">
-              <p className="font-ui font-semibold text-qgen-black-soft" style={{ fontSize: 15.5 }}>
-                โปรดเลือกเพศสำหรับ Persona ของคุณ
-              </p>
-              <p className="font-ui text-qgen-gray-ash mt-1" style={{ fontSize: 12.5 }}>
-                จะใช้แสดงรูปภาพ Persona ในผลลัพธ์
-              </p>
-            </div>
-            <div className="flex flex-col divide-y divide-qgen-gray-border">
-              {([
-                { label: "ชาย", gender: "M" as const },
-                { label: "หญิง", gender: "F" as const },
-                { label: "ไม่ระบุ (สุ่ม)", gender: Math.random() < 0.5 ? "M" as const : "F" as const },
-              ]).map(({ label, gender }) => (
-                <button
-                  key={label}
-                  onClick={() => {
-                    setShowGenderPicker(false);
-                    handleSubmit(gender);
-                  }}
-                  className="w-full py-4 font-ui font-medium text-qgen-black-soft text-center
-                    hover:bg-qgen-paper-alt active:bg-qgen-paper-wash transition-colors duration-150"
-                  style={{ fontSize: 15 }}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <button
-            onClick={() => setShowGenderPicker(false)}
-            className="mt-4 font-ui text-white/70 text-sm active:text-white transition-colors"
-          >
-            ยกเลิก
-          </button>
-        </div>
-      )}
     </div>
   );
 }
