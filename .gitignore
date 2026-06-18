@@ -40,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# survey data — never commit respondent data or research assets
+data/responses.jsonl
+*.xlsx
+Persona/
