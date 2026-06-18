@@ -212,6 +212,18 @@ export default function SurveyClient() {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [currentIndex]);
 
+  // Lock body scroll on non-scrollable phases; reset position on every phase change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    const locked = phase !== "demo" && phase !== "survey";
+    document.documentElement.style.overflow = locked ? "hidden" : "";
+    document.body.style.overflow = locked ? "hidden" : "";
+    return () => {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    };
+  }, [phase]);
+
   // Save progress whenever any persisted field changes — but only after the
   // restore effect has run, so we never overwrite saved progress with the
   // defaults during the first mount.
@@ -797,7 +809,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:pt-16 max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden sm:overflow-visible sm:flex sm:flex-col sm:justify-center px-5 py-4 pb-32 sm:pb-24 sm:pt-0 max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 1
@@ -871,7 +883,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:pt-16 max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden sm:overflow-visible sm:flex sm:flex-col sm:justify-center px-5 py-4 pb-32 sm:pb-24 sm:pt-0 max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 2
@@ -947,7 +959,7 @@ export default function SurveyClient() {
       <div className="h-dvh sm:min-h-screen flex flex-col bg-qgen-paper overflow-hidden sm:overflow-visible">
         <SignalTopBar />
 
-        <div className="flex-1 overflow-hidden sm:overflow-visible px-5 py-4 pb-32 sm:pb-24 sm:pt-16 max-w-lg mx-auto w-full animate-slide-in pt-8">
+        <div className="flex-1 overflow-hidden sm:overflow-visible sm:flex sm:flex-col sm:justify-center px-5 py-4 pb-32 sm:pb-24 sm:pt-0 max-w-lg mx-auto w-full animate-slide-in pt-8">
           <p className="font-ui font-semibold text-qgen-signal uppercase mb-3 text-center"
             style={{ fontSize: 11, letterSpacing: "0.18em" }}>
             Chapter 3
