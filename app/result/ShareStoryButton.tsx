@@ -28,17 +28,13 @@ function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise
 export default function ShareStoryButton({ persona, axisResult, buttonColor, fontFace, logoDataUrl, headingDataUrl, personaImageDataUrl }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   const startedRef = useRef(false);
-  // Pre-created File object so doShare() needs no async before navigator.share()
-  const fileRef = useRef<File | null>(null);
-  const blobUrlRef = useRef<string | null>(null);
 
   const [status, setStatus] = useState<"generating" | "ready" | "error">("generating");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     generate();
-    return () => {
-      if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -54,14 +50,7 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
       }
       await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 8000, "render pass 1");
       const dataUrl = await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 8000, "render pass 2");
-
-      // Pre-convert to File so the click handler has no async work before navigator.share()
-      const res = await fetch(dataUrl);
-      const blob = await res.blob();
-      fileRef.current = new File([blob], "the-office-survivor.png", { type: "image/png" });
-      if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
-      blobUrlRef.current = URL.createObjectURL(blob);
-
+      setPreviewUrl(dataUrl);
       setStatus("ready");
     } catch (err) {
       console.error("[ShareStory] image generation failed:", err);
@@ -71,34 +60,12 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
   }
 
   function handleClick() {
-    if (status === "ready" && fileRef.current && blobUrlRef.current) {
-      doShare(fileRef.current, blobUrlRef.current);
+    if (status === "ready" && previewUrl) {
+      setShowModal(true);
     } else if (status === "error") {
       startedRef.current = false;
       generate();
     }
-    // If still generating, do nothing — button is disabled
-  }
-
-  function doShare(file: File, blobUrl: string) {
-    // iOS Safari requires navigator.share() with no await before it in the same call stack
-    if (navigator.canShare?.({ files: [file] })) {
-      navigator.share({ files: [file], title: "The Office Survivor — ผลลัพธ์ของฉัน" }).catch((err) => {
-        if (err instanceof Error && err.name === "AbortError") return;
-        // Share failed — fall back to download
-        triggerDownload(blobUrl);
-      });
-      return;
-    }
-    // Desktop: download
-    triggerDownload(blobUrl);
-  }
-
-  function triggerDownload(blobUrl: string) {
-    const a = document.createElement("a");
-    a.href = blobUrl;
-    a.download = "the-office-survivor.png";
-    a.click();
   }
 
   return (
@@ -135,6 +102,40 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
           </>
         )}
       </button>
+
+      {/* Preview modal */}
+      {showModal && previewUrl && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/70 px-5"
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className="relative w-full max-w-xs"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Hint text */}
+            <p className="text-white/80 text-center text-xs mb-3">
+              กดค้างที่รูปเพื่อบันทึก (iOS/Android) · คลิกขวาเพื่อเซฟ (Desktop)
+            </p>
+
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={previewUrl}
+              alt="Story card"
+              className="w-full rounded-2xl shadow-2xl"
+              draggable
+            />
+
+            <button
+              onClick={() => setShowModal(false)}
+              className="mt-4 w-full py-3 rounded-2xl bg-white/10 text-white text-sm font-medium
+                active:bg-white/20 transition-colors"
+            >
+              ปิด
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
