@@ -101,27 +101,12 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
           draggable
         />
 
-        <button
-          onClick={() => window.open(previewUrl!, "_blank")}
-          className="w-full py-3 rounded-2xl text-white text-sm font-semibold mb-3 active:scale-[0.98] transition-all"
-          style={{ background: "#C96F3B" }}
-        >
-          เปิดรูปเพื่อบันทึก ↗
-        </button>
-
         <div className="w-full rounded-2xl mb-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.10)" }}>
           <div className="flex items-start gap-3 px-4 py-3 border-b" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
             <span className="text-base mt-0.5">📱</span>
             <div>
-              <p className="text-white text-xs font-semibold mb-0.5">iOS / Android (Safari)</p>
+              <p className="text-white text-xs font-semibold mb-0.5">iOS / Android</p>
               <p className="text-white/60 text-xs leading-relaxed">กดค้างที่รูปภาพ แล้วเลือก &ldquo;บันทึกรูปภาพ&rdquo; หรือ &ldquo;Save to Photos&rdquo;</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3 px-4 py-3 border-b" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
-            <span className="text-base mt-0.5">📲</span>
-            <div>
-              <p className="text-white text-xs font-semibold mb-0.5">LINE / Facebook / In-App Browser</p>
-              <p className="text-white/60 text-xs leading-relaxed">กดปุ่ม &ldquo;เปิดรูปเพื่อบันทึก&rdquo; ด้านบน แล้วกดค้างที่รูปเพื่อบันทึก</p>
             </div>
           </div>
           <div className="flex items-start gap-3 px-4 py-3">
