@@ -26,12 +26,22 @@ function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise
   });
 }
 
+function dataUrlToFile(dataUrl: string, filename: string): File {
+  const [header, data] = dataUrl.split(",");
+  const mime = header.match(/:(.*?);/)?.[1] ?? "image/png";
+  const bytes = atob(data);
+  const arr = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+  return new File([arr], filename, { type: mime });
+}
+
 export default function ShareStoryButton({ persona, axisResult, buttonColor, fontFace, logoDataUrl, headingDataUrl, personaImageDataUrl }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   const startedRef = useRef(false);
 
   const [status, setStatus] = useState<"generating" | "ready" | "error">("generating");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -52,14 +62,16 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
         cardRef.current.appendChild(style);
       }
       // Wait for every <img> in the card to fully decode before capturing.
-      // Large base64 PNGs (2–3 MB) take time to decode; html-to-image can
-      // capture a blank element if we don't wait.
       const imgs = Array.from(cardRef.current.querySelectorAll("img"));
       await Promise.all(imgs.map(img => img.decode().catch(() => {})));
 
       await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 8000, "render pass 1");
       const dataUrl = await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 8000, "render pass 2");
       setPreviewUrl(dataUrl);
+      // Pre-convert to File so handleClick can call navigator.share() synchronously
+      try {
+        setPreviewFile(dataUrlToFile(dataUrl, "office-survivor.png"));
+      } catch { /* non-critical */ }
       setStatus("ready");
     } catch (err) {
       console.error("[ShareStory] image generation failed:", err);
@@ -69,12 +81,29 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
   }
 
   function handleClick() {
-    if (status === "ready" && previewUrl) {
-      setShowModal(true);
-    } else if (status === "error") {
+    if (status === "error") {
       startedRef.current = false;
       generate();
+      return;
     }
+    if (!previewUrl) return;
+
+    // Native file share (iOS Safari 15+, Android Chrome 89+)
+    // previewFile is pre-built so we call share() synchronously inside the click handler,
+    // preserving the user gesture context required by the browser.
+    if (previewFile && navigator.canShare?.({ files: [previewFile] })) {
+      navigator.share({
+        files: [previewFile],
+        title: "The Office Survivor — ผลลัพธ์ของฉัน",
+      }).catch((err) => {
+        if (!(err instanceof Error && err.name === "AbortError")) {
+          setShowModal(true);
+        }
+      });
+      return;
+    }
+
+    setShowModal(true);
   }
 
   const modal = showModal && previewUrl && (
