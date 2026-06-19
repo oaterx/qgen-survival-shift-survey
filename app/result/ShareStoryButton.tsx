@@ -61,14 +61,33 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
         style.textContent = fontFace;
         cardRef.current.appendChild(style);
       }
-      // Wait for every <img> in the card to fully decode before capturing.
-      const imgs = Array.from(cardRef.current.querySelectorAll("img"));
-      await Promise.all(imgs.map(img => img.decode().catch(() => {})));
 
-      await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 8000, "render pass 1");
-      const dataUrl = await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 8000, "render pass 2");
+      // Wait for every <img> to be fully loaded AND decoded.
+      // For each image we: (a) wait for the load event if not yet complete,
+      // then (b) call decode() to ensure the browser has parsed the pixel data.
+      const imgs = Array.from(cardRef.current.querySelectorAll("img"));
+      await Promise.all(
+        imgs.map((img) =>
+          new Promise<void>((resolve) => {
+            const finish = () => img.decode().catch(() => {}).finally(resolve);
+            if (img.complete && img.naturalHeight > 0) {
+              finish();
+            } else {
+              img.addEventListener("load", finish, { once: true });
+              img.addEventListener("error", () => resolve(), { once: true });
+            }
+          })
+        )
+      );
+
+      // Two rAFs: give the browser time to composite decoded images into the
+      // layer that html-to-image will capture. Without this, older/slower iOS
+      // devices capture blank where the persona image should be.
+      await new Promise<void>((r) => requestAnimationFrame(() => { requestAnimationFrame(() => r()); }));
+
+      await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 12000, "render pass 1");
+      const dataUrl = await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 12000, "render pass 2");
       setPreviewUrl(dataUrl);
-      // Pre-convert to File so handleClick can call navigator.share() synchronously
       try {
         setPreviewFile(dataUrlToFile(dataUrl, "office-survivor.png"));
       } catch { /* non-critical */ }
@@ -169,9 +188,9 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
 
   return (
     <>
-      {/* Off-screen card for capture */}
+      {/* Hidden card for capture — kept inside viewport so browser doesn't skip painting */}
       <div
-        style={{ position: "fixed", top: -9999, left: -9999, pointerEvents: "none" }}
+        style={{ position: "fixed", top: 0, left: 0, opacity: 0, pointerEvents: "none" }}
         aria-hidden="true"
       >
         <StoryCard ref={cardRef} persona={persona} axisResult={axisResult} logoDataUrl={logoDataUrl} headingDataUrl={headingDataUrl} personaImageDataUrl={personaImageDataUrl} />
