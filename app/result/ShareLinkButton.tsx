@@ -92,7 +92,7 @@ export default function ShareLinkButton({ url }: { url: string }) {
   const [showModal, setShowModal] = useState(false);
 
   function handleShare() {
-    if (window === window.parent && navigator.share) {
+    if (navigator.share) {
       navigator.share({ title: "The Office Survivor — ผลลัพธ์ของฉัน", url })
         .catch((err) => {
           if (!(err instanceof Error && err.name === "AbortError")) {
