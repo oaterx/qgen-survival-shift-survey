@@ -88,10 +88,10 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
     }
     if (!previewUrl) return;
 
-    // Native file share (iOS Safari 15+, Android Chrome 89+)
-    // previewFile is pre-built so we call share() synchronously inside the click handler,
-    // preserving the user gesture context required by the browser.
-    if (previewFile && navigator.canShare?.({ files: [previewFile] })) {
+    const isMobile = navigator.maxTouchPoints > 0;
+
+    // Mobile: native file share sheet (iOS Safari 15+, Android Chrome 89+)
+    if (isMobile && previewFile && navigator.canShare?.({ files: [previewFile] })) {
       navigator.share({
         files: [previewFile],
         title: "The Office Survivor — ผลลัพธ์ของฉัน",
@@ -100,6 +100,15 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
           setShowModal(true);
         }
       });
+      return;
+    }
+
+    // Desktop: download directly
+    if (!isMobile) {
+      const a = document.createElement("a");
+      a.href = previewUrl;
+      a.download = "office-survivor.png";
+      a.click();
       return;
     }
 
