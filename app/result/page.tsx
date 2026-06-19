@@ -177,7 +177,7 @@ export default async function ResultPage({
           {/* Share row */}
           <div className="flex gap-2">
             <div className="flex-1"><ShareSurveyButton /></div>
-            <ShareLinkButton url={resultShareUrl} />
+            <div className="flex-1"><ShareLinkButton url={resultShareUrl} /></div>
           </div>
 
           {/* Back to home */}
