@@ -50,7 +50,7 @@ export default async function ResultPage({
     (axisResult.F.roundedScore + axisResult.C.roundedScore + axisResult.W.roundedScore) / 3
   );
   const level = scoreLevel(overallScore);
-  const resultShareUrl = `https://qgen-survival-shift-survey-128904677858.asia-southeast3.run.app/result?r=${sp.r}${sp.g ? `&g=${sp.g}` : ""}`;
+  const resultShareUrl = `https://qgen.co/en/the-office-survivor/result?r=${sp.r}${sp.g ? `&g=${sp.g}` : ""}`;
   const personaAccent = THEME_COLOR[persona.theme] ?? "#C96F3B";
 
   const actionPlan = (persona as { actionPlan?: Record<string, { titleTH: string; actions: string[] }> }).actionPlan;
@@ -174,9 +174,10 @@ export default async function ResultPage({
             personaImageDataUrl={personaImageDataUrl}
           />
 
-          {/* Share row: แชร์แบบทดสอบ (ShareLinkButton hidden until result routing is ready) */}
+          {/* Share row */}
           <div className="flex gap-2">
             <div className="flex-1"><ShareSurveyButton /></div>
+            <ShareLinkButton url={resultShareUrl} />
           </div>
 
           {/* Back to home */}
