@@ -93,6 +93,7 @@ const StoryCard = forwardRef<HTMLDivElement, Props>(function StoryCard(
           <img
             src={personaImageDataUrl}
             alt={persona.name}
+            data-persona
             style={{ width: 280, height: 373, objectFit: "contain", marginBottom: 26 }}
           />
         )}

@@ -35,14 +35,23 @@ function dataUrlToFile(dataUrl: string, filename: string): File {
   return new File([arr], filename, { type: mime });
 }
 
-// Downscale a (possibly multi-MB) data URL to its real on-card render size and
-// re-encode as JPEG over a paper background. The big base64 persona PNGs are
-// silently dropped by WebKit/WebView (LINE, in-app browsers) when html-to-image
-// embeds them inside its SVG-as-image, leaving a blank persona. Shrinking the
-// payload ~10–20× keeps it under the WebView's embedded-image limit.
-// PAPER must match StoryCard's background so any transparent areas blend in.
-const PAPER = "#F7F6F3";
-function shrinkImage(dataUrl: string, maxW: number, bg: string): Promise<string> {
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.decoding = "async";
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function doubleRaf(): Promise<void> {
+  return new Promise((r) => requestAnimationFrame(() => { requestAnimationFrame(() => r()); }));
+}
+
+// Downscale a (possibly multi-MB) data URL to a transparent PNG at ~render size.
+// Keeps the alpha channel so it composites cleanly over the card's paper bg.
+function shrinkImage(dataUrl: string, maxW: number): Promise<string> {
   return new Promise((resolve) => {
     const img = new Image();
     img.decoding = "async";
@@ -58,10 +67,8 @@ function shrinkImage(dataUrl: string, maxW: number, bg: string): Promise<string>
         canvas.height = h;
         const ctx = canvas.getContext("2d");
         if (!ctx) { resolve(dataUrl); return; }
-        ctx.fillStyle = bg;
-        ctx.fillRect(0, 0, w, h);
         ctx.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL("image/jpeg", 0.9));
+        resolve(canvas.toDataURL("image/png"));
       } catch {
         resolve(dataUrl);
       }
@@ -69,6 +76,45 @@ function shrinkImage(dataUrl: string, maxW: number, bg: string): Promise<string>
     img.onerror = () => resolve(dataUrl);
     img.src = dataUrl;
   });
+}
+
+// Paint the persona onto the captured card via canvas drawImage().
+// html-to-image renders by serialising the DOM into an SVG <foreignObject>, but
+// in-app WebViews (LINE / Facebook / Instagram) refuse to paint <img> elements
+// inside that foreignObject — so the persona comes out blank there. drawImage()
+// goes through the normal 2D canvas path, which every browser/WebView supports.
+async function compositePersona(
+  baseUrl: string,
+  personaUrl: string,
+  cardRect: DOMRect,
+  personaRect: DOMRect,
+): Promise<string> {
+  const [base, persona] = await Promise.all([loadImage(baseUrl), loadImage(personaUrl)]);
+  const canvas = document.createElement("canvas");
+  canvas.width = base.naturalWidth;
+  canvas.height = base.naturalHeight;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return baseUrl;
+  ctx.drawImage(base, 0, 0);
+
+  // Map the persona's CSS box → output pixels.
+  const ratio = base.naturalWidth / cardRect.width;
+  const boxX = (personaRect.left - cardRect.left) * ratio;
+  const boxY = (personaRect.top - cardRect.top) * ratio;
+  const boxW = personaRect.width * ratio;
+  const boxH = personaRect.height * ratio;
+
+  // Replicate object-fit: contain inside that box.
+  const ar = persona.naturalWidth / persona.naturalHeight;
+  const boxAr = boxW / boxH;
+  let dw = boxW, dh = boxH, dx = boxX, dy = boxY;
+  if (ar > boxAr) { dh = boxW / ar; dy = boxY + (boxH - dh) / 2; }
+  else { dw = boxH * ar; dx = boxX + (boxW - dw) / 2; }
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(persona, dx, dy, dw, dh);
+  return canvas.toDataURL("image/png");
 }
 
 export default function ShareStoryButton({ persona, axisResult, buttonColor, fontFace, logoDataUrl, headingDataUrl, personaImageDataUrl }: Props) {
@@ -81,7 +127,7 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
   const [showModal, setShowModal] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // Persona shrunk to its real render size for reliable WebView capture.
+  // Persona shrunk to its real render size; also the source for compositing.
   const [cardPersona, setCardPersona] = useState<string | undefined>(undefined);
   const [personaReady, setPersonaReady] = useState(false);
 
@@ -95,8 +141,7 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
         return;
       }
       // Card renders persona at 280×373 CSS px; at pixelRatio 2 → 560px wide.
-      // 600 gives a little headroom without bloating the payload.
-      const small = await shrinkImage(personaImageDataUrl, 600, PAPER);
+      const small = await shrinkImage(personaImageDataUrl, 600);
       if (!cancelled) {
         setCardPersona(small);
         setPersonaReady(true);
@@ -117,16 +162,15 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
     startedRef.current = true;
     setStatus("generating");
     try {
-      if (fontFace && !cardRef.current.querySelector("style")) {
+      const card = cardRef.current;
+      if (fontFace && !card.querySelector("style")) {
         const style = document.createElement("style");
         style.textContent = fontFace;
-        cardRef.current.appendChild(style);
+        card.appendChild(style);
       }
 
       // Wait for every <img> to be fully loaded AND decoded.
-      // For each image we: (a) wait for the load event if not yet complete,
-      // then (b) call decode() to ensure the browser has parsed the pixel data.
-      const imgs = Array.from(cardRef.current.querySelectorAll("img"));
+      const imgs = Array.from(card.querySelectorAll("img"));
       await Promise.all(
         imgs.map((img) =>
           new Promise<void>((resolve) => {
@@ -140,17 +184,34 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
           })
         )
       );
+      await doubleRaf();
 
-      // Two rAFs: give the browser time to composite decoded images into the
-      // layer that html-to-image will capture. Without this, older/slower iOS
-      // devices capture blank where the persona image should be.
-      await new Promise<void>((r) => requestAnimationFrame(() => { requestAnimationFrame(() => r()); }));
+      // Measure the persona box, then hide it so html-to-image captures the
+      // text/background/logo/heading layer only. The persona is painted back
+      // on top via canvas drawImage() — reliable in every browser & WebView.
+      const personaEl = card.querySelector<HTMLImageElement>("img[data-persona]");
+      const cardRect = card.getBoundingClientRect();
+      const personaRect = personaEl ? personaEl.getBoundingClientRect() : null;
+      if (personaEl) personaEl.style.visibility = "hidden";
+      await doubleRaf();
 
-      await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 12000, "render pass 1");
-      const dataUrl = await withTimeout(toPng(cardRef.current, { pixelRatio: 2, cacheBust: true }), 12000, "render pass 2");
-      setPreviewUrl(dataUrl);
+      await withTimeout(toPng(card, { pixelRatio: 2, cacheBust: true }), 12000, "render pass 1");
+      const baseUrl = await withTimeout(toPng(card, { pixelRatio: 2, cacheBust: true }), 12000, "render pass 2");
+
+      if (personaEl) personaEl.style.visibility = "";
+
+      let finalUrl = baseUrl;
+      if (cardPersona && personaRect) {
+        try {
+          finalUrl = await compositePersona(baseUrl, cardPersona, cardRect, personaRect);
+        } catch (e) {
+          console.error("[ShareStory] persona composite failed, using base image:", e);
+        }
+      }
+
+      setPreviewUrl(finalUrl);
       try {
-        setPreviewFile(dataUrlToFile(dataUrl, "office-survivor.png"));
+        setPreviewFile(dataUrlToFile(finalUrl, "office-survivor.png"));
       } catch { /* non-critical */ }
       setStatus("ready");
     } catch (err) {
