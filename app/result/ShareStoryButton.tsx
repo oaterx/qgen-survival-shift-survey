@@ -310,9 +310,12 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
 
   return (
     <>
-      {/* Hidden card for capture — kept inside viewport so browser doesn't skip painting */}
+      {/* Hidden card for capture — pushed off-screen. Persona is drawn separately
+          via canvas drawImage(), so the card never needs to be on-screen, and
+          off-screen avoids extending the page (a transformed ancestor would turn
+          position:fixed into the page's containing block and add scroll space). */}
       <div
-        style={{ position: "fixed", top: 0, left: 0, opacity: 0, pointerEvents: "none" }}
+        style={{ position: "fixed", top: -10000, left: -10000, opacity: 0, pointerEvents: "none" }}
         aria-hidden="true"
       >
         <StoryCard ref={cardRef} persona={persona} axisResult={axisResult} logoDataUrl={logoDataUrl} headingDataUrl={headingDataUrl} personaImageDataUrl={cardPersona} />
