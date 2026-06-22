@@ -78,42 +78,53 @@ function shrinkImage(dataUrl: string, maxW: number): Promise<string> {
   });
 }
 
-// Paint the persona onto the captured card via canvas drawImage().
+// Draw an image into a box replicating CSS object-fit: contain.
+function drawContain(
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  x: number, y: number, w: number, h: number,
+) {
+  const ar = img.naturalWidth / img.naturalHeight;
+  const boxAr = w / h;
+  let dw = w, dh = h, dx = x, dy = y;
+  if (ar > boxAr) { dh = w / ar; dy = y + (h - dh) / 2; }
+  else { dw = h * ar; dx = x + (w - dw) / 2; }
+  ctx.drawImage(img, dx, dy, dw, dh);
+}
+
+type Overlay = { url: string; rect: DOMRect };
+
+// Paint the card's images onto the captured base via canvas drawImage().
 // html-to-image renders by serialising the DOM into an SVG <foreignObject>, but
-// in-app WebViews (LINE / Facebook / Instagram) refuse to paint <img> elements
-// inside that foreignObject — so the persona comes out blank there. drawImage()
-// goes through the normal 2D canvas path, which every browser/WebView supports.
-async function compositePersona(
+// in-app WebViews (LINE / Facebook / Instagram) refuse to paint ANY <img> inside
+// that foreignObject — so logo, heading and persona all come out blank there.
+// drawImage() goes through the normal 2D canvas path, supported everywhere.
+async function compositeOverlays(
   baseUrl: string,
-  personaUrl: string,
+  overlays: Overlay[],
   cardRect: DOMRect,
-  personaRect: DOMRect,
 ): Promise<string> {
-  const [base, persona] = await Promise.all([loadImage(baseUrl), loadImage(personaUrl)]);
+  const base = await loadImage(baseUrl);
   const canvas = document.createElement("canvas");
   canvas.width = base.naturalWidth;
   canvas.height = base.naturalHeight;
   const ctx = canvas.getContext("2d");
   if (!ctx) return baseUrl;
   ctx.drawImage(base, 0, 0);
-
-  // Map the persona's CSS box → output pixels.
-  const ratio = base.naturalWidth / cardRect.width;
-  const boxX = (personaRect.left - cardRect.left) * ratio;
-  const boxY = (personaRect.top - cardRect.top) * ratio;
-  const boxW = personaRect.width * ratio;
-  const boxH = personaRect.height * ratio;
-
-  // Replicate object-fit: contain inside that box.
-  const ar = persona.naturalWidth / persona.naturalHeight;
-  const boxAr = boxW / boxH;
-  let dw = boxW, dh = boxH, dx = boxX, dy = boxY;
-  if (ar > boxAr) { dh = boxW / ar; dy = boxY + (boxH - dh) / 2; }
-  else { dw = boxH * ar; dx = boxX + (boxW - dw) / 2; }
-
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
-  ctx.drawImage(persona, dx, dy, dw, dh);
+
+  const ratio = base.naturalWidth / cardRect.width;
+  for (const o of overlays) {
+    const img = await loadImage(o.url);
+    drawContain(
+      ctx, img,
+      (o.rect.left - cardRect.left) * ratio,
+      (o.rect.top - cardRect.top) * ratio,
+      o.rect.width * ratio,
+      o.rect.height * ratio,
+    );
+  }
   return canvas.toDataURL("image/png");
 }
 
@@ -186,26 +197,35 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
       );
       await doubleRaf();
 
-      // Measure the persona box, then hide it so html-to-image captures the
-      // text/background/logo/heading layer only. The persona is painted back
-      // on top via canvas drawImage() — reliable in every browser & WebView.
-      const personaEl = card.querySelector<HTMLImageElement>("img[data-persona]");
+      // Measure each image box, then hide all images so html-to-image captures
+      // only the text/background/lines layer. WKWebView (LINE / FB / IG in-app
+      // browsers) drops every <img> inside the SVG foreignObject, so we paint
+      // logo, heading and persona back via canvas drawImage() — reliable
+      // everywhere. Source order: logo, heading, persona (no overlap).
       const cardRect = card.getBoundingClientRect();
-      const personaRect = personaEl ? personaEl.getBoundingClientRect() : null;
-      if (personaEl) personaEl.style.visibility = "hidden";
+      const sources: Array<{ el: HTMLImageElement | null; url?: string }> = [
+        { el: card.querySelector<HTMLImageElement>("img[data-logo]"), url: logoDataUrl },
+        { el: card.querySelector<HTMLImageElement>("img[data-heading]"), url: headingDataUrl },
+        { el: card.querySelector<HTMLImageElement>("img[data-persona]"), url: cardPersona },
+      ];
+      const overlays: Overlay[] = [];
+      for (const s of sources) {
+        if (s.el && s.url) overlays.push({ url: s.url, rect: s.el.getBoundingClientRect() });
+      }
+      sources.forEach((s) => { if (s.el) s.el.style.visibility = "hidden"; });
       await doubleRaf();
 
       await withTimeout(toPng(card, { pixelRatio: 2, cacheBust: true }), 12000, "render pass 1");
       const baseUrl = await withTimeout(toPng(card, { pixelRatio: 2, cacheBust: true }), 12000, "render pass 2");
 
-      if (personaEl) personaEl.style.visibility = "";
+      sources.forEach((s) => { if (s.el) s.el.style.visibility = ""; });
 
       let finalUrl = baseUrl;
-      if (cardPersona && personaRect) {
+      if (overlays.length > 0) {
         try {
-          finalUrl = await compositePersona(baseUrl, cardPersona, cardRect, personaRect);
+          finalUrl = await compositeOverlays(baseUrl, overlays, cardRect);
         } catch (e) {
-          console.error("[ShareStory] persona composite failed, using base image:", e);
+          console.error("[ShareStory] image composite failed, using base image:", e);
         }
       }
 

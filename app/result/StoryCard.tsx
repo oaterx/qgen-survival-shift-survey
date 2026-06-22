@@ -69,7 +69,7 @@ const StoryCard = forwardRef<HTMLDivElement, Props>(function StoryCard(
       >
         {logoDataUrl ? (
           /* eslint-disable-next-line @next/next/no-img-element */
-          <img src={logoDataUrl} alt="QGEN" style={{ height: 96, objectFit: "contain", marginBottom: 14 }} />
+          <img src={logoDataUrl} alt="QGEN" data-logo style={{ height: 96, objectFit: "contain", marginBottom: 14 }} />
         ) : (
           <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 14 }}>
             <span style={{ fontSize: 32, fontWeight: 800, color: INK, fontFamily: NUM_FONT }}>Q</span>
@@ -81,6 +81,7 @@ const StoryCard = forwardRef<HTMLDivElement, Props>(function StoryCard(
           <img
             src={headingDataUrl}
             alt="The Office Survivor"
+            data-heading
             style={{ width: 338, height: 117, objectFit: "contain", marginBottom: 36 }}
           />
         ) : (
