@@ -35,6 +35,42 @@ function dataUrlToFile(dataUrl: string, filename: string): File {
   return new File([arr], filename, { type: mime });
 }
 
+// Downscale a (possibly multi-MB) data URL to its real on-card render size and
+// re-encode as JPEG over a paper background. The big base64 persona PNGs are
+// silently dropped by WebKit/WebView (LINE, in-app browsers) when html-to-image
+// embeds them inside its SVG-as-image, leaving a blank persona. Shrinking the
+// payload ~10–20× keeps it under the WebView's embedded-image limit.
+// PAPER must match StoryCard's background so any transparent areas blend in.
+const PAPER = "#F7F6F3";
+function shrinkImage(dataUrl: string, maxW: number, bg: string): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.decoding = "async";
+    img.onload = () => {
+      try {
+        const nw = img.naturalWidth || maxW;
+        const nh = img.naturalHeight || maxW;
+        const scale = Math.min(1, maxW / nw);
+        const w = Math.max(1, Math.round(nw * scale));
+        const h = Math.max(1, Math.round(nh * scale));
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) { resolve(dataUrl); return; }
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", 0.9));
+      } catch {
+        resolve(dataUrl);
+      }
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
 export default function ShareStoryButton({ persona, axisResult, buttonColor, fontFace, logoDataUrl, headingDataUrl, personaImageDataUrl }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   const startedRef = useRef(false);
@@ -45,11 +81,36 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
   const [showModal, setShowModal] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  // Persona shrunk to its real render size for reliable WebView capture.
+  const [cardPersona, setCardPersona] = useState<string | undefined>(undefined);
+  const [personaReady, setPersonaReady] = useState(false);
+
+  // Step 1 (on mount): shrink the persona image before it ever enters the card.
   useEffect(() => {
     setMounted(true);
-    generate();
+    let cancelled = false;
+    (async () => {
+      if (!personaImageDataUrl) {
+        setPersonaReady(true);
+        return;
+      }
+      // Card renders persona at 280×373 CSS px; at pixelRatio 2 → 560px wide.
+      // 600 gives a little headroom without bloating the payload.
+      const small = await shrinkImage(personaImageDataUrl, 600, PAPER);
+      if (!cancelled) {
+        setCardPersona(small);
+        setPersonaReady(true);
+      }
+    })();
+    return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Step 2: once the shrunk persona is rendered into the card, capture it.
+  useEffect(() => {
+    if (personaReady) generate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [personaReady]);
 
   async function generate() {
     if (startedRef.current || !cardRef.current) return;
@@ -193,7 +254,7 @@ export default function ShareStoryButton({ persona, axisResult, buttonColor, fon
         style={{ position: "fixed", top: 0, left: 0, opacity: 0, pointerEvents: "none" }}
         aria-hidden="true"
       >
-        <StoryCard ref={cardRef} persona={persona} axisResult={axisResult} logoDataUrl={logoDataUrl} headingDataUrl={headingDataUrl} personaImageDataUrl={personaImageDataUrl} />
+        <StoryCard ref={cardRef} persona={persona} axisResult={axisResult} logoDataUrl={logoDataUrl} headingDataUrl={headingDataUrl} personaImageDataUrl={cardPersona} />
       </div>
 
       <button
